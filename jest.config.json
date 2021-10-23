@@ -1,0 +1,11 @@
+{
+  "globalSetup": "./jest.config.global.js",
+  "transform": {
+    "^.+\\.(t|j)sx?$": [ 
+      "esbuild-jest", 
+      {
+        "sourcemap": true
+      }
+    ]
+  }
+}

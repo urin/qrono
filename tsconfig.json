@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "allowJs": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [
+    "dist/*"
+  ]
+}

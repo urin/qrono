@@ -1,0 +1,27 @@
+{
+  "name": "qrono",
+  "version": "0.0.0",
+  "description": "Tiny date time library",
+  "author": "urin <urinkun@gmail.com> (https://urin.github.io/)",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/qrono.js",
+  "repository": {
+    "type": "git"
+  },
+  "scripts": {
+    "lint": "standard ./src",
+    "build": "node ./scripts/build.js",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "esbuild": "^0.13.4",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^27.2.5",
+    "mockdate": "^3.0.5",
+    "standard": "*",
+    "timezone-mock": "^1.2.2"
+  }
+}
