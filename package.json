@@ -1,15 +1,24 @@
 {
   "name": "qrono",
   "version": "0.0.0",
-  "description": "Tiny date time library",
+  "description": "Just right date time library",
+  "main": "src/qrono.js",
+  "type": "module",
+  "keywords": [
+    "qrono",
+    "date",
+    "time",
+    "immutable"
+  ],
   "author": "urin <urinkun@gmail.com> (https://urin.github.io/)",
   "license": "MIT",
-  "type": "module",
-  "main": "src/qrono.js",
+  "homepage": "https://github.com/urin/qrono/",
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "git+https://github.com/urin/qrono.git"
   },
   "scripts": {
+    "prepublish": "node ./scripts/build.js",
     "lint": "standard ./src",
     "build": "node ./scripts/build.js",
     "test": "jest",
