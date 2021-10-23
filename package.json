@@ -2,7 +2,7 @@
   "name": "qrono",
   "version": "0.0.0",
   "description": "Just right date time library",
-  "main": "src/qrono.js",
+  "license": "MIT",
   "type": "module",
   "keywords": [
     "qrono",
@@ -10,17 +10,14 @@
     "time",
     "immutable"
   ],
-  "author": "urin <urinkun@gmail.com> (https://urin.github.io/)",
-  "license": "MIT",
-  "homepage": "https://github.com/urin/qrono/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/urin/qrono.git"
-  },
+  "files": ["dist"],
+  "module": "dist/qrono.js",
+  "main": "dist/qrono.cjs",
+  "unpkg": "dist/qrono.js",
   "scripts": {
-    "prepublish": "node ./scripts/build.js",
-    "lint": "standard ./src",
+    "prepare": "node ./scripts/build.js",
     "build": "node ./scripts/build.js",
+    "lint": "standard ./src",
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
@@ -30,7 +27,12 @@
     "esbuild-jest": "^0.5.0",
     "jest": "^27.2.5",
     "mockdate": "^3.0.5",
-    "standard": "*",
-    "timezone-mock": "^1.2.2"
+    "standard": "*"
+  },
+  "author": "urin <urinkun@gmail.com> (https://urin.github.io/)",
+  "homepage": "https://github.com/urin/qrono/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urin/qrono.git"
   }
 }
