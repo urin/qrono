@@ -1,4 +1,19 @@
 var __defProp = Object.defineProperty;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
 var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __export = (target, all) => {
   __markAsModule(target);
@@ -198,7 +213,7 @@ Qrono.context = function(context2) {
     });
     return this;
   }
-  return { ...defaultContext };
+  return __spreadValues({}, defaultContext);
 };
 Qrono.asUtc = function() {
   defaultContext.localtime = false;
@@ -211,6 +226,7 @@ Qrono.asLocaltime = function() {
 Object.assign(Qrono, { monday, tuesday, wednesday, thursday, friday, saturday, sunday });
 var internal2 = Symbol("Qrono.internal");
 function Qrono(...args) {
+  var _a;
   if (!new.target) {
     return new Qrono(...args);
   }
@@ -237,7 +253,7 @@ function Qrono(...args) {
   const first = args[0];
   const second = args[1];
   if (first == null) {
-    self.nativeDate ??= new Date();
+    (_a = self.nativeDate) != null ? _a : self.nativeDate = new Date();
   } else if (first instanceof Date) {
     self.nativeDate = new Date(first.getTime());
   } else if (isString(first)) {
@@ -287,18 +303,20 @@ function getNative(name) {
   return this.nativeDate[`get${this.localtime ? "" : "UTC"}${name}`]();
 }
 function set(values) {
-  const args = { ...values };
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
+  const args = __spreadValues({}, values);
   args.month = args.month && args.month - 1;
-  const date = this.nativeDate ?? new Date();
+  const date = (_a = this.nativeDate) != null ? _a : new Date();
   if (this.localtime) {
-    this.nativeDate = asDst(this.ambiguousAsDst, new Date(args.year ?? date.getFullYear(), args.month ?? (this.nativeDate ? date.getMonth() : 0), args.day ?? (this.nativeDate ? date.getDate() : 1), args.hour ?? (this.nativeDate ? date.getHours() : 0), args.minute ?? (this.nativeDate ? date.getMinutes() : 0), args.second ?? (this.nativeDate ? date.getSeconds() : 0), args.millisecond ?? (this.nativeDate ? date.getMilliseconds() : 0)));
+    this.nativeDate = asDst(this.ambiguousAsDst, new Date((_b = args.year) != null ? _b : date.getFullYear(), (_c = args.month) != null ? _c : this.nativeDate ? date.getMonth() : 0, (_d = args.day) != null ? _d : this.nativeDate ? date.getDate() : 1, (_e = args.hour) != null ? _e : this.nativeDate ? date.getHours() : 0, (_f = args.minute) != null ? _f : this.nativeDate ? date.getMinutes() : 0, (_g = args.second) != null ? _g : this.nativeDate ? date.getSeconds() : 0, (_h = args.millisecond) != null ? _h : this.nativeDate ? date.getMilliseconds() : 0));
   } else {
-    this.nativeDate = new Date(Date.UTC(args.year ?? date.getUTCFullYear(), args.month ?? (this.nativeDate ? date.getUTCMonth() : 0), args.day ?? (this.nativeDate ? date.getUTCDate() : 1), args.hour ?? (this.nativeDate ? date.getUTCHours() : 0), args.minute ?? (this.nativeDate ? date.getUTCMinutes() : 0), args.second ?? (this.nativeDate ? date.getUTCSeconds() : 0), args.millisecond ?? (this.nativeDate ? date.getUTCMilliseconds() : 0)));
+    this.nativeDate = new Date(Date.UTC((_i = args.year) != null ? _i : date.getUTCFullYear(), (_j = args.month) != null ? _j : this.nativeDate ? date.getUTCMonth() : 0, (_k = args.day) != null ? _k : this.nativeDate ? date.getUTCDate() : 1, (_l = args.hour) != null ? _l : this.nativeDate ? date.getUTCHours() : 0, (_m = args.minute) != null ? _m : this.nativeDate ? date.getUTCMinutes() : 0, (_n = args.second) != null ? _n : this.nativeDate ? date.getUTCSeconds() : 0, (_o = args.millisecond) != null ? _o : this.nativeDate ? date.getUTCMilliseconds() : 0));
   }
   return this;
 }
 var parsePattern = new RegExp("^(\\d{4})(?:[-/]?([0-2]?\\d)(?:[-/]?([0-3]?\\d))?)?(?:[T\\s]([0-2]?\\d)(?::([0-5]?\\d)?(?::([0-6]?\\d)?(?:[.:](\\d{1,3})?\\d*)?)?)?)?(Z|[-+]\\d{2}:?\\d{2})?$");
 function parse(str) {
+  var _a;
   const text = str.trim().toUpperCase();
   const values = text.match(parsePattern);
   if (!values) {
@@ -311,7 +329,7 @@ function parse(str) {
     +values[4] || 0,
     +values[5] || 0,
     +values[6] || 0,
-    +values[7]?.padStart(3, "0") || 0,
+    +((_a = values[7]) == null ? void 0 : _a.padStart(3, "0")) || 0,
     values[8]
   ];
   const native = new Date(text);

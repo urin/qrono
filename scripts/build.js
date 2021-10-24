@@ -4,7 +4,8 @@ import { build } from 'esbuild'
 build({
   entryPoints: ['./src/qrono.js'],
   outfile: './dist/qrono.js',
-  target: 'es2020',
+  format: 'esm',
+  target: 'esnext',
   sourcemap: true,
   bundle: true
 })
@@ -12,16 +13,30 @@ build({
 build({
   entryPoints: ['./src/qrono.js'],
   outfile: './dist/qrono.min.js',
-  target: 'es2020',
+  format: 'esm',
+  target: 'esnext',
   sourcemap: true,
   bundle: true,
   minify: true
+})
+
+// Node
+build({
+  entryPoints: ['./src/qrono.js'],
+  outfile: './dist/qrono.mjs',
+  format: 'esm',
+  target: 'es2015',
+  platform: 'node',
+  sourcemap: true,
+  bundle: true
 })
 
 // CommonJS
 build({
   entryPoints: ['./src/qrono.js'],
   outfile: './dist/qrono.cjs',
+  format: 'cjs',
+  target: 'es2015',
   platform: 'node',
   sourcemap: true,
   bundle: true

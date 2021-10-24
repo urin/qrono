@@ -1,22 +1,21 @@
 {
   "name": "qrono",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Just right date time library",
   "license": "MIT",
-  "type": "module",
   "keywords": [
     "qrono",
     "date",
     "time",
     "immutable"
   ],
+  "type": "module",
   "files": ["dist"],
   "module": "dist/qrono.js",
   "main": "dist/qrono.cjs",
   "unpkg": "dist/qrono.js",
   "scripts": {
-    "prepare": "node ./scripts/build.js",
-    "build": "node ./scripts/build.js",
+    "prepare": "standard ./src && node ./scripts/build.js",
     "lint": "standard ./src",
     "test": "jest",
     "test:watch": "jest --watchAll"
