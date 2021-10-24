@@ -28,7 +28,7 @@
     "mockdate": "^3.0.5",
     "standard": "*"
   },
-  "author": "urin <urinkun@gmail.com>",
+  "author": "urin <urinkun@gmail.com> (https://github.com/urin)",
   "homepage": "https://github.com/urin/qrono/",
   "repository": {
     "type": "git",
