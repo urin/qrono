@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Just right date time library",
   "license": "MIT",
   "type": "module",
@@ -29,7 +29,7 @@
     "mockdate": "^3.0.5",
     "standard": "*"
   },
-  "author": "urin <urinkun@gmail.com> (https://urin.github.io/)",
+  "author": "urin <urinkun@gmail.com>",
   "homepage": "https://github.com/urin/qrono/",
   "repository": {
     "type": "git",
