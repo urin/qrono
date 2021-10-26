@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Just right date time library",
   "license": "MIT",
   "keywords": [
@@ -10,12 +10,14 @@
     "immutable"
   ],
   "type": "module",
-  "files": ["dist"],
+  "sideEffects": false,
+  "files": ["src", "dist", "types"],
   "module": "dist/qrono.js",
   "main": "dist/qrono.cjs",
-  "unpkg": "dist/qrono.js",
+  "unpkg": "dist/qrono.min.js",
+  "jsdeliver": "dist/qrono.min.js",
   "scripts": {
-    "prepare": "standard ./src && node ./scripts/build.js",
+    "prepare": "npm run lint && node ./scripts/build.js",
     "lint": "standard ./src",
     "test": "jest",
     "test:watch": "jest --watchAll"
@@ -28,7 +30,7 @@
     "mockdate": "^3.0.5",
     "standard": "*"
   },
-  "author": "urin <urinkun@gmail.com> (https://github.com/urin)",
+  "author": "urin <urinkun@gmail.com> (https://github.com/urin/)",
   "homepage": "https://github.com/urin/qrono/",
   "repository": {
     "type": "git",

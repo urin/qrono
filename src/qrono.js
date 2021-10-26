@@ -30,6 +30,7 @@ const qrono = Qrono
 Qrono.date = QronoDate
 export default qrono
 export { qrono }
+
 export {
   monday,
   tuesday,
