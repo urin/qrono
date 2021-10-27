@@ -13,6 +13,7 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 ---
 
 * [Design philosophy](#design-philosophy)
+* [Getting started](#getting-started)
 * [Examples](#examples)
 * [License](#license)
 
@@ -35,11 +36,15 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 <script src="https://unpkg.com/qrono/dist/qrono.min.js"></script>
 ```
 
-### JavaScript
+### Node.js
+
+```sh
+npm install qrono
+```
 
 ```js
 // as module
-import { qrono } from 'qrono.js'
+import { qrono } from 'qrono'
 // or CommonJS
 const { qrono } = require('qrono')
 ```
@@ -114,8 +119,8 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 [image-license]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [url-license]: LICENSE
 
-[url-npm]: https://npmjs.org/package/qrono
 [image-npm-version]: https://img.shields.io/npm/v/qrono.svg?style=flat
+[url-npm]: https://npmjs.org/package/qrono
 
 [image-npm-downloads]: https://img.shields.io/npm/dm/qrono.svg?style=flat
 [url-npm-downloads]: https://npmcharts.com/compare/qrono?minimal=true
