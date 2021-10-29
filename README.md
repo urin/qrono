@@ -1,8 +1,9 @@
-# Qrono<small> - Just right date time library</small>
+# Qrono<small> - 🕥 Just right date time library</small>
 
 [![MIT License][image-license]][url-license]
 [![NPM version][image-npm-version]][url-npm]
 [![NPM downloads][image-npm-downloads]][url-npm-downloads]
+[![gzip size][image-size]][url-size]
 
 ```js
 qrono('2021-08-31 12:34').plus({ month: 1 }).isSame(qrono('2021-09-30 12:34'))
@@ -10,21 +11,26 @@ qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
 qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
 ```
 
----
-
-* [Design philosophy](#design-philosophy)
-* [Getting started](#getting-started)
-* [Examples](#examples)
-* [License](#license)
+[Design philosophy](#design-philosophy) \| [Getting started](#getting-started) \| [Examples](#examples) \| [License](#license)
 
 ---
 
 ## Design philosophy
 
-* Provides functions that are necessary in most cases.
-* Supports only UTC (as default) and local time of the environment.
-* Enables to handle ambiguous time of daylight saving time strictly.
-* Immutable and chainable
+- Provides immutable and chainable functions that are necessary in most cases.
+- Supports only UTC (as default) and local time of the environment.
+- Enables to handle ambiguous time of daylight saving time strictly.
+- Not support localization.
+  It could be done by [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+- Follows [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en).
+- Pure JavaScript without dependencies.
+
+### Other libraries
+
+- [Luxon](https://github.com/moment/luxon)
+- [Day.js](https://github.com/iamkun/dayjs)
+- [date\-fns](https://github.com/date-fns/date-fns)
+- [Moment\.js](https://github.com/moment/moment)
 
 ## Getting started
 
@@ -124,3 +130,7 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 
 [image-npm-downloads]: https://img.shields.io/npm/dm/qrono.svg?style=flat
 [url-npm-downloads]: https://npmcharts.com/compare/qrono?minimal=true
+
+[image-size]: https://img.badgesize.io/https://unpkg.com/qrono/dist/qrono.min.js?compression=gzip&color=blue
+[url-size]: https://unpkg.com/qrono/dist/qrono.min.js
+
