@@ -11,11 +11,11 @@ qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
 qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
 ```
 
-[Design philosophy](#design-philosophy) \| [Getting started](#getting-started) \| [Quick tour](#quick-tour) \| [License](#license)
+[🎨 Design philosophy](#design-philosophy-) \| [📥 Getting started](#getting-started-) \| [🚀 Quick tour](#quick-tour-) \| [🌏 License](#license-)
 
 ---
 
-## Design philosophy
+## Design philosophy 🎨
 
 - Provides immutable and chainable functions that are necessary in most cases.
 - Supports only UTC (as default) and local time of the environment.
@@ -59,7 +59,7 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 </details>
 
 
-## Getting started
+## Getting started 📥
 
 ### Browser
 
@@ -82,7 +82,7 @@ import { qrono } from 'qrono'
 const { qrono } = require('qrono')
 ```
 
-## Quick tour
+## Quick tour 🚀
 
 ### Construction
 
@@ -185,13 +185,13 @@ qrono.date('2000-01-02').numeric()        // => 10958 days from UNIX epoch
   time.yearOfWeek()    // => 1999
   // Daylight saving time stuff that is meaningful in case of local time
   const localtime = time.asLocaltime()
-  time.hasDstInYear()
-  time.isInDst()
-  time.isDstTransitionDay()
-  time.minutesInDay()
+  localtime.hasDstInYear()
+  localtime.isInDst()
+  localtime.isDstTransitionDay()
+  localtime.minutesInDay()
 ```
 
-## License
+## License 🌏
 
 [MIT][url-license]
 
