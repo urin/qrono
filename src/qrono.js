@@ -569,18 +569,16 @@ function plus (sign, ...args) {
   }
   const date = this.nativeDate()
   const utc = this[internal].localtime ? '' : 'UTC'
-  if (has(timeFields, 'year')) {
-    date[`set${utc}FullYear`](date[`get${utc}FullYear`]() + sign * timeFields.year)
-  }
-  if (has(timeFields, 'month')) {
-    const month = timeFields.month
+  if (has(timeFields, 'year') || has(timeFields, 'month')) {
+    const year = this.year() + sign * (timeFields.year ?? 0)
+    const month = this.month() + sign * (timeFields.month ?? 0)
     const endOfMonth = new Date(date.getTime())
-    endOfMonth[`set${utc}Month`](endOfMonth[`get${utc}Month`]() + sign * month + 1, 0)
-    const daysInMonth = endOfMonth.getDate()
-    if (date[`get${utc}Date`]() >= daysInMonth) {
-      date[`set${utc}Month`](endOfMonth[`get${utc}Month`](), daysInMonth)
+    endOfMonth[`set${utc}FullYear`](year, month, 0)
+    const lastDay = endOfMonth.getDate()
+    if (lastDay < this.day()) {
+      date[`set${utc}FullYear`](year, endOfMonth[`get${utc}Month`](), lastDay)
     } else {
-      date[`set${utc}Month`](date[`get${utc}Month`]() + sign * month)
+      date[`set${utc}FullYear`](year, month - 1)
     }
   }
   ;[
@@ -588,7 +586,9 @@ function plus (sign, ...args) {
     ['second', 'Seconds'], ['millisecond', 'Milliseconds']
   ].forEach(([key, nativeKey]) => {
     if (has(timeFields, key)) {
-      date[`set${utc}${nativeKey}`](date[`get${utc}${nativeKey}`]() + sign * timeFields[key])
+      date[`set${utc}${nativeKey}`](
+        date[`get${utc}${nativeKey}`]() + sign * timeFields[key]
+      )
     }
   })
   return this.clone(asDst(this[internal].ambiguousAsDst, date))

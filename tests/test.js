@@ -210,6 +210,9 @@ test('Localtime', () => {
 })
 
 test('Calculation and comparison', () => {
+  expect(qrono(2020, 2, 29).plus({ year: 1 }).toString()).toBe(
+    '2021-02-28T00:00:00.000Z'
+  )
   expect(qrono(2021, 12, 31).plus({ day: 1 }).toString()).toBe(
     '2022-01-01T00:00:00.000Z'
   )
