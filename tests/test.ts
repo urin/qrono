@@ -15,7 +15,7 @@ afterEach(() => {
   MockDate.reset()
 })
 
-function dateText (date) {
+function dateText (date?) {
   let dateObject = null
   if (date === undefined) {
     dateObject = new Date()
@@ -24,7 +24,7 @@ function dateText (date) {
   } else if (Number.isSafeInteger(date)) {
     dateObject = new Date(date)
   } else if (typeof date === 'string' || date instanceof String) {
-    dateObject = new Date(date)
+    dateObject = new Date(date as string)
   }
   return dateObject.toISOString()
 }
@@ -53,7 +53,6 @@ test('toString', () => {
 test('Construction', () => {
   expect(qrono().numeric()).toBe(Date.now())
   expect(+qrono()).toBe(Date.now())
-  expect((new Qrono()).toString()).toBe(qrono().toString())
   expect(qrono(new Date()).toString()).toBe(dateText())
   expect(qrono(qrono(2020, 10)).toString()).toBe(dateText(Date.UTC(2020, 9)))
 })
@@ -137,7 +136,7 @@ test('Accessor', () => {
   expect(qrono(value).toArray()).toEqual([2021, 9, 30, 12, 34, 56, 789])
   expect(qrono().toDate()).toEqual(qrono.date())
   expect(qrono().localtime(true).asUtc().localtime()).toBe(false)
-  expect(qrono().localtime(false).asLocalTime().localtime()).toBe(true)
+  expect(qrono().localtime(false).asLocaltime().localtime()).toBe(true)
 })
 
 test('Getter', () => {
@@ -292,7 +291,6 @@ test('QronoDate', () => {
   expect(qrono.date().numeric()).toBe(todayNumeric)
   expect(+qrono.date()).toBe(todayNumeric)
   expect(qrono.date(todayNumeric).toString()).toBe(todayString)
-  expect((new QronoDate()).toString()).toBe(qrono.date().toString())
   expect(qrono.date(new Date()).toString()).toBe(todayString)
   expect(qrono.date(qrono(2020, 10)).toString()).toBe(
     dateText(Date.UTC(2020, 9)).substring(0, 10)

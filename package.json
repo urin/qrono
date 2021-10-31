@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Just right date time library",
   "license": "MIT",
   "keywords": [
@@ -11,11 +11,15 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "files": ["src", "dist", "types"],
+  "files": [
+    "src",
+    "dist"
+  ],
   "module": "dist/qrono.js",
   "main": "dist/qrono.cjs",
   "unpkg": "dist/qrono.min.js",
   "jsdeliver": "dist/qrono.min.js",
+  "types": "types/qrono.d.ts",
   "scripts": {
     "prepare": "npm run lint && node ./scripts/build.js",
     "lint": "standard ./src",

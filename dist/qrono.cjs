@@ -409,7 +409,7 @@ Qrono.prototype.toDate = function(...args) {
 Qrono.prototype.asUtc = function() {
   return this.clone({ localtime: false });
 };
-Qrono.prototype.asLocalTime = function() {
+Qrono.prototype.asLocaltime = function() {
   return this.clone({ localtime: true });
 };
 Qrono.prototype.year = function(value) {
@@ -568,6 +568,7 @@ Qrono.prototype.minus = function(...args) {
   return plus.call(this, -1, ...args);
 };
 function plus(sign, ...args) {
+  var _a, _b;
   const arg0 = args[0];
   const arg1 = args[1];
   if (Number.isFinite(arg0) && !Number.isFinite(arg1)) {
@@ -601,18 +602,16 @@ function plus(sign, ...args) {
   }
   const date = this.nativeDate();
   const utc = this[internal2].localtime ? "" : "UTC";
-  if (has(timeFields, "year")) {
-    date[`set${utc}FullYear`](date[`get${utc}FullYear`]() + sign * timeFields.year);
-  }
-  if (has(timeFields, "month")) {
-    const month = timeFields.month;
+  if (has(timeFields, "year") || has(timeFields, "month")) {
+    const year = this.year() + sign * ((_a = timeFields.year) != null ? _a : 0);
+    const month = this.month() + sign * ((_b = timeFields.month) != null ? _b : 0);
     const endOfMonth = new Date(date.getTime());
-    endOfMonth[`set${utc}Month`](endOfMonth[`get${utc}Month`]() + sign * month + 1, 0);
-    const daysInMonth = endOfMonth.getDate();
-    if (date[`get${utc}Date`]() >= daysInMonth) {
-      date[`set${utc}Month`](endOfMonth[`get${utc}Month`](), daysInMonth);
+    endOfMonth[`set${utc}FullYear`](year, month, 0);
+    const lastDay = endOfMonth.getDate();
+    if (lastDay < this.day()) {
+      date[`set${utc}FullYear`](year, endOfMonth[`get${utc}Month`](), lastDay);
     } else {
-      date[`set${utc}Month`](date[`get${utc}Month`]() + sign * month);
+      date[`set${utc}FullYear`](year, month - 1);
     }
   }
   ;
