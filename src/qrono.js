@@ -351,7 +351,7 @@ Qrono.prototype.asUtc = function () {
   return this.clone({ localtime: false })
 }
 
-Qrono.prototype.asLocalTime = function () {
+Qrono.prototype.asLocaltime = function () {
   return this.clone({ localtime: true })
 }
 
