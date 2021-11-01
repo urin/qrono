@@ -130,12 +130,12 @@ qrono('2022-12-31 15:23:11.321').hour()         // => 15 as local time
 ### Conversion
 
 ```js
-  qrono('2000-01-01').numeric() // => 946,684,800,000 milliseconds from UNIX epoch
-    === +qrono('2000-01-01')    // => true
-  const time = qrono('2000-01-02 03:04:05.006')
-  time.toObject()   // => { year: 2000, month: 1, day: 2, hour: 3, minute: 4, second: 5, millisecond: 6 }
-  time.toArray()    // => [2000, 1, 2, 3, 4, 5, 6]
-  time.nativeDate() // => JavaScript native Date instance
+qrono('2000-01-01').numeric() // => 946,684,800,000 milliseconds from UNIX epoch
+  === +qrono('2000-01-01')    // => true
+const time = qrono('2000-01-02 03:04:05.006')
+time.toObject()   // => { year: 2000, month: 1, day: 2, hour: 3, minute: 4, second: 5, millisecond: 6 }
+time.toArray()    // => [2000, 1, 2, 3, 4, 5, 6]
+time.nativeDate() // => JavaScript native Date instance
 ```
 
 ### Calculation
@@ -167,28 +167,28 @@ qrono.date('2000-01-02').numeric()        // => 10958 days from UNIX epoch
 ### Short-hands
 
 ```js
-  const time = qrono('2000-01-02 03:04:05.006')
-  time.startOfYear()   // => 2000-01-01T00:00:00.000Z
-  time.startOfMonth()  // => 2000-01-01T00:00:00.000Z
-  time.startOfDay()    // => 2000-01-02T00:00:00.000Z
-  time.startOfHour()   // => 2000-01-02T03:00:00.000Z
-  time.startOfMinute() // => 2000-01-02T03:04:00.000Z
-  time.startOfSecond() // => 2000-01-02T03:04:05.000Z
-  time.dayOfWeek()     // => 7 === qrono.sunday
-  time.dayOfYear()     // => 2
-  time.isLeapYear()    // => true
-  time.daysInMonth()   // => 31
-  time.daysInYear()    // => 366
-  // ISO week number. See https://en.wikipedia.org/wiki/ISO_week_date
-  time.weeksInYear()   // => 52
-  time.weekOfYear()    // => 52
-  time.yearOfWeek()    // => 1999
-  // Daylight saving time stuff that is meaningful in case of local time
-  const localtime = time.asLocaltime()
-  localtime.hasDstInYear()
-  localtime.isInDst()
-  localtime.isDstTransitionDay()
-  localtime.minutesInDay()
+const time = qrono('2000-01-02 03:04:05.006')
+time.startOfYear()   // => 2000-01-01T00:00:00.000Z
+time.startOfMonth()  // => 2000-01-01T00:00:00.000Z
+time.startOfDay()    // => 2000-01-02T00:00:00.000Z
+time.startOfHour()   // => 2000-01-02T03:00:00.000Z
+time.startOfMinute() // => 2000-01-02T03:04:00.000Z
+time.startOfSecond() // => 2000-01-02T03:04:05.000Z
+time.dayOfWeek()     // => 7 === qrono.sunday
+time.dayOfYear()     // => 2
+time.isLeapYear()    // => true
+time.daysInMonth()   // => 31
+time.daysInYear()    // => 366
+// ISO week number. See https://en.wikipedia.org/wiki/ISO_week_date
+time.weeksInYear()   // => 52
+time.weekOfYear()    // => 52
+time.yearOfWeek()    // => 1999
+// Daylight saving time stuff that is meaningful in case of local time
+const localtime = time.asLocaltime()
+localtime.hasDstInYear()
+localtime.isInDst()
+localtime.isDstTransitionDay()
+localtime.minutesInDay()
 ```
 
 ## License 🌏
