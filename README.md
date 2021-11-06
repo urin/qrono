@@ -15,18 +15,23 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 
 ---
 
+
 ## Design philosophy 🎨
 
-- Provides immutable and chainable functions that are necessary in most cases.
-- Supports only UTC (as default) and local time of the environment.
-- Enables to handle ambiguous time of daylight saving time strictly.
+- Provides immutable and chain-able functions that are necessary in most cases.
 - Not support localization.
-  It could be done with [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+  - It could be done with [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+- Supports only UTC (as default) and local time of the environment.
+  - [Other libraries](#alternatives) tend to have bigger code base and complicated usage to support multiple time zones and locales.
+  - In most cases, it is enough to support only the time zone of the client environment.
+    The [Luxon's explanation](https://moment.github.io/luxon/#/zones?id=don39t-worry) is right to the point.
+- Enables to handle ambiguous time of daylight saving time strictly.
+  - This feature can be achieved thanks to the abandonment of support time zones and locales.
 - Follows [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en).
 - Pure JavaScript without dependencies.
 
 <details>
-  <summary>Alternatives</summary>
+  <summary id="alternatives">Alternatives</summary>
   <ul>
     <li>
       <a href="https://github.com/moment/moment">Moment.js</a>
