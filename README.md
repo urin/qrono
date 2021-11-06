@@ -31,29 +31,36 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
     <li>
       <a href="https://github.com/moment/moment">Moment.js</a>
       <br>
-      Legacy, mutable, rich, widely support localization and time zone
+      It is a great library that is very widely used (it was the de-facto standard). It went into maintenance mode in 2020.<br>
+      It has a fundamental problem that its behavior as a mutable object is prone to bugs, and the later date-time libraries introduced below are all designed to be immutable.<br>
     </li>
     <li>
       <a href="https://github.com/moment/luxon">Luxon</a>
       <br>
-      Modern, rich, good code base and docs, widely support localization and time zone
+      An immutable and rich library created by the maintainers of <a href="https://github.com/moment/moment">Moment.js</a>. Sophisticated and feature-rich. The code is easy to read.<br>
+      By default, it handles time in local time, and <a href="https://moment.github.io/luxon/#/zones?id=ambiguous-times">cannot strictly handle ambiguous times</a>.<br>
+      It is different from other libraries in that the documentation clearly shows how it behaves with ambiguous time.<br>
     </li>
     <li>
       <a href="https://github.com/iamkun/dayjs">Day.js</a>
       <br>
-      Modern, rich, extendable by plugins, widely support localization and time zone
+      A <a href="https://github.com/moment/moment">Moment.js</a> compatible library with a minimum size of 2KB, which has <a href="https://github.com/iamkun/dayjs/stargazers">many GitHub stars</a> and is becoming the de-facto standard. The code readability is not high.<br>
+      The code base is large due to time zone and locale support (178 source files as of 2021-11-02), but the effective size can be reduced if tree-shaking is enabled due to the style of declaring necessary plugins.<br>
+      It is troublesome to declare plug-ins each time because some functions that could have been implemented by default are now plug-ins.<br>
+      Planning a major version upgrade during digesting the large number of issues.<br>
     </li>
     <li>
       <a href="https://github.com/date-fns/date-fns">date-fns</a>
       <br>
-      Modern, pure functions for JavaScript Date object, tree-shaking available
+      As the name implies, it provides over 200 pure functions for manipulating JavaScript Date objects, implemented in TypeScript and tree-shaking enabled.<br>
+      Since the JavaScript Date object takes the lead, problems such as mutable, month starting at 0, etc. are inherited. <br>
     </li>
     <li>
       <a href="https://tc39.es/proposal-temporal/docs/index.html">
         The ECMA TC39 Temporal Proposal
       </a>
       <br>
-      Standard for future, class-based, similar to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html">java.time</a>
+      An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by <a href="https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html">java.time</a>.
     </li>
   </ul>
 </details>
@@ -77,7 +84,7 @@ npm install qrono
 
 ```js
 // as module
-import qrono from 'qrono'
+import { qrono } from 'qrono'
 // or CommonJS
 const { qrono } = require('qrono')
 ```
@@ -152,18 +159,6 @@ const tommorrow = today.plus({ day: 1 })
 today.isBetween(yesterday, tommorrow) // => true
 ```
 
-### QronoDate
-
-`qrono.date(...)` returns a `QronoDate` instance with only date information.
-
-Methods of `QronoDate` are almost compatible with those of `Qrono`.
-
-```js
-qrono.date('2000-01-02').toString()       // => "2000-01-02"
-qrono('2000-01-02 23:04:05.006').toDate() // => QronoDate instance 2000-01-02
-qrono.date('2000-01-02').numeric()        // => 10958 days from UNIX epoch
-```
-
 ### Short-hands
 
 ```js
@@ -189,6 +184,18 @@ localtime.hasDstInYear()
 localtime.isInDst()
 localtime.isDstTransitionDay()
 localtime.minutesInDay()
+```
+
+### QronoDate
+
+`qrono.date(...)` returns a `QronoDate` instance with only date information.
+
+Methods of `QronoDate` are almost compatible with those of `Qrono`.
+
+```js
+qrono.date('2000-01-02').toString()       // => "2000-01-02"
+qrono('2000-01-02 23:04:05.006').toDate() // => QronoDate instance 2000-01-02
+qrono.date('2000-01-02').numeric()        // => 10958 days from UNIX epoch
 ```
 
 ## License 🌏
