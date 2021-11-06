@@ -37,7 +37,7 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
     <li>
       <a href="https://github.com/moment/luxon">Luxon</a>
       <br>
-      An immutable and rich library created by the maintainers of <a href="https://github.com/moment/moment">Moment.js</a>. Sophisticated and feature-rich. The code is easy to read.<br>
+      An immutable and rich library created by the maintainers of <a href="https://github.com/moment/moment">Moment.js</a>. Sophisticated and feature-rich. Good code base to explore.<br>
       By default, it handles time in local time, and <a href="https://moment.github.io/luxon/#/zones?id=ambiguous-times">cannot strictly handle ambiguous times</a>.<br>
       It is different from other libraries in that the documentation clearly shows how it behaves with ambiguous time.<br>
     </li>
@@ -47,7 +47,7 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
       A <a href="https://github.com/moment/moment">Moment.js</a> compatible library with a minimum size of 2KB, which has <a href="https://github.com/iamkun/dayjs/stargazers">many GitHub stars</a> and is becoming the de-facto standard. The code readability is not high.<br>
       The code base is large due to time zone and locale support (178 source files as of 2021-11-02), but the effective size can be reduced if tree-shaking is enabled due to the style of declaring necessary plugins.<br>
       It is troublesome to declare plug-ins each time because some functions that could have been implemented by default are now plug-ins.<br>
-      Planning a major version upgrade during digesting the large number of issues.<br>
+      Planning a major version upgrade in the middle of solving <a href="https://github.com/iamkun/dayjs/issues?q=is%3Aissue+is%3Aopen">the large number of issues</a>.<br>
     </li>
     <li>
       <a href="https://github.com/date-fns/date-fns">date-fns</a>
