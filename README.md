@@ -20,7 +20,7 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 
 - Provides immutable and chain-able functions that are necessary in most cases.
 - Locality-Agnostic.
-  - It could be done with [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+  - Localization could be done with [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
 - Supports only UTC (as default) and local time of the environment.
   - [Other libraries](#alternatives) tend to have bigger code base and complicated usage to support multiple time zones and locales.
   - In most cases, it is enough to support only the time zone of the client environment.
