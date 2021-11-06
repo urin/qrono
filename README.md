@@ -50,8 +50,8 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
       <a href="https://github.com/iamkun/dayjs">Day.js</a>
       <br>
       A <a href="https://github.com/moment/moment">Moment.js</a> compatible library with a minimum size of 2KB, which has <a href="https://github.com/iamkun/dayjs/stargazers">many GitHub stars</a> and is becoming the de-facto standard. The code readability is not high.<br>
-      The code base is large due to time zone and locale support (178 source files as of 2021-11-02), but the effective size can be reduced if tree-shaking is enabled due to the style of declaring necessary plugins.<br>
-      It is troublesome to declare plug-ins each time because some functions that could have been implemented by default are now plug-ins.<br>
+      The code base is large due to time zone and locale support (178 source files as of 2021-11-02), but the effective size can be reduced if tree-shaking is available.<br>
+      Requires to import plugins each time because most of functions are provided as plugins.<br>
       Planning a major version upgrade in the middle of solving <a href="https://github.com/iamkun/dayjs/issues?q=is%3Aissue+is%3Aopen">the large number of issues</a>.<br>
     </li>
     <li>
