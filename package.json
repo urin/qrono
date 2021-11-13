@@ -21,18 +21,29 @@
   "jsdeliver": "dist/qrono.min.js",
   "types": "types/qrono.d.ts",
   "scripts": {
-    "prepare": "npm run lint && node ./scripts/build.js",
-    "lint": "standard ./src",
+    "prepare": "husky install && npm run lint && npm run build",
+    "lint": "standard ./src ./scripts",
+    "format": "standard --fix ./src ./scripts",
+    "build": "node ./scripts/build.js",
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
   "devDependencies": {
+    "@commitlint/cli": "^14.1.0",
+    "@commitlint/config-conventional": "^14.1.0",
     "@types/jest": "^27.0.2",
     "esbuild": "^0.13.4",
     "esbuild-jest": "^0.5.0",
+    "husky": "^7.0.4",
     "jest": "^27.2.5",
     "mockdate": "^3.0.5",
     "standard": "*"
+  },
+  "dependencies": {},
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "author": "urin <urinkun@gmail.com> (https://github.com/urin/)",
   "homepage": "https://github.com/urin/qrono/",
