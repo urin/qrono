@@ -89,7 +89,7 @@ npm install qrono
 
 ```js
 // as module
-import { qrono } from 'qrono'
+import qrono from 'qrono'
 // or CommonJS
 const { qrono } = require('qrono')
 ```

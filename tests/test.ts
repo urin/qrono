@@ -1,5 +1,5 @@
 /* eslint-env jest */
-import qrono from '../src/qrono.js'
+import { qrono } from '../src/qrono.js'
 
 import MockDate from 'mockdate'
 
