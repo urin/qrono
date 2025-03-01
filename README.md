@@ -156,7 +156,12 @@ time.nativeDate() // => JavaScript native Date instance
 qrono('2000-01-01 01:00:00.000') - qrono('2000-01-01') // => 3,600,000 milliseconds = 1 hour
 qrono('2000-01-01 01:00:00.000') < qrono('2000-01-01') // => false
 qrono('2000-01-01').plus(7200000).minus(3600000)       // => 2000-01-01T01:00:00.000Z
+// In operations using Object, `year`, `month`, and `day` are calculated literally.
+// For example, adding one month at the end of a month results in the end of the following month.
+// `hour`, `minute`, `second`, and `millisecond` are treated as a duration in calculations.
 qrono('2000-01-01').minus({ hour: 1, minute: 30 })     // => 1999-12-31T22:30:00.000Z
+qrono('2020-02-29').plus({ year: 1 })                  // => 2021-02-28T00:00:00.000Z
+qrono('2021-12-31').minus({ month: 1 })                // => 2021-11-30T00:00:00.000Z
 
 const today = qrono()
 const yesterday = today.minus({ day: 1 })

@@ -576,13 +576,16 @@ function plus (sign, ...args) {
       date[`set${utc}FullYear`](year, month - 1)
     }
   }
-  ;[
-    ['day', 'Date'], ['hour', 'Hours'], ['minute', 'Minutes'],
+  if (has(timeFields, 'day')) {
+    date[`set${utc}Date`](date[`get${utc}Date`]() + sign * timeFields.day)
+  }
+  [
+    ['hour', 'Hours'], ['minute', 'Minutes'],
     ['second', 'Seconds'], ['millisecond', 'Milliseconds']
   ].forEach(([key, nativeKey]) => {
     if (has(timeFields, key)) {
-      date[`set${utc}${nativeKey}`](
-        date[`get${utc}${nativeKey}`]() + sign * timeFields[key]
+      date[`setUTC${nativeKey}`](
+        date[`getUTC${nativeKey}`]() + sign * timeFields[key]
       )
     }
   })

@@ -90,8 +90,8 @@ function QronoDate(...args) {
   if (Number.isFinite(first) && !Number.isFinite(second)) {
     args[0] *= millisecondsPerDay;
   }
-  source = (source ? source.clone(...args) : qrono_default(...args)).startOfDay();
-  self.datetime = qrono_default({ localtime: false }, source.toObject());
+  source = (source ? source.clone(...args) : qrono(...args)).startOfDay();
+  self.datetime = qrono({ localtime: false }, source.toObject());
   return this;
 }
 QronoDate.prototype.toString = function() {
@@ -104,7 +104,7 @@ QronoDate.prototype.clone = function(...args) {
   return new QronoDate(this, ...args);
 };
 QronoDate.prototype.toDatetime = function() {
-  return qrono_default(this[internal].datetime.toArray());
+  return qrono(this[internal].datetime.toArray());
 };
 QronoDate.prototype.numeric = function() {
   return this[internal].datetime.numeric() / millisecondsPerDay;
@@ -156,7 +156,6 @@ QronoDate.prototype.minus = function(...args) {
 // src/qrono.js
 var qrono = Qrono;
 Qrono.date = QronoDate;
-var qrono_default = qrono;
 var defaultContext = {
   localtime: false,
   ambiguousAsDst: false
@@ -434,7 +433,7 @@ Qrono.prototype.isDstTransitionDay = function() {
     return false;
   }
   const startOfDay = this.startOfDay();
-  return startOfDay.plus({ day: 1 }).startOfDay() - startOfDay !== millisecondsPerDay;
+  return millisecondsPerDay !== startOfDay.plus({ day: 1 }).startOfDay().minus({ millisecond: 1 }) - startOfDay + 1;
 };
 Qrono.prototype.minutesInDay = function() {
   if (!this[internal2].localtime) {
@@ -574,22 +573,22 @@ function plus(sign, ...args) {
       date[`set${utc}FullYear`](year, month - 1);
     }
   }
-  ;
+  if (has(timeFields, "day")) {
+    date[`set${utc}Date`](date[`get${utc}Date`]() + sign * timeFields.day);
+  }
   [
-    ["day", "Date"],
     ["hour", "Hours"],
     ["minute", "Minutes"],
     ["second", "Seconds"],
     ["millisecond", "Milliseconds"]
   ].forEach(([key, nativeKey]) => {
     if (has(timeFields, key)) {
-      date[`set${utc}${nativeKey}`](date[`get${utc}${nativeKey}`]() + sign * timeFields[key]);
+      date[`setUTC${nativeKey}`](date[`getUTC${nativeKey}`]() + sign * timeFields[key]);
     }
   });
   return this.clone(asDst(this[internal2].ambiguousAsDst, date));
 }
 export {
-  qrono_default as default,
   friday,
   monday,
   qrono,
