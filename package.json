@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Just right date time library",
   "license": "MIT",
   "keywords": [
@@ -30,13 +30,13 @@
     "test:watch": "jest --watchAll"
   },
   "devDependencies": {
-    "@commitlint/cli": "^14.1.0",
-    "@commitlint/config-conventional": "^14.1.0",
-    "@types/jest": "^27.0.2",
-    "esbuild": "^0.13.4",
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "@types/jest": "^29.5.14",
+    "esbuild": "^0.25.0",
     "esbuild-jest": "^0.5.0",
-    "husky": "^7.0.4",
-    "jest": "^27.2.5",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
     "mockdate": "^3.0.5",
     "standard": "*"
   },
