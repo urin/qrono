@@ -1,4 +1,4 @@
-export = qrono
+export { qrono }
 
 declare function qrono (
   date?: Date | number | string | qrono.Qrono | number[] | qrono.TimeFields

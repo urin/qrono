@@ -27,8 +27,7 @@ import QronoDate from './qrono.date.js'
 // Exports
 // -----------------------------------------------------------------------------
 const qrono = Qrono
-Qrono.date = QronoDate
-export default qrono
+
 export { qrono }
 
 export {
@@ -40,6 +39,8 @@ export {
   saturday,
   sunday
 } from './helpers'
+
+Qrono.date = QronoDate
 
 // -----------------------------------------------------------------------------
 // Static
@@ -254,25 +255,17 @@ Qrono.prototype.toString = function () {
     const t = this[internal].nativeDate
     const offset = -t.getTimezoneOffset()
     const offsetAbs = Math.abs(offset)
-    return `${
-      String(t.getFullYear()).padStart(4, '0')
-    }-${
-      String(t.getMonth() + 1).padStart(2, '0')
-    }-${
-      String(t.getDate()).padStart(2, '0')
-    }T${
-      String(t.getHours()).padStart(2, '0')
-    }:${
-      String(t.getMinutes()).padStart(2, '0')
-    }:${
-      String(t.getSeconds()).padStart(2, '0')
-    }.${
-      String(t.getMilliseconds()).padStart(3, '0')
-    }${
-      (offset >= 0 ? '+' : '-') +
+    return `${String(t.getFullYear()).padStart(4, '0')
+      }-${String(t.getMonth() + 1).padStart(2, '0')
+      }-${String(t.getDate()).padStart(2, '0')
+      }T${String(t.getHours()).padStart(2, '0')
+      }:${String(t.getMinutes()).padStart(2, '0')
+      }:${String(t.getSeconds()).padStart(2, '0')
+      }.${String(t.getMilliseconds()).padStart(3, '0')
+      }${(offset >= 0 ? '+' : '-') +
       String(Math.trunc(offsetAbs / minutesPerHour)).padStart(2, '0') +
       ':' + String(offsetAbs % minutesPerHour).padStart(2, '0')
-    }`
+      }`
   }
   return this[internal].nativeDate.toISOString()
 }
@@ -444,14 +437,16 @@ Qrono.prototype.isInDst = function () {
   if (!this[internal].localtime) { return false }
   return (
     this.offset() ===
-      Math.max(...[3, 6, 9, 12].map(month => this.month(month).offset()))
+    Math.max(...[3, 6, 9, 12].map(month => this.month(month).offset()))
   )
 }
 
 Qrono.prototype.isDstTransitionDay = function () {
   if (!this[internal].localtime) { return false }
   const startOfDay = this.startOfDay()
-  return (startOfDay.plus({ day: 1 }).startOfDay() - startOfDay) !== millisecondsPerDay
+  return millisecondsPerDay !== (
+    startOfDay.plus({ day: 1 }).startOfDay().minus({ millisecond: 1 }) - startOfDay + 1 // ms
+  )
 }
 
 Qrono.prototype.minutesInDay = function () {

@@ -2,7 +2,7 @@ import {
   given,
   millisecondsPerDay
 } from './helpers.js'
-import qrono from './qrono.js'
+import { qrono } from './qrono.js'
 
 const internal = Symbol('QronoDate.internal')
 
