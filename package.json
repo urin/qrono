@@ -40,7 +40,9 @@
     "mockdate": "^3.0.5",
     "standard": "*"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jsr": "^0.13.4"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

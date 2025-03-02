@@ -1,0 +1,14 @@
+{
+  "name": "@urin/qrono",
+  "version": "0.1.2",
+  "license": "MIT",
+  "exports": "./src/qrono.js",
+  "publish": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "src",
+      "types"
+    ]
+  }
+}
