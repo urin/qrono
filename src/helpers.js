@@ -71,16 +71,15 @@ export function hasDatetimeField (object) {
 export function asDst (ambiguousAsDst, date) {
   const numeric = date.getTime()
   const result = new Date(numeric)
-  if (!ambiguousAsDst) {
-    const nextday = new Date(numeric)
-    nextday.setDate(date.getDate() + 1)
-    const adjust = nextday.getTimezoneOffset() - date.getTimezoneOffset()
-    if (adjust > 0) {
-      const advanced = new Date(numeric).setMinutes(date.getMinutes() + adjust)
-      const advancedUTC = new Date(numeric).setUTCMinutes(date.getUTCMinutes() + adjust)
-      if (advanced !== advancedUTC) {
-        result.setUTCMinutes(date.getUTCMinutes() + adjust)
-      }
+  const adjacentDay = new Date(numeric)
+  const sign = ambiguousAsDst ? 1 : -1
+  adjacentDay.setDate(date.getDate() + sign)
+  const adjust = adjacentDay.getTimezoneOffset() - date.getTimezoneOffset()
+  if ((ambiguousAsDst && adjust < 0) || (!ambiguousAsDst && adjust > 0)) {
+    const adjusted = new Date(numeric).setMinutes(date.getMinutes() + sign * adjust)
+    const adjustedUTC = new Date(numeric).setUTCMinutes(date.getUTCMinutes() + sign * adjust)
+    if (adjusted !== adjustedUTC && (adjusted - adjustedUTC) / millisecondsPerMinute !== adjust) {
+      result.setUTCMinutes(date.getUTCMinutes() + sign * adjust)
     }
   }
   return result

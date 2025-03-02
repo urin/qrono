@@ -74,16 +74,15 @@ function hasDatetimeField(object) {
 function asDst(ambiguousAsDst, date) {
   const numeric = date.getTime();
   const result = new Date(numeric);
-  if (!ambiguousAsDst) {
-    const nextday = new Date(numeric);
-    nextday.setDate(date.getDate() + 1);
-    const adjust = nextday.getTimezoneOffset() - date.getTimezoneOffset();
-    if (adjust > 0) {
-      const advanced = new Date(numeric).setMinutes(date.getMinutes() + adjust);
-      const advancedUTC = new Date(numeric).setUTCMinutes(date.getUTCMinutes() + adjust);
-      if (advanced !== advancedUTC) {
-        result.setUTCMinutes(date.getUTCMinutes() + adjust);
-      }
+  const adjacentDay = new Date(numeric);
+  const sign = ambiguousAsDst ? 1 : -1;
+  adjacentDay.setDate(date.getDate() + sign);
+  const adjust = adjacentDay.getTimezoneOffset() - date.getTimezoneOffset();
+  if (ambiguousAsDst && adjust < 0 || !ambiguousAsDst && adjust > 0) {
+    const adjusted = new Date(numeric).setMinutes(date.getMinutes() + sign * adjust);
+    const adjustedUTC = new Date(numeric).setUTCMinutes(date.getUTCMinutes() + sign * adjust);
+    if (adjusted !== adjustedUTC && (adjusted - adjustedUTC) / millisecondsPerMinute !== adjust) {
+      result.setUTCMinutes(date.getUTCMinutes() + sign * adjust);
     }
   }
   return result;
@@ -452,15 +451,18 @@ Qrono.prototype.isDstTransitionDay = function() {
   if (!this[internal2].localtime) {
     return false;
   }
-  const startOfDay = this.startOfDay();
-  return millisecondsPerDay !== startOfDay.plus({ day: 1 }).startOfDay().minus({ millisecond: 1 }) - startOfDay + 1;
+  return this.minutesInDay() !== minutesPerDay;
 };
 Qrono.prototype.minutesInDay = function() {
   if (!this[internal2].localtime) {
     return minutesPerDay;
   }
   const startOfDay = this.startOfDay();
-  return (startOfDay.plus({ day: 1 }).startOfDay() - startOfDay) / millisecondsPerMinute;
+  const nextDay = startOfDay.plus({ day: 1 }).startOfDay();
+  if (startOfDay.day() === nextDay.day()) {
+    return minutesPerDay;
+  }
+  return (nextDay - startOfDay) / millisecondsPerMinute;
 };
 Qrono.prototype.daysInMonth = function() {
   const days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -552,7 +554,7 @@ function plus(sign, ...args) {
   const arg0 = args[0];
   const arg1 = args[1];
   if (Number.isFinite(arg0) && !Number.isFinite(arg1)) {
-    return this.clone(this.numeric() - arg0);
+    return this.clone(this.numeric() + arg0);
   }
   let timeFields = null;
   if (isObject(arg0)) {
