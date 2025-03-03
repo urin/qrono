@@ -16,7 +16,6 @@ var __spreadValues = (a, b) => {
 };
 
 // src/helpers.js
-var epoch = new Date(0);
 var daysPerWeek = 7;
 var hoursPerDay = 24;
 var hoursPerWeek = hoursPerDay * daysPerWeek;
@@ -43,7 +42,9 @@ function has(object, ...keys) {
   return keys.flat().some(object.hasOwnProperty, object);
 }
 function fields(object) {
-  return Object.entries(object).filter(([, value]) => !isFunction(value)).map(([key]) => key);
+  return Object.entries(object).filter(
+    ([, value]) => !isFunction(value)
+  ).map(([key]) => key);
 }
 function given(arg) {
   return arg !== void 0;
@@ -202,7 +203,10 @@ Qrono.asLocaltime = function() {
   defaultContext.localtime = true;
   return this;
 };
-Object.assign(Qrono, { monday, tuesday, wednesday, thursday, friday, saturday, sunday });
+Object.assign(
+  Qrono,
+  { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
+);
 var internal2 = Symbol("Qrono.internal");
 function Qrono(...args) {
   var _a;
@@ -210,9 +214,11 @@ function Qrono(...args) {
     return new Qrono(...args);
   }
   const self = this[internal2] = {
+    // properties
     nativeDate: null,
     localtime: false,
     ambiguousAsDst: false,
+    // methods
     set,
     parse,
     valid,
@@ -232,14 +238,16 @@ function Qrono(...args) {
   const first = args[0];
   const second = args[1];
   if (first == null) {
-    (_a = self.nativeDate) != null ? _a : self.nativeDate = new Date();
+    (_a = self.nativeDate) != null ? _a : self.nativeDate = /* @__PURE__ */ new Date();
   } else if (first instanceof Date) {
     self.nativeDate = new Date(first.getTime());
   } else if (isString(first)) {
     self.parse(first);
   } else if (isObject(first)) {
     if (!hasDatetimeField(first)) {
-      throw RangeError("Missing time field (year, minute, day, hour, minute, second or millisecond)");
+      throw RangeError(
+        "Missing time field (year, minute, day, hour, minute, second or millisecond)"
+      );
     }
     self.set(first);
   } else if (Number.isFinite(first) && !Number.isFinite(second)) {
@@ -285,21 +293,45 @@ function set(values) {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
   const args = __spreadValues({}, values);
   args.month = args.month && args.month - 1;
-  const date = (_a = this.nativeDate) != null ? _a : new Date();
+  const date = (_a = this.nativeDate) != null ? _a : /* @__PURE__ */ new Date();
   if (this.localtime) {
-    this.nativeDate = asDst(this.ambiguousAsDst, new Date((_b = args.year) != null ? _b : date.getFullYear(), (_c = args.month) != null ? _c : this.nativeDate ? date.getMonth() : 0, (_d = args.day) != null ? _d : this.nativeDate ? date.getDate() : 1, (_e = args.hour) != null ? _e : this.nativeDate ? date.getHours() : 0, (_f = args.minute) != null ? _f : this.nativeDate ? date.getMinutes() : 0, (_g = args.second) != null ? _g : this.nativeDate ? date.getSeconds() : 0, (_h = args.millisecond) != null ? _h : this.nativeDate ? date.getMilliseconds() : 0));
+    this.nativeDate = asDst(
+      this.ambiguousAsDst,
+      new Date(
+        (_b = args.year) != null ? _b : date.getFullYear(),
+        (_c = args.month) != null ? _c : this.nativeDate ? date.getMonth() : 0,
+        (_d = args.day) != null ? _d : this.nativeDate ? date.getDate() : 1,
+        (_e = args.hour) != null ? _e : this.nativeDate ? date.getHours() : 0,
+        (_f = args.minute) != null ? _f : this.nativeDate ? date.getMinutes() : 0,
+        (_g = args.second) != null ? _g : this.nativeDate ? date.getSeconds() : 0,
+        (_h = args.millisecond) != null ? _h : this.nativeDate ? date.getMilliseconds() : 0
+      )
+    );
   } else {
-    this.nativeDate = new Date(Date.UTC((_i = args.year) != null ? _i : date.getUTCFullYear(), (_j = args.month) != null ? _j : this.nativeDate ? date.getUTCMonth() : 0, (_k = args.day) != null ? _k : this.nativeDate ? date.getUTCDate() : 1, (_l = args.hour) != null ? _l : this.nativeDate ? date.getUTCHours() : 0, (_m = args.minute) != null ? _m : this.nativeDate ? date.getUTCMinutes() : 0, (_n = args.second) != null ? _n : this.nativeDate ? date.getUTCSeconds() : 0, (_o = args.millisecond) != null ? _o : this.nativeDate ? date.getUTCMilliseconds() : 0));
+    this.nativeDate = new Date(Date.UTC(
+      (_i = args.year) != null ? _i : date.getUTCFullYear(),
+      (_j = args.month) != null ? _j : this.nativeDate ? date.getUTCMonth() : 0,
+      (_k = args.day) != null ? _k : this.nativeDate ? date.getUTCDate() : 1,
+      (_l = args.hour) != null ? _l : this.nativeDate ? date.getUTCHours() : 0,
+      (_m = args.minute) != null ? _m : this.nativeDate ? date.getUTCMinutes() : 0,
+      (_n = args.second) != null ? _n : this.nativeDate ? date.getUTCSeconds() : 0,
+      (_o = args.millisecond) != null ? _o : this.nativeDate ? date.getUTCMilliseconds() : 0
+    ));
   }
   return this;
 }
-var parsePattern = new RegExp("^(\\d{4})(?:[-/]?([0-2]?\\d)(?:[-/]?([0-3]?\\d))?)?(?:[T\\s]([0-2]?\\d)(?::([0-5]?\\d)?(?::([0-6]?\\d)?(?:[.:](\\d{1,3})?\\d*)?)?)?)?(Z|[-+]\\d{2}:?\\d{2})?$");
+var parsePattern = new RegExp(
+  // yyyy[[-|/]MM[[-|/]DD]]
+  "^(\\d{4})(?:[-/]?([0-2]?\\d)(?:[-/]?([0-3]?\\d))?)?(?:[T\\s]([0-2]?\\d)(?::([0-5]?\\d)?(?::([0-6]?\\d)?(?:[.:](\\d{1,3})?\\d*)?)?)?)?(Z|[-+]\\d{2}:?\\d{2})?$"
+);
 function parse(str) {
   var _a;
   const text = str.trim().toUpperCase();
   const values = text.match(parsePattern);
   if (!values) {
-    throw RangeError(`Failed to parse '${str}'. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`);
+    throw RangeError(
+      `Failed to parse '${str}'. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`
+    );
   }
   const [year, month, day, hour, minute, second, millisecond, offset] = [
     +values[1],
@@ -313,7 +345,9 @@ function parse(str) {
   ];
   const native = new Date(text);
   if (!isValidDate(native)) {
-    throw RangeError(`Failed to parse '${str}' by Date. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`);
+    throw RangeError(
+      `Failed to parse '${str}' by Date. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`
+    );
   }
   if (offset) {
     this.nativeDate = native;
@@ -423,7 +457,9 @@ Qrono.prototype.weekOfYear = function() {
   const date = this.toDate();
   const theThursday = date.day(date.day() - date.dayOfWeek() + thursday);
   const startOfYear = theThursday.startOfYear();
-  const firstThursday = startOfYear.dayOfWeek() === thursday ? startOfYear : startOfYear.day(1 + (thursday - startOfYear.dayOfWeek() + daysPerWeek) % daysPerWeek);
+  const firstThursday = startOfYear.dayOfWeek() === thursday ? startOfYear : startOfYear.day(
+    1 + (thursday - startOfYear.dayOfWeek() + daysPerWeek) % daysPerWeek
+  );
   return 1 + Math.ceil((theThursday - firstThursday) / daysPerWeek);
 };
 Qrono.prototype.yearOfWeek = function() {
@@ -439,7 +475,9 @@ Qrono.prototype.hasDstInYear = function() {
     return false;
   }
   const currentOffset = this.offset();
-  return [3, 6, 9, 12].map((month) => this.month(month).offset()).some((offset) => offset !== currentOffset);
+  return [3, 6, 9, 12].map(
+    (month) => this.month(month).offset()
+  ).some((offset) => offset !== currentOffset);
 };
 Qrono.prototype.isInDst = function() {
   if (!this[internal2].localtime) {
@@ -559,7 +597,9 @@ function plus(sign, ...args) {
   let timeFields = null;
   if (isObject(arg0)) {
     if (!hasDatetimeField(arg0)) {
-      throw RangeError("Missing time field (year, minute, day, hour, minute, second or millisecond)");
+      throw RangeError(
+        "Missing time field (year, minute, day, hour, minute, second or millisecond)"
+      );
     }
     timeFields = arg0;
   } else if (Number.isFinite(arg0) || Array.isArray(arg0)) {
@@ -606,7 +646,9 @@ function plus(sign, ...args) {
     ["millisecond", "Milliseconds"]
   ].forEach(([key, nativeKey]) => {
     if (has(timeFields, key)) {
-      date[`setUTC${nativeKey}`](date[`getUTC${nativeKey}`]() + sign * timeFields[key]);
+      date[`setUTC${nativeKey}`](
+        date[`getUTC${nativeKey}`]() + sign * timeFields[key]
+      );
     }
   });
   return this.clone(asDst(this[internal2].ambiguousAsDst, date));
