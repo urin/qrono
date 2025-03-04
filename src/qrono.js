@@ -12,6 +12,7 @@ import {
   minutesPerDay,
   minutesPerHour,
   millisecondsPerMinute,
+  millisecondsPerDay,
   monday,
   tuesday,
   wednesday,
@@ -20,8 +21,6 @@ import {
   saturday,
   sunday
 } from './helpers.js'
-
-import QronoDate from './qrono.date.js'
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -40,11 +39,11 @@ export {
   sunday
 } from './helpers'
 
-Qrono.date = QronoDate
-
 // -----------------------------------------------------------------------------
 // Static
 // -----------------------------------------------------------------------------
+Qrono.date = QronoDate
+
 // NOTE Must be flat object for shallow cloning.
 const defaultContext = {
   localtime: false,
@@ -591,4 +590,96 @@ function plus (sign, ...args) {
     }
   })
   return this.clone(asDst(this[internal].ambiguousAsDst, date))
+}
+
+// -----------------------------------------------------------------------------
+// QronoDate Class
+// -----------------------------------------------------------------------------
+const internalDate = Symbol('QronoDate.internal')
+
+function QronoDate (...args) {
+  if (!new.target) { return new QronoDate(...args) }
+  const self = this[internalDate] = {
+    datetime: null
+  }
+  let source = null
+  if (args[0] instanceof QronoDate) {
+    source = args.shift().toDatetime()
+  }
+  const first = args[0]
+  const second = args[1]
+  if (Number.isFinite(first) && !Number.isFinite(second)) {
+    args[0] *= millisecondsPerDay
+  }
+  source = (
+    source ? source.clone(...args) : qrono(...args)
+  ).startOfDay()
+  self.datetime = qrono({ localtime: false }, source.toObject())
+  return this
+}
+
+QronoDate.prototype.toString = function () {
+  return this[internalDate].datetime.toString().substring(0, 10)
+}
+
+QronoDate.prototype.valueOf = function () {
+  return this[internalDate].datetime / millisecondsPerDay
+}
+
+QronoDate.prototype.clone = function (...args) {
+  return new QronoDate(this, ...args)
+}
+
+QronoDate.prototype.toDatetime = function () {
+  return qrono(this[internalDate].datetime.toArray())
+}
+
+QronoDate.prototype.numeric = function () {
+  return this[internalDate].datetime.numeric() / millisecondsPerDay
+}
+
+QronoDate.prototype.startOfYear = function () {
+  return new QronoDate(this[internalDate].datetime.startOfYear())
+}
+
+QronoDate.prototype.startOfMonth = function () {
+  return new QronoDate(this[internalDate].datetime.startOfMonth())
+}
+
+;['year', 'month', 'day'].forEach(field => {
+  QronoDate.prototype[field] = function (value) {
+    if (given(value)) {
+      return new QronoDate(this[internalDate].datetime[field](value))
+    }
+    return this[internalDate].datetime[field]()
+  }
+})
+
+;[
+  'dayOfWeek', 'dayOfYear', 'weekOfYear', 'yearOfWeek',
+  'isLeapYear', 'daysInMonth', 'daysInYear', 'weeksInYear'
+].forEach(method => {
+  QronoDate.prototype[method] = function () {
+    return this[internalDate].datetime[method]()
+  }
+})
+
+QronoDate.prototype.isDstTransitionDay = function () {
+  return this[internalDate].datetime.localtime(true).isDstTransitionDay()
+}
+
+QronoDate.prototype.endOfYear = function () {
+  return this.clone({ month: 12, day: 31 })
+}
+
+QronoDate.prototype.endOfMonth = function () {
+  return this.clone({ day: this.daysInMonth() })
+}
+
+QronoDate.prototype.plus = function (...args) {
+  return this[internalDate].datetime.plus(...args).toDate()
+}
+
+QronoDate.prototype.minus = function (...args) {
+  return this[internalDate].datetime.minus(...args).toDate()
 }
