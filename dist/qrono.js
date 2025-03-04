@@ -72,87 +72,6 @@ function asDst(ambiguousAsDst, date) {
   return result;
 }
 
-// src/qrono.date.js
-var internal = Symbol("QronoDate.internal");
-function QronoDate(...args) {
-  if (!new.target) {
-    return new QronoDate(...args);
-  }
-  const self = this[internal] = {
-    datetime: null
-  };
-  let source = null;
-  if (args[0] instanceof QronoDate) {
-    source = args.shift().toDatetime();
-  }
-  const first = args[0];
-  const second = args[1];
-  if (Number.isFinite(first) && !Number.isFinite(second)) {
-    args[0] *= millisecondsPerDay;
-  }
-  source = (source ? source.clone(...args) : qrono(...args)).startOfDay();
-  self.datetime = qrono({ localtime: false }, source.toObject());
-  return this;
-}
-QronoDate.prototype.toString = function() {
-  return this[internal].datetime.toString().substring(0, 10);
-};
-QronoDate.prototype.valueOf = function() {
-  return this[internal].datetime / millisecondsPerDay;
-};
-QronoDate.prototype.clone = function(...args) {
-  return new QronoDate(this, ...args);
-};
-QronoDate.prototype.toDatetime = function() {
-  return qrono(this[internal].datetime.toArray());
-};
-QronoDate.prototype.numeric = function() {
-  return this[internal].datetime.numeric() / millisecondsPerDay;
-};
-QronoDate.prototype.startOfYear = function() {
-  return new QronoDate(this[internal].datetime.startOfYear());
-};
-QronoDate.prototype.startOfMonth = function() {
-  return new QronoDate(this[internal].datetime.startOfMonth());
-};
-["year", "month", "day"].forEach((field) => {
-  QronoDate.prototype[field] = function(value) {
-    if (given(value)) {
-      return new QronoDate(this[internal].datetime[field](value));
-    }
-    return this[internal].datetime[field]();
-  };
-});
-[
-  "dayOfWeek",
-  "dayOfYear",
-  "weekOfYear",
-  "yearOfWeek",
-  "isLeapYear",
-  "daysInMonth",
-  "daysInYear",
-  "weeksInYear"
-].forEach((method) => {
-  QronoDate.prototype[method] = function() {
-    return this[internal].datetime[method]();
-  };
-});
-QronoDate.prototype.isDstTransitionDay = function() {
-  return this[internal].datetime.localtime(true).isDstTransitionDay();
-};
-QronoDate.prototype.endOfYear = function() {
-  return this.clone({ month: 12, day: 31 });
-};
-QronoDate.prototype.endOfMonth = function() {
-  return this.clone({ day: this.daysInMonth() });
-};
-QronoDate.prototype.plus = function(...args) {
-  return this[internal].datetime.plus(...args).toDate();
-};
-QronoDate.prototype.minus = function(...args) {
-  return this[internal].datetime.minus(...args).toDate();
-};
-
 // src/qrono.js
 var qrono = Qrono;
 Qrono.date = QronoDate;
@@ -190,12 +109,12 @@ Object.assign(
   Qrono,
   { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
 );
-var internal2 = Symbol("Qrono.internal");
+var internal = Symbol("Qrono.internal");
 function Qrono(...args) {
   if (!new.target) {
     return new Qrono(...args);
   }
-  const self = this[internal2] = {
+  const self = this[internal] = {
     // properties
     nativeDate: null,
     localtime: false,
@@ -339,40 +258,40 @@ function parse(str) {
   return this;
 }
 Qrono.prototype.toString = function() {
-  if (this[internal2].localtime) {
-    const t = this[internal2].nativeDate;
+  if (this[internal].localtime) {
+    const t = this[internal].nativeDate;
     const offset = -t.getTimezoneOffset();
     const offsetAbs = Math.abs(offset);
     return `${String(t.getFullYear()).padStart(4, "0")}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}T${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}:${String(t.getSeconds()).padStart(2, "0")}.${String(t.getMilliseconds()).padStart(3, "0")}${(offset >= 0 ? "+" : "-") + String(Math.trunc(offsetAbs / minutesPerHour)).padStart(2, "0") + ":" + String(offsetAbs % minutesPerHour).padStart(2, "0")}`;
   }
-  return this[internal2].nativeDate.toISOString();
+  return this[internal].nativeDate.toISOString();
 };
 Qrono.prototype.valueOf = function() {
-  return this[internal2].nativeDate.valueOf();
+  return this[internal].nativeDate.valueOf();
 };
 Qrono.prototype.clone = function(...args) {
   return new Qrono(this, ...args);
 };
 Qrono.prototype.context = function(context2) {
-  return given(context2) ? this.clone(context2) : { localtime: this[internal2].localtime, ambiguousAsDst: this[internal2].ambiguousAsDst };
+  return given(context2) ? this.clone(context2) : { localtime: this[internal].localtime, ambiguousAsDst: this[internal].ambiguousAsDst };
 };
 Qrono.prototype.nativeDate = function() {
-  return new Date(this[internal2].nativeDate.getTime());
+  return new Date(this[internal].nativeDate.getTime());
 };
 Qrono.prototype.offset = function() {
-  return this[internal2].localtime ? -this[internal2].nativeDate.getTimezoneOffset() : 0;
+  return this[internal].localtime ? -this[internal].nativeDate.getTimezoneOffset() : 0;
 };
 Qrono.prototype.localtime = function(arg) {
-  return given(arg) ? this.clone({ localtime: arg }) : this[internal2].localtime;
+  return given(arg) ? this.clone({ localtime: arg }) : this[internal].localtime;
 };
 Qrono.prototype.ambiguousAsDst = function(arg) {
-  return given(arg) ? this.clone({ ambiguousAsDst: arg }) : this[internal2].ambiguousAsDst;
+  return given(arg) ? this.clone({ ambiguousAsDst: arg }) : this[internal].ambiguousAsDst;
 };
 Qrono.prototype.valid = function() {
-  return this[internal2].valid();
+  return this[internal].valid();
 };
 Qrono.prototype.numeric = function() {
-  return this[internal2].nativeDate.getTime();
+  return this[internal].nativeDate.getTime();
 };
 Qrono.prototype.toObject = function() {
   return {
@@ -406,28 +325,28 @@ Qrono.prototype.asLocaltime = function() {
   return this.clone({ localtime: true });
 };
 Qrono.prototype.year = function(value) {
-  return given(value) ? this.clone({ year: value }) : this[internal2].getNative("FullYear");
+  return given(value) ? this.clone({ year: value }) : this[internal].getNative("FullYear");
 };
 Qrono.prototype.month = function(value) {
-  return given(value) ? this.clone({ month: value }) : this[internal2].getNative("Month") + 1;
+  return given(value) ? this.clone({ month: value }) : this[internal].getNative("Month") + 1;
 };
 Qrono.prototype.day = function(value) {
-  return given(value) ? this.clone({ day: value }) : this[internal2].getNative("Date");
+  return given(value) ? this.clone({ day: value }) : this[internal].getNative("Date");
 };
 Qrono.prototype.hour = function(value) {
-  return given(value) ? this.clone({ hour: value }) : this[internal2].getNative("Hours");
+  return given(value) ? this.clone({ hour: value }) : this[internal].getNative("Hours");
 };
 Qrono.prototype.minute = function(value) {
-  return given(value) ? this.clone({ minute: value }) : this[internal2].getNative("Minutes");
+  return given(value) ? this.clone({ minute: value }) : this[internal].getNative("Minutes");
 };
 Qrono.prototype.second = function(value) {
-  return given(value) ? this.clone({ second: value }) : this[internal2].getNative("Seconds");
+  return given(value) ? this.clone({ second: value }) : this[internal].getNative("Seconds");
 };
 Qrono.prototype.millisecond = function(value) {
-  return given(value) ? this.clone({ millisecond: value }) : this[internal2].getNative("Milliseconds");
+  return given(value) ? this.clone({ millisecond: value }) : this[internal].getNative("Milliseconds");
 };
 Qrono.prototype.dayOfWeek = function() {
-  return 1 + (this[internal2].getNative("Day") - 1 + daysPerWeek) % daysPerWeek;
+  return 1 + (this[internal].getNative("Day") - 1 + daysPerWeek) % daysPerWeek;
 };
 Qrono.prototype.dayOfYear = function() {
   const date = this.toDate();
@@ -451,7 +370,7 @@ Qrono.prototype.isLeapYear = function() {
   return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 };
 Qrono.prototype.hasDstInYear = function() {
-  if (!this[internal2].localtime) {
+  if (!this[internal].localtime) {
     return false;
   }
   const currentOffset = this.offset();
@@ -460,19 +379,19 @@ Qrono.prototype.hasDstInYear = function() {
   ).some((offset) => offset !== currentOffset);
 };
 Qrono.prototype.isInDst = function() {
-  if (!this[internal2].localtime) {
+  if (!this[internal].localtime) {
     return false;
   }
   return this.offset() === Math.max(...[3, 6, 9, 12].map((month) => this.month(month).offset()));
 };
 Qrono.prototype.isDstTransitionDay = function() {
-  if (!this[internal2].localtime) {
+  if (!this[internal].localtime) {
     return false;
   }
   return this.minutesInDay() !== minutesPerDay;
 };
 Qrono.prototype.minutesInDay = function() {
-  if (!this[internal2].localtime) {
+  if (!this[internal].localtime) {
     return minutesPerDay;
   }
   const startOfDay = this.startOfDay();
@@ -602,7 +521,7 @@ function plus(sign, ...args) {
     throw TypeError();
   }
   const date = this.nativeDate();
-  const utc = this[internal2].localtime ? "" : "UTC";
+  const utc = this[internal].localtime ? "" : "UTC";
   if (has(timeFields, "year") || has(timeFields, "month")) {
     const year = this.year() + sign * (timeFields.year ?? 0);
     const month = this.month() + sign * (timeFields.month ?? 0);
@@ -630,8 +549,87 @@ function plus(sign, ...args) {
       );
     }
   });
-  return this.clone(asDst(this[internal2].ambiguousAsDst, date));
+  return this.clone(asDst(this[internal].ambiguousAsDst, date));
 }
+var internalDate = Symbol("QronoDate.internal");
+function QronoDate(...args) {
+  if (!new.target) {
+    return new QronoDate(...args);
+  }
+  const self = this[internalDate] = {
+    datetime: null
+  };
+  let source = null;
+  if (args[0] instanceof QronoDate) {
+    source = args.shift().toDatetime();
+  }
+  const first = args[0];
+  const second = args[1];
+  if (Number.isFinite(first) && !Number.isFinite(second)) {
+    args[0] *= millisecondsPerDay;
+  }
+  source = (source ? source.clone(...args) : qrono(...args)).startOfDay();
+  self.datetime = qrono({ localtime: false }, source.toObject());
+  return this;
+}
+QronoDate.prototype.toString = function() {
+  return this[internalDate].datetime.toString().substring(0, 10);
+};
+QronoDate.prototype.valueOf = function() {
+  return this[internalDate].datetime / millisecondsPerDay;
+};
+QronoDate.prototype.clone = function(...args) {
+  return new QronoDate(this, ...args);
+};
+QronoDate.prototype.toDatetime = function() {
+  return qrono(this[internalDate].datetime.toArray());
+};
+QronoDate.prototype.numeric = function() {
+  return this[internalDate].datetime.numeric() / millisecondsPerDay;
+};
+QronoDate.prototype.startOfYear = function() {
+  return new QronoDate(this[internalDate].datetime.startOfYear());
+};
+QronoDate.prototype.startOfMonth = function() {
+  return new QronoDate(this[internalDate].datetime.startOfMonth());
+};
+["year", "month", "day"].forEach((field) => {
+  QronoDate.prototype[field] = function(value) {
+    if (given(value)) {
+      return new QronoDate(this[internalDate].datetime[field](value));
+    }
+    return this[internalDate].datetime[field]();
+  };
+});
+[
+  "dayOfWeek",
+  "dayOfYear",
+  "weekOfYear",
+  "yearOfWeek",
+  "isLeapYear",
+  "daysInMonth",
+  "daysInYear",
+  "weeksInYear"
+].forEach((method) => {
+  QronoDate.prototype[method] = function() {
+    return this[internalDate].datetime[method]();
+  };
+});
+QronoDate.prototype.isDstTransitionDay = function() {
+  return this[internalDate].datetime.localtime(true).isDstTransitionDay();
+};
+QronoDate.prototype.endOfYear = function() {
+  return this.clone({ month: 12, day: 31 });
+};
+QronoDate.prototype.endOfMonth = function() {
+  return this.clone({ day: this.daysInMonth() });
+};
+QronoDate.prototype.plus = function(...args) {
+  return this[internalDate].datetime.plus(...args).toDate();
+};
+QronoDate.prototype.minus = function(...args) {
+  return this[internalDate].datetime.minus(...args).toDate();
+};
 export {
   friday,
   monday,
