@@ -64,7 +64,7 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
         The ECMA TC39 Temporal Proposal
       </a>
       <br>
-      An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by <a href="https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html">java.time</a>.
+      An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by <a href="https://jcp.org/aboutJava/communityprocess/pfd/jsr310/JSR-310-guide.html">java.time</a>.
     </li>
   </ul>
 </details>

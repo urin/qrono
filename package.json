@@ -22,7 +22,7 @@
   "jsdeliver": "dist/qrono.min.js",
   "types": "types/qrono.d.ts",
   "scripts": {
-    "prepare": "husky install && npm run lint && npm run build",
+    "prepare": "husky && npm run lint && npm run build",
     "lint": "standard ./src ./scripts",
     "format": "standard --fix ./src ./scripts",
     "build": "node ./scripts/build.js",
