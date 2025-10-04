@@ -1,6 +1,6 @@
 {
   "name": "@urin/qrono",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "license": "MIT",
   "exports": "./src/qrono.js",
   "publish": {
