@@ -16,6 +16,7 @@ var __spreadValues = (a, b) => {
 };
 
 // src/helpers.js
+var initialSafeDate = new Date(1915, 0, 1, 12, 0, 0, 0);
 var daysPerWeek = 7;
 var hoursPerDay = 24;
 var hoursPerWeek = hoursPerDay * daysPerWeek;
@@ -209,49 +210,39 @@ function getNative(name) {
   return this.nativeDate[`get${this.localtime ? "" : "UTC"}${name}`]();
 }
 function set(values) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _A, _B;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
   const args = __spreadValues({}, values);
-  if (!this.nativeDate || args.year != null) {
-    const date2 = /* @__PURE__ */ new Date();
-    if (this.localtime) {
-      this.nativeDate = asDst(
-        this.ambiguousAsDst,
-        /* @__PURE__ */ new Date(
-          `${((_a = args.year) != null ? _a : date2.getFullYear()).toString().padStart(4, "0")}-${((_b = args.month) != null ? _b : 1).toString().padStart(2, "0")}-${((_c = args.day) != null ? _c : 1).toString().padStart(2, "0")}T${((_d = args.hour) != null ? _d : 0).toString().padStart(2, "0")}:${((_e = args.minute) != null ? _e : 0).toString().padStart(2, "0")}:${((_f = args.second) != null ? _f : 0).toString().padStart(2, "0")}.${((_g = args.millisecond) != null ? _g : 0).toString().padStart(3, "0")}`
-        )
-      );
-    } else {
-      this.nativeDate = /* @__PURE__ */ new Date(
-        `${((_h = args.year) != null ? _h : date2.getUTCFullYear()).toString().padStart(4, "0")}-${((_i = args.month) != null ? _i : 1).toString().padStart(2, "0")}-${((_j = args.day) != null ? _j : 1).toString().padStart(2, "0")}T${((_k = args.hour) != null ? _k : 0).toString().padStart(2, "0")}:${((_l = args.minute) != null ? _l : 0).toString().padStart(2, "0")}:${((_m = args.second) != null ? _m : 0).toString().padStart(2, "0")}.${((_n = args.millisecond) != null ? _n : 0).toString().padStart(3, "0")}Z`
-      );
-    }
-    return this;
-  }
   args.month = args.month && args.month - 1;
-  const date = this.nativeDate;
   if (this.localtime) {
-    this.nativeDate = asDst(
-      this.ambiguousAsDst,
-      new Date(
-        (_o = args.year) != null ? _o : date.getFullYear(),
-        (_p = args.month) != null ? _p : date.getMonth(),
-        (_q = args.day) != null ? _q : date.getDate(),
-        (_r = args.hour) != null ? _r : date.getHours(),
-        (_s = args.minute) != null ? _s : date.getMinutes(),
-        (_t = args.second) != null ? _t : date.getSeconds(),
-        (_u = args.millisecond) != null ? _u : date.getMilliseconds()
-      )
+    const baseDate = (_a = this.nativeDate) != null ? _a : new Date(0, 0);
+    const newDate = new Date(initialSafeDate.getTime());
+    newDate.setFullYear(
+      (_b = args.year) != null ? _b : baseDate.getFullYear(),
+      (_c = args.month) != null ? _c : baseDate.getMonth(),
+      (_d = args.day) != null ? _d : baseDate.getDate()
     );
+    newDate.setHours(
+      (_e = args.hour) != null ? _e : baseDate.getHours(),
+      (_f = args.minute) != null ? _f : baseDate.getMinutes(),
+      (_g = args.second) != null ? _g : baseDate.getSeconds(),
+      (_h = args.millisecond) != null ? _h : baseDate.getMilliseconds()
+    );
+    this.nativeDate = asDst(this.ambiguousAsDst, newDate);
   } else {
-    this.nativeDate = new Date(Date.UTC(
-      (_v = args.year) != null ? _v : date.getUTCFullYear(),
-      (_w = args.month) != null ? _w : date.getUTCMonth(),
-      (_x = args.day) != null ? _x : date.getUTCDate(),
-      (_y = args.hour) != null ? _y : date.getUTCHours(),
-      (_z = args.minute) != null ? _z : date.getUTCMinutes(),
-      (_A = args.second) != null ? _A : date.getUTCSeconds(),
-      (_B = args.millisecond) != null ? _B : date.getUTCMilliseconds()
-    ));
+    const baseDate = (_i = this.nativeDate) != null ? _i : /* @__PURE__ */ new Date(0);
+    const newDate = /* @__PURE__ */ new Date(0);
+    newDate.setUTCFullYear(
+      (_j = args.year) != null ? _j : baseDate.getUTCFullYear(),
+      (_k = args.month) != null ? _k : baseDate.getUTCMonth(),
+      (_l = args.day) != null ? _l : baseDate.getUTCDate()
+    );
+    newDate.setUTCHours(
+      (_m = args.hour) != null ? _m : baseDate.getUTCHours(),
+      (_n = args.minute) != null ? _n : baseDate.getUTCMinutes(),
+      (_o = args.second) != null ? _o : baseDate.getUTCSeconds(),
+      (_p = args.millisecond) != null ? _p : baseDate.getUTCMilliseconds()
+    );
+    this.nativeDate = newDate;
   }
   return this;
 }
