@@ -49,8 +49,7 @@ test('Construction', () => {
   expect(+qrono()).toBe(Date.now())
   expect(qrono(new Date()).toString()).toBe(dateText())
   expect(qrono(qrono(2020, 10)).toString()).toBe(dateText(Date.UTC(2020, 9)))
-  expect(qrono({ year: 50 }).asUtc().toString()).toBe('0050-01-01T00:00:00.000Z')
-
+  expect(qrono({ year: 10, month: 1, day: 2 }).month(2).toString()).toBe('0010-02-02T00:00:00.000Z')
 })
 
 test('Construction from string', () => {

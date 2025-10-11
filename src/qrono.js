@@ -8,6 +8,7 @@ import {
   isValidDate,
   asDst,
   hasDatetimeField,
+  initialSafeDate,
   daysPerWeek,
   minutesPerDay,
   minutesPerHour,
@@ -175,54 +176,37 @@ function getNative (name) {
 
 function set (values) {
   const args = { ...values }
-  if (!this.nativeDate || args.year != null) {
-    // Construct nativeDate from
-    const date = new Date()
-    if (this.localtime) {
-      this.nativeDate = asDst(
-        this.ambiguousAsDst,
-        new Date(
-        `${(args.year ?? date.getFullYear()).toString().padStart(4, '0')}` +
-        `-${(args.month ?? 1).toString().padStart(2, '0')}` +
-        `-${(args.day ?? 1).toString().padStart(2, '0')}` +
-        `T${(args.hour ?? 0).toString().padStart(2, '0')}` +
-        `:${(args.minute ?? 0).toString().padStart(2, '0')}` +
-        `:${(args.second ?? 0).toString().padStart(2, '0')}` +
-        `.${(args.millisecond ?? 0).toString().padStart(3, '0')}`
-        )
-      )
-    } else {
-      this.nativeDate = new Date(
-      `${(args.year ?? date.getUTCFullYear()).toString().padStart(4, '0')}` +
-      `-${(args.month ?? 1).toString().padStart(2, '0')}` +
-      `-${(args.day ?? 1).toString().padStart(2, '0')}` +
-      `T${(args.hour ?? 0).toString().padStart(2, '0')}` +
-      `:${(args.minute ?? 0).toString().padStart(2, '0')}` +
-      `:${(args.second ?? 0).toString().padStart(2, '0')}` +
-      `.${(args.millisecond ?? 0).toString().padStart(3, '0')}` +
-      'Z'
-      )
-    }
-    return this
-  }
-  // Manipulate nativeDate is already set
   args.month = args.month && args.month - 1
-  const date = this.nativeDate
   if (this.localtime) {
-    this.nativeDate = asDst(
-      this.ambiguousAsDst,
-      new Date(
-        args.year ?? date.getFullYear(), args.month ?? date.getMonth(), args.day ?? date.getDate(),
-        args.hour ?? date.getHours(), args.minute ?? date.getMinutes(), args.second ?? date.getSeconds(),
-        args.millisecond ?? date.getMilliseconds()
-      )
+    const baseDate = this.nativeDate ?? new Date(0, 0)
+    const newDate = new Date(initialSafeDate.getTime())
+    newDate.setFullYear(
+      args.year ?? baseDate.getFullYear(),
+      args.month ?? baseDate.getMonth(),
+      args.day ?? baseDate.getDate()
     )
+    newDate.setHours(
+      args.hour ?? baseDate.getHours(),
+      args.minute ?? baseDate.getMinutes(),
+      args.second ?? baseDate.getSeconds(),
+      args.millisecond ?? baseDate.getMilliseconds()
+    )
+    this.nativeDate = asDst(this.ambiguousAsDst, newDate)
   } else {
-    this.nativeDate = new Date(Date.UTC(
-      args.year ?? date.getUTCFullYear(), args.month ?? date.getUTCMonth(), args.day ?? date.getUTCDate(),
-      args.hour ?? date.getUTCHours(), args.minute ?? date.getUTCMinutes(), args.second ?? date.getUTCSeconds(),
-      args.millisecond ?? date.getUTCMilliseconds()
-    ))
+    const baseDate = this.nativeDate ?? new Date(0)
+    const newDate = new Date(0)
+    newDate.setUTCFullYear(
+      args.year ?? baseDate.getUTCFullYear(),
+      args.month ?? baseDate.getUTCMonth(),
+      args.day ?? baseDate.getUTCDate()
+    )
+    newDate.setUTCHours(
+      args.hour ?? baseDate.getUTCHours(),
+      args.minute ?? baseDate.getUTCMinutes(),
+      args.second ?? baseDate.getUTCSeconds(),
+      args.millisecond ?? baseDate.getUTCMilliseconds()
+    )
+    this.nativeDate = newDate
   }
   return this
 }

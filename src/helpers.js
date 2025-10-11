@@ -1,5 +1,15 @@
 export const epoch = new Date(0)
 
+// When creating or updating a local time, both `Date.setFullYear` and `Date.setHours` are used.
+// Noon is used as the initial reference point to avoid the time after `setFullYear`
+// from falling into an ambiguous DST period. Historically, DST transitions in all countries
+// have been scheduled around midnight, and it should be the same in the future.
+// The reason for selecting 1915 as the initial value is as follows.
+// Since DST was first established in 1916, the initial value should be set to a year prior to that.
+// If a year too far in the past is chosen, it may correspond to a period when time zones were not yet
+// precisely defined in some regions, which could result in unexpected timezone offsets.
+export const initialSafeDate = new Date(1915, 0, 1, 12, 0, 0, 0)
+
 export const daysPerWeek = 7
 export const hoursPerDay = 24
 export const hoursPerWeek = hoursPerDay * daysPerWeek
