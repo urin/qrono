@@ -633,6 +633,10 @@ QronoDate.prototype.valueOf = function () {
   return this[internalDate].datetime / millisecondsPerDay
 }
 
+QronoDate.prototype.valid = function () {
+  return this[internalDate].datetime.valid()
+}
+
 QronoDate.prototype.clone = function (...args) {
   return new QronoDate(this, ...args)
 }
@@ -645,12 +649,28 @@ QronoDate.prototype.numeric = function () {
   return this[internalDate].datetime.numeric() / millisecondsPerDay
 }
 
+QronoDate.prototype.toObject = function () {
+  return {
+    year: this.year(),
+    month: this.month(),
+    day: this.day()
+  }
+}
+
+QronoDate.prototype.toArray = function () {
+  return [this.year(), this.month(), this.day()]
+}
+
 QronoDate.prototype.startOfYear = function () {
   return new QronoDate(this[internalDate].datetime.startOfYear())
 }
 
 QronoDate.prototype.startOfMonth = function () {
   return new QronoDate(this[internalDate].datetime.startOfMonth())
+}
+
+QronoDate.prototype.startOfDay = function () {
+  return this[internalDate].datetime.clone()
 }
 
 ;['year', 'month', 'day'].forEach(field => {
@@ -671,9 +691,13 @@ QronoDate.prototype.startOfMonth = function () {
   }
 })
 
-QronoDate.prototype.isDstTransitionDay = function () {
-  return this[internalDate].datetime.localtime(true).isDstTransitionDay()
-}
+;[
+  'minutesInDay', 'hasDstInYear', 'isDstTransitionDay'
+].forEach(method => {
+  QronoDate.prototype[method] = function () {
+    return this[internalDate].datetime.localtime(true)[method]()
+  }
+})
 
 QronoDate.prototype.endOfYear = function () {
   return this.clone({ month: 12, day: 31 })
@@ -681,6 +705,15 @@ QronoDate.prototype.endOfYear = function () {
 
 QronoDate.prototype.endOfMonth = function () {
   return this.clone({ day: this.daysInMonth() })
+}
+
+QronoDate.prototype.isSame = function (another) { return +this === +another }
+QronoDate.prototype.isBefore = function (another) { return this < another }
+QronoDate.prototype.isAfter = function (another) { return this > another }
+QronoDate.prototype.isSameOrBefore = function (another) { return this <= another }
+QronoDate.prototype.isSameOrAfter = function (another) { return this >= another }
+QronoDate.prototype.isBetween = function (a, b) {
+  return (a <= this && this <= b) || (b <= this && this <= a)
 }
 
 QronoDate.prototype.plus = function (...args) {

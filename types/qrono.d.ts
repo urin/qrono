@@ -530,10 +530,6 @@ declare namespace qrono {
       year: number
       month: number
       day: number
-      hour: number
-      minute: number
-      second: number
-      millisecond: number
     }
 
     /**
@@ -613,11 +609,6 @@ declare namespace qrono {
     hasDstInYear (): boolean
 
     /**
-     * Returns whether the QronoDate instance is in daylight saving time.
-     */
-    isInDst (): boolean
-
-    /**
      * Returns whether the QronoDate instance is on a daylight saving time transition day.
      */
     isDstTransitionDay (): boolean
@@ -655,7 +646,7 @@ declare namespace qrono {
     /**
      * Returns a new QronoDate instance representing the start of the day.
      */
-    startOfDay (): QronoDate
+    startOfDay (): Qrono
 
     /**
      * Returns a new QronoDate instance representing the end of the year.
