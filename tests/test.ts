@@ -325,4 +325,105 @@ test('QronoDate', () => {
   expect(qrono.date(2025, 12, 29).endOfMonth()).toEqual(qrono.date(2025, 12, 31))
   expect(qrono.date(2021, 12, 31).plus({ day: 1 }).toString()).toBe('2022-01-01')
   expect(qrono.date(2021, 12, 31).minus({ month: 1 }).toString()).toBe('2021-11-30')
+  expect(qrono.date('2021-09-30').valid()).toBe(true)
+  expect(qrono.date(new Date('invalid')).valid()).toBe(false)
+  expect(qrono.date(2021, 9, 30).valid()).toBe(true)
+
+  expect(qrono.date('2021-09-30').toArray()).toEqual([2021, 9, 30])
+  expect(qrono.date(2025, 12, 31).toArray()).toEqual([2025, 12, 31])
+  expect(qrono.date(1999, 1, 1).toArray()).toEqual([1999, 1, 1])
+
+  const dateObj = qrono.date('2021-09-30').toObject()
+  expect(dateObj).toEqual({
+    year: 2021,
+    month: 9,
+    day: 30
+  })
+  expect(dateObj).not.toHaveProperty('hour')
+  expect(dateObj).not.toHaveProperty('minute')
+  expect(dateObj).not.toHaveProperty('second')
+  expect(dateObj).not.toHaveProperty('millisecond')
+
+  const date = qrono.date('2021-09-30')
+  const startOfDay = date.startOfDay()
+  expect(startOfDay.isSame(qrono('2021-09-30'))).toBe(true)
+
+  expect(qrono.date('1950-05-06').minutesInDay()).toBe(1440)
+  expect(qrono.date('1950-05-07').minutesInDay()).toBe(1380)
+  expect(qrono.date('1950-09-10').minutesInDay()).toBe(1500)
+
+  expect(qrono.date('1950-01-01').hasDstInYear()).toBe(true)
+  expect(qrono.date('1954-01-01').hasDstInYear()).toBe(false)
+  expect(qrono.date('2021-06-15').hasDstInYear()).toBe(false)
+
+  const date1 = qrono.date('2021-09-30')
+  const date2 = qrono.date('2021-09-30')
+  const date3 = qrono.date('2021-10-01')
+  const date4 = qrono.date('2021-09-29')
+
+  expect(date1.isSame(date2)).toBe(true)
+  expect(date1.isSame(date3)).toBe(false)
+  expect(date1.isSame(qrono.date('2021-09-30'))).toBe(true)
+
+  expect(date1.isBefore(date3)).toBe(true)
+  expect(date1.isBefore(date4)).toBe(false)
+  expect(date1.isBefore(date2)).toBe(false)
+
+  expect(date1.isAfter(date4)).toBe(true)
+  expect(date1.isAfter(date3)).toBe(false)
+  expect(date1.isAfter(date2)).toBe(false)
+
+  expect(date1.isSameOrBefore(date2)).toBe(true)
+  expect(date1.isSameOrBefore(date3)).toBe(true)
+  expect(date1.isSameOrBefore(date4)).toBe(false)
+
+  expect(date1.isSameOrAfter(date2)).toBe(true)
+  expect(date1.isSameOrAfter(date4)).toBe(true)
+  expect(date1.isSameOrAfter(date3)).toBe(false)
+
+  expect(date1.isBetween(date4, date3)).toBe(true)
+  expect(date1.isBetween(date3, date4)).toBe(true)
+  expect(date1.isBetween(date2, date2)).toBe(true)
+  expect(date3.isBetween(date1, date2)).toBe(false)
+  expect(date4.isBetween(date1, date3)).toBe(false)
+
+  const dateNumeric = +date1
+  expect(date1.isSame(dateNumeric)).toBe(true)
+  expect(date1.isBefore(dateNumeric + 1)).toBe(true)
+  expect(date1.isAfter(dateNumeric - 1)).toBe(true)
+
+  qrono.asUtc()
+
+  const testDate = qrono.date(2022, 6, 15)
+  const arr = testDate.toArray()
+  const obj = testDate.toObject()
+
+  expect(arr[0]).toBe(obj.year)
+  expect(arr[1]).toBe(obj.month)
+  expect(arr[2]).toBe(obj.day)
+
+  const earlyDate = qrono.date('1900-01-01')
+  const lateDate = qrono.date('2100-12-31')
+
+  expect(earlyDate.isBefore(lateDate)).toBe(true)
+  expect(lateDate.isAfter(earlyDate)).toBe(true)
+  expect(earlyDate.isBetween(earlyDate, lateDate)).toBe(true)
+  expect(lateDate.isBetween(earlyDate, lateDate)).toBe(true)
+
+  qrono.asUtc()
+
+  const baseDate = qrono.date('2021-09-30')
+
+  const nextDay = baseDate.plus({ day: 1 })
+  expect(nextDay.toString()).toBe('2021-10-01')
+  expect(nextDay.toArray()).toEqual([2021, 10, 1])
+  expect(nextDay.valid()).toBe(true)
+
+  const prevMonth = baseDate.minus({ month: 1 })
+  expect(prevMonth.toString()).toBe('2021-08-30')
+  expect(prevMonth.toObject()).toEqual({ year: 2021, month: 8, day: 30 })
+
+  expect(nextDay.isAfter(baseDate)).toBe(true)
+  expect(prevMonth.isBefore(baseDate)).toBe(true)
+  expect(baseDate.isBetween(prevMonth, nextDay)).toBe(true)
 })
