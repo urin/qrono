@@ -1,3 +1,5 @@
+<img src="docs/public/logo.png" alt="Qrono Logo" width="100" style="display: block; margin: 0 auto;">
+
 # Qrono<small> - 🕥 Just right date time library</small>
 
 [![MIT License][image-license]][url-license]

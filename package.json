@@ -29,7 +29,10 @@
     "build": "vite build --minify",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.1",
@@ -42,6 +45,7 @@
     "vite": "^7.3.1",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-oxlint": "^1.6.0",
+    "vitepress": "^1.6.4",
     "vitest": "^4.0.18"
   },
   "commitlint": {
