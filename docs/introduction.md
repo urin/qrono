@@ -82,7 +82,7 @@ Considering these factors, **Qrono** is deliberately designed to forgo support f
 
 ### About Daylight Saving Time
 
-Qrono is the only JavaScript date-time library with dedicated APIs for DST handling ([`hasDstInYear()`](/api#hasdstinyear), [`isInDst()`](/api#isindst), [`isDstTransitionDay()`](/api#isdsttransitionday), [`minutesInDay()`](/api#minutesinday)).
+Qrono is the only JavaScript date-time library with dedicated APIs for DST handling ([`hasDstInYear()`](./api/#hasdstinyear), [`isInDst()`](./api/#isindst), [`isDstTransitionDay()`](./api/#isdsttransitionday), [`minutesInDay()`](./api/#minutesinday)).
 
 JavaScript's `Date` object can behave in non-intuitive ways when handling daylight saving time transitions.
 
