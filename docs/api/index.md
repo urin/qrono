@@ -1,6 +1,6 @@
 # API Reference
 
-Complete API reference for `Qrono` - the just right date time library.
+Complete API reference for Qrono.
 
 ## Factory {#factory}
 
@@ -41,9 +41,20 @@ qrono({ localtime: true }, '2024-01-15')
 Creates a new `QronoDate` instance (date only, no time component).
 
 ```javascript
-qrono.date()              // Today
-qrono.date('2024-01-15')  // From string
-qrono.date(2024, 1, 15)   // From components
+// Today
+qrono.date()
+
+// From string
+qrono.date('2024-01-15')
+
+// From components
+qrono.date(2024, 1, 15)
+
+// From array
+qrono.date([2024, 1, 15])
+
+// From object
+qrono.date({ year: 2024, month: 1, day: 15 })
 ```
 
 ## Static Methods {#static-methods}
@@ -82,11 +93,11 @@ localTime.localtime()  // true
 
 ### qrono.localtime(value) {#static-localtime}
 
-Returns the qrono function with the specified localtime setting.
+Sets and returns the qrono default localtime setting.
 
 ```javascript
 qrono.localtime(true)
-qrono().localtime()  // true
+qrono.localtime()  // true
 ```
 
 ## Constants {#constants}
@@ -554,6 +565,6 @@ qrono().asLocaltime().offset() // e.g., 540 (JST)
 Check if the instance represents a valid date.
 
 ```javascript
-qrono('2024-01-15').valid()       // true
+qrono('2024-01-15').valid()        // true
 qrono(new Date('invalid')).valid() // false
 ```

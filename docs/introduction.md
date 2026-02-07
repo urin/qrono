@@ -32,12 +32,18 @@ Full TypeScript definitions included for type-safe development.
 
 ## Design Philosophy
 
-- **Type-safe, immutable and chainable** - Provides functions necessary for most cases.
-- **Locality-Agnostic** - Localization can be done with the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
-- **UTC and Local Time Only** - Supports only UTC (default) and the local time of the environment. In most cases, supporting only the client's time zone is sufficient.
-- **Strict DST Handling** - The only library that handles ambiguous daylight saving time strictly, with dedicated APIs for DST transitions.
-- **ISO 8601 Compliant** - Follows the [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) standard.
-- **Zero Dependencies** - Pure JavaScript without external dependencies.
+- **Type-safe, immutable and chainable**  
+  Provides functions necessary for most cases.
+- **Locality-Agnostic**  
+  Localization can be done with the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+- **UTC and Local Time Only**  
+  Supports only UTC (default) and the local time of the environment. In most cases, supporting only the client's time zone is sufficient.
+- **Strict DST Handling**  
+  The only library that handles ambiguous daylight saving time strictly, with dedicated APIs for DST transitions.
+- **ISO 8601 Compliant**  
+  Follows the [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) standard.
+- **Zero Dependencies**  
+  Pure JavaScript without external dependencies.
 
 ## Why Qrono?
 
@@ -55,9 +61,28 @@ Other date-time libraries have larger codebases and more complicated usage to su
 
 None of these libraries provide APIs to detect or handle DST transitions properly. Qrono fills this gap with a balanced approach - not too simple, not too complex, just right.
 
+### Supporting Only the Local Time of the Execution Environment
+
+When handling time in a globally accessible web application, careful consideration about local time required.
+
+In general, the server does not know the user’s actual time zone or the time zone of the client environment (OS).
+If the system needs to be aware of the user’s time zone, an application-level mechanism to manage time zones becomes necessary. In practice, however, the user’s time zone is usually assumed to be the same as the client environment’s (OS) time zone.
+
+For example, a user who resides in Japan may start using the application in the United States. If the user changes the OS time zone to match the local time in the United States, this will be done automatically in most cases such as the environment is a smart device, the client environment’s time zone will differ from the one that is managed in the server. Considering the large number of such edge cases, it is impractical for a server-side application to manage each user’s intended time zone in a database-like manner.
+
+For this reason, to keep the system design simple, the server should avoid managing user-specific time zones. Instead, the server should store and handle time exclusively in UTC. All time values should be transmitted to clients in UTC (typically as ISO 8601–formatted strings), and converting them into local time should be the responsibility of the client.
+
+Even when support for multiple locales is required, storing time data in UTC is usually sufficient. In most cases, locale-specific formatting can be handled entirely on the client side by using the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+
+One important caveat of this design is that the time zone database of the client environment (OS) must be properly maintained. Daylight saving time rules — for example, in Brazil — may change from year to year, and time zone definitions themselves are determined by laws that are frequently revised. This means that the underlying time zone database must be kept up to date.
+
+If the application is used in a closed or unmanaged environment where such updates cannot be applied due to special constraints, the approach described above may be insufficient.
+
+Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits such as small code base and easy handling of daylight saving time transitions.
+
 ### About Daylight Saving Time
 
-Qrono is the only JavaScript date-time library with dedicated APIs for DST handling (`hasDstInYear()`, `isInDst()`, `isDstTransitionDay()`, `minutesInDay()`).
+Qrono is the only JavaScript date-time library with dedicated APIs for DST handling ([`hasDstInYear()`](/api#hasdstinyear), [`isInDst()`](/api#isindst), [`isDstTransitionDay()`](/api#isdsttransitionday), [`minutesInDay()`](/api#minutesinday)).
 
 JavaScript's `Date` object can behave in non-intuitive ways when handling daylight saving time transitions.
 
@@ -76,7 +101,8 @@ This behavior is not a bug but a result of strictly following the ECMAScript spe
 
 Additionally, a `Date` object created from a duplicated time during daylight saving time (DST) transition always refers to the time before DST ends. In other words, there is no simple way to obtain a `Date` object that refers to the UTC time **after** the end of DST from a duplicated time.
 
-Qrono addresses these issues by providing a more understandable approach to handling such transitions.
+**Qrono** addresses these issues by providing a more understandable approach to handling such transitions.
+
 ## Installation
 
 ::: code-group

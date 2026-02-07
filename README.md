@@ -1,6 +1,4 @@
-<img src="docs/public/logo.png" alt="Qrono Logo" width="100" style="display: block; margin: 0 auto;">
-
-# Qrono<small> - 🕥 Just right date time library</small>
+# <img src="docs/public/logo.png" alt="Qrono Logo" width="100"> Qrono - 🕥 _Just right date time library_
 
 [![MIT License][image-license]][url-license]
 [![NPM version][image-npm-version]][url-npm]
@@ -13,7 +11,7 @@ qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
 qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
 ```
 
-[🎨 Design philosophy](#design-philosophy-) \| [📥 Getting started](#getting-started-) \| [🚀 Quick tour](#quick-tour-) \| [🌏 License](#license-)
+[🌐 Website](https://urin.github.io/qrono/) \| [🎨 Design philosophy](#design-philosophy-) \| [📥 Getting started](#getting-started-) \| [🚀 Quick tour](#quick-tour-) \| [🌏 License](#license-)
 
 ---
 
@@ -31,47 +29,52 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 - Follows [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en).
 - Pure JavaScript without dependencies.
 
-<details>
-  <summary id="alternatives">Alternatives</summary>
-  <ul>
-    <li>
-      <a href="https://github.com/moment/moment">Moment.js</a>
-      <br>
-      A widely used library that was the de-facto standard. It went into maintenance mode in 2020.<br>
-      It has a fundamental problem with mutable objects, making it prone to bugs. The later date-time libraries introduced below are all designed to be immutable.<br>
-    </li>
-    <li>
-      <a href="https://github.com/moment/luxon">Luxon</a>
-      <br>
-      An immutable and rich library created by the maintainers of <a href="https://github.com/moment/moment">Moment.js</a>. Sophisticated and feature-rich. Good codebase to explore.<br>
-      By default, it handles time in local time and <a href="https://moment.github.io/luxon/#/zones?id=ambiguous-times">cannot strictly handle ambiguous times</a>.<br>
-      It differs from other libraries in that the documentation clearly shows how it behaves with ambiguous time.<br>
-    </li>
-    <li>
-      <a href="https://github.com/iamkun/dayjs">Day.js</a>
-      <br>
-      A <a href="https://github.com/moment/moment">Moment.js</a> compatible library with a minimum size of 2KB, which has <a href="https://github.com/iamkun/dayjs/stargazers">many GitHub stars</a> and is becoming the de-facto standard. The code readability is not high.<br>
-      The codebase is large due to time zone and locale support (178 source files as of 2021-11-02), but the effective size can be reduced if tree-shaking is available.<br>
-      Requires importing plugins each time because most functions are provided as plugins.<br>
-      Planning a major version upgrade while solving <a href="https://github.com/iamkun/dayjs/issues?q=is%3Aissue+is%3Aopen">many issues</a>.<br>
-    </li>
-    <li>
-      <a href="https://github.com/date-fns/date-fns">date-fns</a>
-      <br>
-      Provides over 200 pure functions for manipulating JavaScript `Date` objects, implemented in TypeScript and tree-shaking enabled.<br>
-      Since the JavaScript `Date` object takes the lead, problems such as mutability and month starting at 0 are inherited. <br>
-    </li>
-    <li>
-      <a href="https://tc39.es/proposal-temporal/docs/index.html">
-        The ECMA TC39 Temporal Proposal
-      </a>
-      <br>
-      An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by <a href="https://jcp.org/aboutJava/communityprocess/pfd/jsr310/JSR-310-guide.html">java.time</a>.
-    </li>
-  </ul>
-</details>
+### Alternatives
 
-### About daylight saving time transitions
+- **[Moment.js](https://momentjs.com/)**  
+  A widely used library that was the de-facto standard. It went into maintenance mode in 2020.  
+  It has a fundamental problem with mutable objects, making it prone to bugs. The later date-time libraries introduced below are all designed to be immutable.  
+        
+- **[Luxon](https://moment.github.io/luxon/)**  
+  An immutable and rich library created by the maintainers of [Moment.js](https://github.com/moment/moment).  Sophisticated and feature-rich. Good codebase to explore.  
+  By default, it handles time in local time and [cannot strictly handle ambiguous times](https://moment.github.io/luxon/#/zones?id=ambiguous-times).  
+  It differs from other libraries in that the documentation clearly shows how it behaves with ambiguous time.  
+
+- **[Day.js](https://day.js.org/)**  
+  A [Moment.js](https://github.com/moment/moment) compatible library with small size, which has [many GitHub stars](https://github.com/iamkun/dayjs/stargazers) and is becoming the de-facto standard.  
+  Requires importing plugins each time because most functions are provided as plugins.  
+  3.4kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
+  **Qrono** achieves **3.9kB with 100+ APIs** without plugins.
+  The codebase is large due to time zone and locale support (178 source files as of 2021-11-02), but the effective size can be reduced if tree-shaking is available. The code readability is not high.  
+  Planning a major version upgrade while solving [many issues](https://github.com/iamkun/dayjs/issues?q=is%3Aissue+is%3Aopen).  
+
+- **[date-fns](https://date-fns.org/)**  
+  Provides 200+ pure functions for manipulating JavaScript `Date` objects, implemented in TypeScript and tree-shaking enabled.  
+  Since the JavaScript `Date` object takes the lead, problems such as mutability and month starting at 0 are inherited.   
+
+- **[The ECMA TC39 Temporal Proposal](https://tc39.es/proposal-temporal/docs/index.html)**  
+  An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by [java.time](https://jcp.org/aboutJava/communityprocess/pfd/jsr310/JSR-310-guide.html).
+
+### Reason for Supporting Only the Local Time of the Execution Environment
+
+When handling time in a globally accessible web application, careful consideration about local time required.
+
+In general, the server does not know the user’s actual time zone or the time zone of the client environment (OS).
+If the system needs to be aware of the user’s time zone, an application-level mechanism to manage time zones becomes necessary. In practice, however, the user’s time zone is usually assumed to be the same as the client environment’s (OS) time zone.
+
+For example, a user who resides in Japan may start using the application in the United States. If the user changes the OS time zone to match the local time in the United States, this will be done automatically in most cases such as the environment is a smart device, the client environment’s time zone will differ from the one that is managed in the server. Considering the large number of such edge cases, it is impractical for a server-side application to manage each user’s intended time zone in a database-like manner.
+
+For this reason, to keep the system design simple, the server should avoid managing user-specific time zones. Instead, the server should store and handle time exclusively in UTC. All time values should be transmitted to clients in UTC (typically as ISO 8601–formatted strings), and converting them into local time should be the responsibility of the client.
+
+Even when support for multiple locales is required, storing time data in UTC is usually sufficient. In most cases, locale-specific formatting can be handled entirely on the client side by using the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+
+One important caveat of this design is that the time zone database of the client environment (OS) must be properly maintained. Daylight saving time rules — for example, in Brazil — may change from year to year, and time zone definitions themselves are determined by laws that are frequently revised. This means that the underlying time zone database must be kept up to date.
+
+If the application is used in a closed or unmanaged environment where such updates cannot be applied due to special constraints, the approach described above may be insufficient.
+
+Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits such as small code base and easy handling of daylight saving time transitions.
+
+### Handling DST transitions with JavaScript's `Date`
 
 JavaScript's `Date` object can behave in non-intuitive ways when handling daylight saving time transitions.
 
@@ -89,22 +92,23 @@ This behavior is not a bug but a result of strictly following the ECMAScript spe
 
 Additionally, a `Date` object created from a duplicated time during daylight saving time (DST) transition always refers to the time before DST ends. In other words, there is no simple way to obtain a `Date` object that refers to the UTC time **after** the end of DST from a duplicated time.
 
-This library addresses these issues by providing a more understandable approach to handling such transitions.
+Qrono is the only JavaScript date-time library with dedicated APIs for DST handling (`hasDstInYear()`, `isInDst()`, `isDstTransitionDay()`, `minutesInDay()`).
 
 ## Getting started 📥
 
-### Browser
+```sh
+npm  install qrono        # for npm
+deno add jsr:@urin/qrono  # for Deno
+bunx jsr add @urin/qrono  # for Bun
+pnpm add     @urin/qrono  # for pnpm
+yarn add     @urin/qrono  # for Yarn
+```
 
 ```html
+<!-- for Browser -->
 <script src="path/to/qrono.min.js"></script>
 <!-- from UNPKG -->
 <script src="https://unpkg.com/qrono/dist/qrono.min.js"></script>
-```
-
-### Node.js
-
-```sh
-npm install qrono
 ```
 
 ```js
