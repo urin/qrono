@@ -1,6 +1,6 @@
 # Introduction
 
-Qrono is a just right date time library for JavaScript - not too simple, not too complex. All features packed into just **4kB**.
+Qrono is a just-right date-time library for JavaScript - not too simple, not too complex. All features are packed into just **4kB**.
 
 ```javascript
 qrono('2021-08-31 12:34').plus({ month: 1 }).isSame(qrono('2021-09-30 12:34'))
@@ -12,11 +12,11 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 
 ### 🚀 Simple & Intuitive
 
-Easy-to-use API designed for common date-time operations without the complexity.
+API for common date-time operations without extra complexity.
 
 ### 🔒 Immutable
 
-All operations return new instances, ensuring your data remains predictable and safe.
+All operations return new instances for safe, predictable data.
 
 ### ⚡ Lightweight
 
@@ -32,12 +32,13 @@ Full TypeScript definitions included for type-safe development.
 
 ## Design Philosophy
 
-- **Type-safe, immutable and chainable**  
+- **Type-safe, immutable, and chainable**  
   Provides functions necessary for most cases.
 - **Locality-Agnostic**  
   Localization can be done with the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
 - **UTC and Local Time Only**  
-  Supports only UTC (default) and the local time of the environment. In most cases, supporting only the client's time zone is sufficient.
+  Supports only UTC (default) and the local time of the environment. In most cases, supporting only the client's time zone is
+sufficient.
 - **Strict DST Handling**  
   The only library that handles ambiguous daylight saving time strictly, with dedicated APIs for DST transitions.
 - **ISO 8601 Compliant**  
@@ -52,23 +53,23 @@ Other date-time libraries have larger codebases and more complicated usage to su
 - **[Moment.js](https://momentjs.com/)**  
   Widely used but mutable objects make it prone to bugs. Now in maintenance mode.
 - **[Luxon](https://moment.github.io/luxon/)**  
-  Feature-rich but cannot strictly handle ambiguous DST times by default.
+  It is feature-rich, but it cannot strictly handle ambiguous DST times by default.
 - **[Day.js](https://day.js.org/)**  
   3.4kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
   **Qrono** achieves **3.9kB with 100+ APIs** without plugins.
 - **[date-fns](https://date-fns.org/)**  
-  Tree-shakable pure functions but inherits JavaScript Date problems (mutability, 0-indexed months).
+  Tree-shakable pure functions, but inherits JavaScript Date problems (mutability, 0-indexed months).
 
 None of these libraries provide APIs to detect or handle DST transitions properly. Qrono fills this gap with a balanced approach - not too simple, not too complex, just right.
 
 ### Supporting Only the Local Time of the Execution Environment
 
-When handling time in a globally accessible web application, careful consideration about local time required.
+When handling time in a globally accessible web application, careful consideration is required for local time.
 
 In general, the server does not know the user’s actual time zone or the time zone of the client environment (OS).
 If the system needs to be aware of the user’s time zone, an application-level mechanism to manage time zones becomes necessary. In practice, however, the user’s time zone is usually assumed to be the same as the client environment’s (OS) time zone.
 
-For example, a user who resides in Japan may start using the application in the United States. If the user changes the OS time zone to match the local time in the United States, this will be done automatically in most cases such as the environment is a smart device, the client environment’s time zone will differ from the one that is managed in the server. Considering the large number of such edge cases, it is impractical for a server-side application to manage each user’s intended time zone in a database-like manner.
+For example, a user who resides in Japan may start using the application in the United States. If the user changes the OS time zone to match the local time in the United States, this will be done automatically in most cases, such as when the environment is a smart device; the client environment's time zone will differ from the one that is managed in the server. Considering the large number of such edge cases, it is impractical for a server-side application to manage each user's intended time zone in a database-like manner.
 
 For this reason, to keep the system design simple, the server should avoid managing user-specific time zones. Instead, the server should store and handle time exclusively in UTC. All time values should be transmitted to clients in UTC (typically as ISO 8601–formatted strings), and converting them into local time should be the responsibility of the client.
 
@@ -78,7 +79,7 @@ One important caveat of this design is that the time zone database of the client
 
 If the application is used in a closed or unmanaged environment where such updates cannot be applied due to special constraints, the approach described above may be insufficient.
 
-Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits such as small code base and easy handling of daylight saving time transitions.
+Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits, such as a small code base and easy handling of daylight saving time transitions.
 
 ### About Daylight Saving Time
 
@@ -97,7 +98,7 @@ On March 14, 2021, daylight saving time begins. The time jumps directly from `20
 
 In this example, subtracting 1 millisecond from `2021-03-14 03:00:00.000 CST` results in `2021-03-14 03:59:59.999 CST`. This appears to be a simple subtraction of 1 millisecond, but it actually advances the time by 1 hour.
 
-This behavior is not a bug but a result of strictly following the ECMAScript specification.
+This behavior is not a bug but a result of strictly following the [ECMAScript specification](https://262.ecma-international.org/11.0/#sec-local-time-zone-adjustment).
 
 Additionally, a `Date` object created from a duplicated time during daylight saving time (DST) transition always refers to the time before DST ends. In other words, there is no simple way to obtain a `Date` object that refers to the UTC time **after** the end of DST from a duplicated time.
 

@@ -4,6 +4,8 @@ Complete API reference for Qrono.
 
 ## Factory {#factory}
 
+All Factory methods accept an optional `context` object as the first argument to configure how the instance handles timezone and DST settings.
+
 ### qrono(...args) {#qrono}
 
 Creates a new `Qrono` datetime instance.
@@ -32,8 +34,11 @@ qrono([2024, 1, 15, 10, 30])
 // From object
 qrono({ year: 2024, month: 1, day: 15 })
 
-// With context options
+// With context options (context as first argument)
 qrono({ localtime: true }, '2024-01-15')
+
+// Context options are applied to the instance
+qrono({ localtime: true, ambiguousAsDst: false }, '2024-01-15')
 ```
 
 ### qrono.date(...args) {#qrono-date}
@@ -57,47 +62,88 @@ qrono.date([2024, 1, 15])
 qrono.date({ year: 2024, month: 1, day: 15 })
 ```
 
-## Static Methods {#static-methods}
+### valid() {#valid}
 
-### qrono.context(options) {#static-context}
-
-Sets the default context for all new instances.
+Check if the instance represents a valid date.
 
 ```javascript
-qrono.context({ localtime: true, ambiguousAsDst: false })
+qrono('2024-01-15').valid()        // true
+qrono(new Date('invalid')).valid() // false
 ```
 
-**Parameters:**
-- `options.localtime` - `boolean` - Use local time instead of UTC
-- `options.ambiguousAsDst` - `boolean` - Interpret ambiguous times as DST
+## Conversion {#conversion}
 
-### qrono.asUtc() {#static-asutc}
+### toString() {#tostring}
 
-Sets the default context to UTC mode and returns the qrono function for chaining.
+Get the ISO 8601 string representation.
 
 ```javascript
-qrono.asUtc()
-const utcTime = qrono('2024-01-15')
-utcTime.localtime()  // false
+time.toString()  // "2024-06-15T14:30:00.000Z"
+
+qrono.date('2024-06-15').toString()  // "2024-06-15"
 ```
 
-### qrono.asLocaltime() {#static-aslocaltime}
+### numeric() {#numeric}
 
-Sets the default context to local time mode and returns the qrono function for chaining.
+Get the Unix timestamp in milliseconds.
 
 ```javascript
-qrono.asLocaltime()
-const localTime = qrono('2024-01-15')
-localTime.localtime()  // true
+time.numeric()  // 1718458200000
 ```
 
-### qrono.localtime(value) {#static-localtime}
+### valueOf() {#valueof}
 
-Sets and returns the qrono default localtime setting.
+Same as `numeric()`. Allows using `+time` syntax.
 
 ```javascript
-qrono.localtime(true)
-qrono.localtime()  // true
++time  // 1718458200000
+```
+
+### toArray() {#toarray}
+
+Get an array of components.
+
+```javascript
+time.toArray()  // [2024, 6, 15, 14, 30, 0, 0]
+
+qrono.date('2024-06-15').toArray()  // [2024, 6, 15]
+```
+
+### toObject() {#toobject}
+
+Get an object with named properties.
+
+```javascript
+time.toObject()
+// { year: 2024, month: 6, day: 15, hour: 14, minute: 30, second: 0, millisecond: 0 }
+
+qrono.date('2024-06-15').toObject()
+// { year: 2024, month: 6, day: 15 }
+```
+
+### nativeDate() {#nativedate}
+
+Get a native JavaScript Date object.
+
+```javascript
+time.nativeDate()  // Date instance
+```
+
+### toDate() {#todate}
+
+Get a `QronoDate` instance (date portion only).
+
+```javascript
+time.toDate()  // QronoDate instance
+```
+
+### toDatetime() {#todatetime}
+
+Converts a `QronoDate` to a `Qrono` datetime at midnight.
+
+```javascript
+qrono.date('2024-06-15').toDatetime().toString()
+// "2024-06-15T00:00:00.000Z"
 ```
 
 ## Constants {#constants}
@@ -114,7 +160,7 @@ qrono.saturday  // 6
 qrono.sunday    // 7
 ```
 
-## Getters / Setters {#getters-setters}
+## Accessors {#accessors}
 
 All component methods work as both getters (no argument) and setters (with argument). Setters return a new instance (immutable).
 
@@ -168,7 +214,57 @@ time.millisecond()     // 123 (getter, 0-999)
 time.millisecond(500)  // New instance with millisecond 500
 ```
 
-## Context Methods {#context-methods}
+### offset() {#offset}
+
+Get the timezone offset in minutes.
+
+```javascript
+qrono().asUtc().offset()       // 0
+qrono().asLocaltime().offset() // e.g., 540 (JST)
+```
+
+## Context {#context-methods}
+
+### qrono.context(options) {#default-context}
+
+Sets the default context for all new instances.
+
+```javascript
+qrono.context({ localtime: true, ambiguousAsDst: false })
+```
+
+**Parameters:**
+- `localtime` - `boolean` - Use local time instead of UTC
+- `ambiguousAsDst` - `boolean` - Interpret ambiguous times as DST
+
+### qrono.asUtc() {#default-asutc}
+
+Sets the default context to UTC mode and returns the qrono function for chaining.
+
+```javascript
+qrono.asUtc()
+const utcTime = qrono('2024-01-15')
+utcTime.localtime()  // false
+```
+
+### qrono.asLocaltime() {#default-aslocaltime}
+
+Sets the default context to local time mode and returns the qrono function for chaining.
+
+```javascript
+qrono.asLocaltime()
+const localTime = qrono('2024-01-15')
+localTime.localtime()  // true
+```
+
+### qrono.localtime(value) {#default-localtime}
+
+Sets and returns the qrono default localtime setting.
+
+```javascript
+qrono.localtime(true)
+qrono.localtime()  // true
+```
 
 ### context() {#context}
 
@@ -218,7 +314,7 @@ const local = time.asLocaltime()
 local.localtime()  // true
 ```
 
-## Arithmetic Methods {#arithmetic}
+## Calculation {#calculation}
 
 ### plus(duration) {#plus}
 
@@ -372,7 +468,7 @@ qrono.date('2024-06-15').endOfMonth().toString()  // "2024-06-30"
 Get the day of the week (Monday = 1, Sunday = 7).
 
 ```javascript
-qrono('2024-06-15').dayOfWeek()  // 6 (Saturday)
+qrono('2024-06-15').dayOfWeek() === qrono.saturday  // 6
 ```
 
 ### dayOfYear() {#dayofyear}
@@ -474,97 +570,4 @@ qrono.asLocaltime()
 qrono('1950-05-06').minutesInDay()  // 1440
 qrono('1950-05-07').minutesInDay()  // 1380 (DST spring forward)
 qrono('1950-09-10').minutesInDay()  // 1500 (DST fall back)
-```
-
-## Output Methods {#output}
-
-### toString() {#tostring}
-
-Get the ISO 8601 string representation.
-
-```javascript
-time.toString()  // "2024-06-15T14:30:00.000Z"
-
-qrono.date('2024-06-15').toString()  // "2024-06-15"
-```
-
-### numeric() {#numeric}
-
-Get the Unix timestamp in milliseconds.
-
-```javascript
-time.numeric()  // 1718458200000
-```
-
-### valueOf() {#valueof}
-
-Same as `numeric()`. Allows using `+time` syntax.
-
-```javascript
-+time  // 1718458200000
-```
-
-### toArray() {#toarray}
-
-Get an array of components.
-
-```javascript
-time.toArray()  // [2024, 6, 15, 14, 30, 0, 0]
-
-qrono.date('2024-06-15').toArray()  // [2024, 6, 15]
-```
-
-### toObject() {#toobject}
-
-Get an object with named properties.
-
-```javascript
-time.toObject()
-// { year: 2024, month: 6, day: 15, hour: 14, minute: 30, second: 0, millisecond: 0 }
-
-qrono.date('2024-06-15').toObject()
-// { year: 2024, month: 6, day: 15 }
-```
-
-### nativeDate() {#nativedate}
-
-Get a native JavaScript Date object.
-
-```javascript
-time.nativeDate()  // Date instance
-```
-
-### toDate() {#todate}
-
-Get a `QronoDate` instance (date portion only).
-
-```javascript
-time.toDate()  // QronoDate instance
-```
-
-### toDatetime() {#todatetime}
-
-Converts a `QronoDate` to a `Qrono` datetime at midnight.
-
-```javascript
-qrono.date('2024-06-15').toDatetime().toString()
-// "2024-06-15T00:00:00.000Z"
-```
-
-### offset() {#offset}
-
-Get the timezone offset in minutes.
-
-```javascript
-qrono().asUtc().offset()       // 0
-qrono().asLocaltime().offset() // e.g., 540 (JST)
-```
-
-### valid() {#valid}
-
-Check if the instance represents a valid date.
-
-```javascript
-qrono('2024-01-15').valid()        // true
-qrono(new Date('invalid')).valid() // false
 ```

@@ -17,34 +17,42 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: "Guide",
-        items: [{ text: "Introduction", link: "/introduction" }],
+        text: "Introduction",
+        link: "/introduction/",
       },
       {
         text: "API Reference",
         link: "/api/",
         items: [
           { text: "Factory", link: "/api/#factory" },
-          { text: "Static Methods", link: "/api/#static-methods" },
+          { text: "Conversion", link: "/api/#conversion" },
           { text: "Constants", link: "/api/#constants" },
-          { text: "Getters / Setters", link: "/api/#getters-setters" },
-          { text: "Context Methods", link: "/api/#context-methods" },
-          { text: "Arithmetic", link: "/api/#arithmetic" },
+          { text: "Accessors", link: "/api/#accessors" },
+          { text: "Context", link: "/api/#context-methods" },
+          { text: "Calculation", link: "/api/#calculation" },
           { text: "Comparison", link: "/api/#comparison" },
           { text: "Start Of", link: "/api/#start-of" },
           { text: "End Of", link: "/api/#end-of" },
           { text: "Date Information", link: "/api/#date-info" },
           { text: "DST Methods", link: "/api/#dst" },
-          { text: "Output", link: "/api/#output" },
         ],
       },
     ],
 
-    socialLinks: [{ icon: "github", link: "https://github.com/urin/qrono" }],
+    socialLinks: [
+      { icon: "npm", link: "https://www.npmjs.com/package/qrono" },
+      {
+        icon: {
+          svg: '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>JSR</title><path d="M3.692 5.538v3.693H0v7.384h7.385v1.847h12.923v-3.693H24V7.385h-7.385V5.538Zm1.846 1.847h1.847v7.384H1.846v-3.692h1.846v1.846h1.846zm3.693 0h5.538V9.23h-3.692v1.846h3.692v5.538H9.231V14.77h3.692v-1.846H9.231Zm7.384 1.846h5.539v3.692h-1.846v-1.846h-1.846v5.538h-1.847z"/></svg>',
+        },
+        link: "https://jsr.io/@urin/qrono",
+        ariaLabel: "JSR",
+      },
+      { icon: "github", link: "https://github.com/urin/qrono" },
+    ],
 
     footer: {
-      message: "Released under the MIT License.",
-      copyright: "Copyright © 2021-present urin",
+      copyright: "© 2021 - present urin",
     },
 
     search: {

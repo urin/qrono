@@ -1,4 +1,4 @@
-# <img src="docs/public/logo.png" alt="Qrono Logo" width="100"> Qrono - 🕥 _Just right date time library_
+# <img src="docs/public/logo.png" alt="Qrono Logo" width="48"> [Qrono](https://urin.github.io/qrono/) - 🕥 _Just right date time library_
 
 [![MIT License][image-license]][url-license]
 [![NPM version][image-npm-version]][url-npm]
@@ -42,10 +42,9 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 
 - **[Day.js](https://day.js.org/)**  
   A [Moment.js](https://github.com/moment/moment) compatible library with small size, which has [many GitHub stars](https://github.com/iamkun/dayjs/stargazers) and is becoming the de-facto standard.  
-  Requires importing plugins each time because most functions are provided as plugins.  
   3.4kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
   **Qrono** achieves **3.9kB with 100+ APIs** without plugins.
-  The codebase is large due to time zone and locale support (178 source files as of 2021-11-02), but the effective size can be reduced if tree-shaking is available. The code readability is not high.  
+  The codebase is large due to time zone and locale support (178 source files as of 2021-11-02).  
   Planning a major version upgrade while solving [many issues](https://github.com/iamkun/dayjs/issues?q=is%3Aissue+is%3Aopen).  
 
 - **[date-fns](https://date-fns.org/)**  
@@ -55,7 +54,7 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 - **[The ECMA TC39 Temporal Proposal](https://tc39.es/proposal-temporal/docs/index.html)**  
   An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by [java.time](https://jcp.org/aboutJava/communityprocess/pfd/jsr310/JSR-310-guide.html).
 
-### Reason for Supporting Only the Local Time of the Execution Environment
+### Supporting Only the Local Time of the Execution Environment
 
 When handling time in a globally accessible web application, careful consideration about local time required.
 
@@ -88,7 +87,7 @@ date.setMilliseconds(-1) // results 2021-03-14 03:59:59.999 CST
 On March 14, 2021, daylight saving time begins. The time jumps directly from `2021-03-14 01:59:59 CST` to `2021-03-14 03:00:00 CST`.
 In this example, subtracting 1 millisecond from `2021-03-14 03:00:00.000 CST` results in `2021-03-14 03:59:59.999 CST`. This appears to be a simple subtraction of 1 millisecond, but it actually advances the time by 1 hour.
 
-This behavior is not a bug but a result of strictly following the ECMAScript specification (https://262.ecma-international.org/11.0/#sec-local-time-zone-adjustment).
+This behavior is not a bug but a result of strictly following the [ECMAScript specification](https://262.ecma-international.org/11.0/#sec-local-time-zone-adjustment).
 
 Additionally, a `Date` object created from a duplicated time during daylight saving time (DST) transition always refers to the time before DST ends. In other words, there is no simple way to obtain a `Date` object that refers to the UTC time **after** the end of DST from a duplicated time.
 
@@ -119,6 +118,8 @@ const { qrono } = require('qrono')
 ```
 
 ## Quick tour 🚀
+
+Visit [official website](https://urin.github.io/qrono/) for complete documentation.
 
 ### Construction
 
