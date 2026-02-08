@@ -14,9 +14,7 @@ function w(t, ...e) {
   return e.flat().some(t.hasOwnProperty, t);
 }
 function v(t) {
-  return Object.entries(t).filter(
-    ([, e]) => !ot(e)
-  ).map(([e]) => e);
+  return Object.entries(t).filter(([, e]) => !ot(e)).map(([e]) => e);
 }
 function y(t) {
   return t !== void 0;
@@ -49,7 +47,11 @@ function C(t, e) {
   a.setDate(e.getDate() + r);
   const u = a.getTimezoneOffset() - e.getTimezoneOffset();
   if (t && u < 0 || !t && u > 0) {
-    const d = new Date(n).setMinutes(e.getMinutes() + r * u), p = new Date(n).setUTCMinutes(e.getUTCMinutes() + r * u);
+    const d = new Date(n).setMinutes(
+      e.getMinutes() + r * u
+    ), p = new Date(n).setUTCMinutes(
+      e.getUTCMinutes() + r * u
+    );
     d !== p && (d - p) / B !== u && c.setUTCMinutes(e.getUTCMinutes() + r * u);
   }
   return c;
@@ -76,10 +78,15 @@ i.asUtc = function() {
 i.asLocaltime = function() {
   return g.localtime = !0, this;
 };
-Object.assign(
-  i,
-  { monday: K, tuesday: tt, wednesday: z, thursday: M, friday: et, saturday: nt, sunday: it }
-);
+Object.assign(i, {
+  monday: K,
+  tuesday: tt,
+  wednesday: z,
+  thursday: M,
+  friday: et,
+  saturday: nt,
+  sunday: it
+});
 const s = /* @__PURE__ */ Symbol("Qrono.internal");
 function i(...t) {
   var a;
@@ -210,7 +217,13 @@ function ht(t) {
 i.prototype.toString = function() {
   if (this[s].localtime) {
     const t = this[s].nativeDate, e = -t.getTimezoneOffset(), n = Math.abs(e);
-    return `${String(t.getFullYear()).padStart(4, "0")}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}T${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}:${String(t.getSeconds()).padStart(2, "0")}.${String(t.getMilliseconds()).padStart(3, "0")}${(e >= 0 ? "+" : "-") + String(Math.trunc(n / b)).padStart(2, "0") + ":" + String(n % b).padStart(2, "0")}`;
+    return `${String(t.getFullYear()).padStart(4, "0")}-${String(
+      t.getMonth() + 1
+    ).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}T${String(
+      t.getHours()
+    ).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}:${String(
+      t.getSeconds()
+    ).padStart(2, "0")}.${String(t.getMilliseconds()).padStart(3, "0")}${(e >= 0 ? "+" : "-") + String(Math.trunc(n / b)).padStart(2, "0") + ":" + String(n % b).padStart(2, "0")}`;
   }
   return this[s].nativeDate.toISOString();
 };
@@ -221,7 +234,10 @@ i.prototype.clone = function(...t) {
   return new i(this, ...t);
 };
 i.prototype.context = function(t) {
-  return y(t) ? this.clone(t) : { localtime: this[s].localtime, ambiguousAsDst: this[s].ambiguousAsDst };
+  return y(t) ? this.clone(t) : {
+    localtime: this[s].localtime,
+    ambiguousAsDst: this[s].ambiguousAsDst
+  };
 };
 i.prototype.nativeDate = function() {
   return new Date(this[s].nativeDate.getTime());
@@ -318,9 +334,7 @@ i.prototype.hasDstInYear = function() {
   if (!this[s].localtime)
     return !1;
   const t = this.offset();
-  return [3, 6, 9, 12].map(
-    (e) => this.month(e).offset()
-  ).some((e) => e !== t);
+  return [3, 6, 9, 12].map((e) => this.month(e).offset()).some((e) => e !== t);
 };
 i.prototype.isInDst = function() {
   return this[s].localtime ? this.offset() === Math.max(...[3, 6, 9, 12].map((t) => this.month(t).offset())) : !1;
@@ -529,11 +543,7 @@ o.prototype.startOfDay = function() {
     return this[h].datetime[t]();
   };
 });
-[
-  "minutesInDay",
-  "hasDstInYear",
-  "isDstTransitionDay"
-].forEach((t) => {
+["minutesInDay", "hasDstInYear", "isDstTransitionDay"].forEach((t) => {
   o.prototype[t] = function() {
     return this[h].datetime.localtime(!0)[t]();
   };

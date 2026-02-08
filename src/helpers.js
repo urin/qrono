@@ -34,51 +34,57 @@ export const friday = 5
 export const saturday = 6
 export const sunday = 7
 
-export function has (object, ...keys) {
+export function has(object, ...keys) {
   return keys.flat().some(object.hasOwnProperty, object)
 }
 
-export function fields (object) {
-  return Object.entries(object).filter(
-    ([, value]) => !isFunction(value)
-  ).map(([key]) => key)
+export function fields(object) {
+  return Object.entries(object)
+    .filter(([, value]) => !isFunction(value))
+    .map(([key]) => key)
 }
 
-export function given (arg) {
+export function given(arg) {
   return arg !== undefined
 }
 
-export function isFunction (a) {
+export function isFunction(a) {
   return a instanceof Function
 }
 
-export function isString (a) {
+export function isString(a) {
   return typeof a === 'string' || a instanceof String
 }
 
-export function isObject (a) {
-  return a !== null && typeof (a) === 'object' && a.constructor === Object
+export function isObject(a) {
+  return a !== null && typeof a === 'object' && a.constructor === Object
 }
 
-export function isValidDate (date) {
+export function isValidDate(date) {
   return !isNaN(date.getTime())
 }
 
-export function hasDateField (object) {
+export function hasDateField(object) {
   return has(object, ['year', 'month', 'day'])
 }
 
-export function hasTimeField (object) {
+export function hasTimeField(object) {
   return has(object, ['hour', 'minute', 'second', 'millisecond'])
 }
 
-export function hasDatetimeField (object) {
+export function hasDatetimeField(object) {
   return has(object, [
-    'year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond'
+    'year',
+    'month',
+    'day',
+    'hour',
+    'minute',
+    'second',
+    'millisecond',
   ])
 }
 
-export function asDst (ambiguousAsDst, date) {
+export function asDst(ambiguousAsDst, date) {
   const numeric = date.getTime()
   const result = new Date(numeric)
   const adjacentDay = new Date(numeric)
@@ -86,9 +92,16 @@ export function asDst (ambiguousAsDst, date) {
   adjacentDay.setDate(date.getDate() + sign)
   const adjust = adjacentDay.getTimezoneOffset() - date.getTimezoneOffset()
   if ((ambiguousAsDst && adjust < 0) || (!ambiguousAsDst && adjust > 0)) {
-    const adjusted = new Date(numeric).setMinutes(date.getMinutes() + sign * adjust)
-    const adjustedUTC = new Date(numeric).setUTCMinutes(date.getUTCMinutes() + sign * adjust)
-    if (adjusted !== adjustedUTC && (adjusted - adjustedUTC) / millisecondsPerMinute !== adjust) {
+    const adjusted = new Date(numeric).setMinutes(
+      date.getMinutes() + sign * adjust
+    )
+    const adjustedUTC = new Date(numeric).setUTCMinutes(
+      date.getUTCMinutes() + sign * adjust
+    )
+    if (
+      adjusted !== adjustedUTC &&
+      (adjusted - adjustedUTC) / millisecondsPerMinute !== adjust
+    ) {
       result.setUTCMinutes(date.getUTCMinutes() + sign * adjust)
     }
   }
