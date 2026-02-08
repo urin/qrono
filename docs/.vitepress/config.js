@@ -4,10 +4,28 @@ export default defineConfig({
   title: 'Qrono',
   description: 'Just right date time library',
   base: '/qrono/',
-  head: [['link', { rel: 'icon', href: '/qrono/favicon.ico' }]],
+  head: [
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/public/logo.svg',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/public/logo.png',
+      },
+    ],
+  ],
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/logo.svg',
 
     nav: [
       { text: 'Top', link: '/' },

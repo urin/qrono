@@ -62,6 +62,14 @@ Other date-time libraries have larger codebases and more complicated usage to su
 
 None of these libraries provide APIs to detect or handle DST transitions properly. Qrono fills this gap with a balanced approach - not too simple, not too complex, just right.
 
+### Repository Size Comparison
+
+[![Comparison of repository size](/comparison-repo-size.svg)](/comparison-repo-size.svg)
+
+This comparison shows that **Qrono clearly stands out for its remarkably small codebase** among other libraries. Its compact size reflects a strong focus on minimalism and efficiency, making it well suited for situations where bundle size and simplicity are important.
+
+For many of the other libraries, their larger size is due to the fact that a significant portion of the codebase is dedicated to supporting a wide range of locales. Meanwhile, the larger size of date-fns is intentional and not a drawback. It is designed with tree-shaking in mind, so unused functions are removed at build time, and its API is intentionally fine-grained and verbose to provide clarity and flexibility. The size difference therefore represents a difference in design philosophy, not a measure of overall quality.
+
 ### Supporting Only the Local Time of the Execution Environment
 
 When handling time in a globally accessible web application, careful consideration is required for local time.
@@ -79,7 +87,9 @@ One important caveat of this design is that the time zone database of the client
 
 If the application is used in a closed or unmanaged environment where such updates cannot be applied due to special constraints, the approach described above may be insufficient.
 
-Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits, such as a small code base and easy handling of daylight saving time transitions.
+In most typical environments, this requirement is satisfied automatically through the operating system’s regular update mechanisms, so it does not pose a practical issue for the majority of applications. However, if the application is used in a closed or unmanaged environment where such updates cannot be applied due to special constraints, the approach described above may be insufficient.
+
+Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits, such as a **small code base and easy handling of daylight saving time transitions**.
 
 ### About Daylight Saving Time
 

@@ -1,4 +1,4 @@
-# <img src="docs/public/logo.png" alt="Qrono Logo" width="48"> [Qrono](https://urin.github.io/qrono/) - 🕥 _Just right date time library_
+# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://urin.github.io/qrono/) - 🕥 _Just right date time library_
 
 [![MIT License][image-license]][url-license]
 [![NPM version][image-npm-version]][url-npm]
