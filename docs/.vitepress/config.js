@@ -3,14 +3,13 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Qrono',
   description: 'Just right date time library',
-  base: '/qrono/',
   head: [
     [
       'link',
       {
         rel: 'icon',
         type: 'image/svg+xml',
-        href: '/public/logo.svg',
+        href: '/logo.svg',
       },
     ],
     [
@@ -19,7 +18,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        href: '/public/logo.png',
+        href: '/logo.png',
       },
     ],
   ],

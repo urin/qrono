@@ -1,4 +1,4 @@
-# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://urin.github.io/qrono/) - 🕥 _Just right date time library_
+# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) - 🕥 _Just right date time library_
 
 [![MIT License][image-license]][url-license]
 [![NPM version][image-npm-version]][url-npm]
@@ -11,7 +11,7 @@ qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
 qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
 ```
 
-[🌐 Website](https://urin.github.io/qrono/) \| [🎨 Design philosophy](#design-philosophy-) \| [📥 Getting started](#getting-started-) \| [🚀 Quick tour](#quick-tour-) \| [🌏 License](#license-)
+[🌐 Website<sup> ↗</sup>](https://qronojs.dev/) \| [🎨 Design philosophy](#design-philosophy-) \| [📥 Getting started](#getting-started-) \| [🚀 Quick tour](#quick-tour-) \| [🌏 License](#license-)
 
 ---
 
@@ -56,6 +56,16 @@ sufficient.
 - **[The ECMA TC39 Temporal Proposal](https://tc39.es/proposal-temporal/docs/index.html)**  
   An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by [java.time](https://jcp.org/aboutJava/communityprocess/pfd/jsr310/JSR-310-guide.html).
 
+None of these libraries provide APIs to detect or handle DST transitions properly. Qrono fills this gap with a balanced approach - not too simple, not too complex, just right.
+
+### Repository Size Comparison
+
+[![Comparison of repository size](docs/public/comparison-repo-size.svg)](docs/public/comparison-repo-size.svg)
+
+This comparison shows that **Qrono clearly stands out for its remarkably small codebase** among other libraries. Its compact size reflects a strong focus on minimalism and efficiency, making it well suited for situations where bundle size and simplicity are important.
+
+For many of the other libraries, their larger size is due to the fact that a significant portion of the codebase is dedicated to supporting a wide range of locales. Meanwhile, the larger size of date-fns is intentional and not a drawback. It is designed with tree-shaking in mind, so unused functions are removed at build time, and its API is intentionally fine-grained and verbose to provide clarity and flexibility. The size difference therefore represents a difference in design philosophy, not a measure of overall quality.
+
 ### Supporting Only the Local Time of the Execution Environment
 
 When handling time in a globally accessible web application, careful consideration is required for local time.
@@ -73,27 +83,32 @@ One important caveat of this design is that the time zone database of the client
 
 If the application is used in a closed or unmanaged environment where such updates cannot be applied due to special constraints, the approach described above may be insufficient.
 
-Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits, such as a small code base and easy handling of daylight saving time transitions.
+In most typical environments, this requirement is satisfied automatically through the operating system’s regular update mechanisms, so it does not pose a practical issue for the majority of applications. However, if the application is used in a closed or unmanaged environment where such updates cannot be applied due to special constraints, the approach described above may be insufficient.
 
-### Handling DST transitions with JavaScript's `Date`
+Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits, such as a **small code base and easy handling of daylight saving time transitions**.
+
+### About Daylight Saving Time
+
+Qrono is the only JavaScript date-time library with dedicated APIs for DST handling (`hasDstInYear()`, `isInDst()`, `isDstTransitionDay()`, `minutesInDay()`).
 
 JavaScript's `Date` object can behave in non-intuitive ways when handling daylight saving time transitions.
 
-For example, see the following scenario in the Central Standard Time (CST) zone of the USA.
+For example, see the following scenario in the Central Standard Time (CST) zone of the USA:
 
-```js
+```javascript
 const date = new Date('2021-03-14T03:00:00.000')
 date.setMilliseconds(-1) // results 2021-03-14 03:59:59.999 CST
 ```
 
 On March 14, 2021, daylight saving time begins. The time jumps directly from `2021-03-14 01:59:59 CST` to `2021-03-14 03:00:00 CST`.
+
 In this example, subtracting 1 millisecond from `2021-03-14 03:00:00.000 CST` results in `2021-03-14 03:59:59.999 CST`. This appears to be a simple subtraction of 1 millisecond, but it actually advances the time by 1 hour.
 
 This behavior is not a bug but a result of strictly following the [ECMAScript specification](https://262.ecma-international.org/11.0/#sec-local-time-zone-adjustment).
 
 Additionally, a `Date` object created from a duplicated time during daylight saving time (DST) transition always refers to the time before DST ends. In other words, there is no simple way to obtain a `Date` object that refers to the UTC time **after** the end of DST from a duplicated time.
 
-Qrono is the only JavaScript date-time library with dedicated APIs for DST handling (`hasDstInYear()`, `isInDst()`, `isDstTransitionDay()`, `minutesInDay()`).
+**Qrono** addresses these issues by providing a more understandable approach to handling such transitions.
 
 ## Getting started 📥
 
@@ -121,7 +136,7 @@ const { qrono } = require('qrono')
 
 ## Quick tour 🚀
 
-Visit [official website](https://urin.github.io/qrono/) for complete documentation.
+Visit [official website](https://qronojs.dev/) for complete documentation.
 
 ### Construction
 
