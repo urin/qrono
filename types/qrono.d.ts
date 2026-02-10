@@ -2,14 +2,47 @@ export { qrono }
 
 /**
  * Creates a new Qrono instance.
- * @param date - The date to initialize the Qrono instance with.
+ * @param date - A native Date to initialize the Qrono instance with.
  * @returns A new Qrono instance.
  * @example
  * qrono('2021-08-31 12:34')
  */
-declare function qrono(
-  date?: Date | number | string | qrono.Qrono | number[] | qrono.TimeFields
-): qrono.Qrono
+declare function qrono(date?: Date): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance.
+ * @param date - A millisecond timestamp (Unix epoch ms).
+ * @returns A new Qrono instance.
+ */
+declare function qrono(date?: number): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance.
+ * @param date - A date-time string.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(date?: string): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance.
+ * @param date - Another Qrono instance to clone.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(date?: qrono.Qrono): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance.
+ * @param date - An array of time fields: `[year, month, day, hour, minute, second, millisecond]`.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(date?: number[]): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance.
+ * @param date - An object of time fields.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(date?: qrono.TimeFields): qrono.Qrono
 
 /**
  * Creates a new Qrono instance.
@@ -30,15 +63,52 @@ declare function qrono(
 /**
  * Creates a new Qrono instance with a specific context.
  * @param context - The context to initialize the Qrono instance with.
- * @param date - The date to initialize the Qrono instance with.
+ * @param date - A native Date to initialize the Qrono instance with.
  * @returns A new Qrono instance.
  * @example
  * qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
  */
-declare function qrono(
-  context?: qrono.Context,
-  date?: Date | number | string | qrono.Qrono | number[] | qrono.TimeFields
-): qrono.Qrono
+declare function qrono(context?: qrono.Context, date?: Date): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance with a specific context.
+ * @param context - The context to initialize the Qrono instance with.
+ * @param date - A millisecond timestamp (Unix epoch ms).
+ * @returns A new Qrono instance.
+ */
+declare function qrono(context?: qrono.Context, date?: number): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance with a specific context.
+ * @param context - The context to initialize the Qrono instance with.
+ * @param date - A date-time string.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(context?: qrono.Context, date?: string): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance with a specific context.
+ * @param context - The context to initialize the Qrono instance with.
+ * @param date - Another Qrono instance to clone.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(context?: qrono.Context, date?: qrono.Qrono): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance with a specific context.
+ * @param context - The context to initialize the Qrono instance with.
+ * @param date - An array of time fields: `[year, month, day, hour, minute, second, millisecond]`.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(context?: qrono.Context, date?: number[]): qrono.Qrono
+
+/**
+ * Creates a new Qrono instance with a specific context.
+ * @param context - The context to initialize the Qrono instance with.
+ * @param date - An object of time fields.
+ * @returns A new Qrono instance.
+ */
+declare function qrono(context?: qrono.Context, date?: qrono.TimeFields): qrono.Qrono
 
 /**
  * Creates a new Qrono instance with a specific context.
@@ -67,14 +137,47 @@ declare namespace qrono {
 
   /**
    * Creates a new QronoDate instance.
-   * @param date - The date to initialize the QronoDate instance with.
+   * @param date - A native Date to initialize the QronoDate instance with.
    * @returns A new QronoDate instance.
    * @example
    * qrono.date('2000-01-02')
    */
-  export function date(
-    date?: Date | number | string | qrono.Qrono | number[] | qrono.TimeFields
-  ): QronoDate
+  export function date(date?: Date): QronoDate
+
+  /**
+   * Creates a new QronoDate instance.
+   * @param date - A millisecond timestamp (Unix epoch ms).
+   * @returns A new QronoDate instance.
+   */
+  export function date(date?: number): QronoDate
+
+  /**
+   * Creates a new QronoDate instance.
+   * @param date - A date string.
+   * @returns A new QronoDate instance.
+   */
+  export function date(date?: string): QronoDate
+
+  /**
+   * Creates a new QronoDate instance.
+   * @param date - Another Qrono instance to derive the date from.
+   * @returns A new QronoDate instance.
+   */
+  export function date(date?: qrono.Qrono): QronoDate
+
+  /**
+   * Creates a new QronoDate instance.
+   * @param date - An array of time fields: `[year, month, day, hour, minute, second, millisecond]`.
+   * @returns A new QronoDate instance.
+   */
+  export function date(date?: number[]): QronoDate
+
+  /**
+   * Creates a new QronoDate instance.
+   * @param date - An object of time fields.
+   * @returns A new QronoDate instance.
+   */
+  export function date(date?: qrono.TimeFields): QronoDate
 
   /**
    * Creates a new QronoDate instance.
@@ -478,10 +581,24 @@ declare namespace qrono {
 
     /**
      * Adds a duration to the Qrono instance.
-     * @param value - The duration to add.
+     * @param value - A millisecond offset to add.
      * @returns A new Qrono instance with the added duration.
      */
-    plus(value: TimeFields | number[]): Qrono
+    plus(value: number): Qrono
+
+    /**
+     * Adds a duration to the Qrono instance.
+     * @param value - An object of time fields to add.
+     * @returns A new Qrono instance with the added duration.
+     */
+    plus(value: TimeFields): Qrono
+
+    /**
+     * Adds a duration to the Qrono instance.
+     * @param value - An array of time fields to add.
+     * @returns A new Qrono instance with the added duration.
+     */
+    plus(value: number[]): Qrono
 
     /**
      * Subtracts a duration from the Qrono instance.
@@ -492,10 +609,24 @@ declare namespace qrono {
 
     /**
      * Subtracts a duration from the Qrono instance.
-     * @param value - The duration to subtract.
+     * @param value - A millisecond offset to subtract.
      * @returns A new Qrono instance with the subtracted duration.
      */
-    minus(value: TimeFields | number[]): Qrono
+    minus(value: number): Qrono
+
+    /**
+     * Subtracts a duration from the Qrono instance.
+     * @param value - An object of time fields to subtract.
+     * @returns A new Qrono instance with the subtracted duration.
+     */
+    minus(value: TimeFields): Qrono
+
+    /**
+     * Subtracts a duration from the Qrono instance.
+     * @param value - An array of time fields to subtract.
+     * @returns A new Qrono instance with the subtracted duration.
+     */
+    minus(value: number[]): Qrono
   }
 
   export class QronoDate {
@@ -706,10 +837,24 @@ declare namespace qrono {
 
     /**
      * Adds a duration to the QronoDate instance.
-     * @param value - The duration to add.
+     * @param value - A millisecond offset to add.
      * @returns A new QronoDate instance with the added duration.
      */
-    plus(value: TimeFields | number[]): QronoDate
+    plus(value: number): QronoDate
+
+    /**
+     * Adds a duration to the QronoDate instance.
+     * @param value - An object of time fields to add.
+     * @returns A new QronoDate instance with the added duration.
+     */
+    plus(value: TimeFields): QronoDate
+
+    /**
+     * Adds a duration to the QronoDate instance.
+     * @param value - An array of time fields to add.
+     * @returns A new QronoDate instance with the added duration.
+     */
+    plus(value: number[]): QronoDate
 
     /**
      * Subtracts a duration from the QronoDate instance.
@@ -720,9 +865,23 @@ declare namespace qrono {
 
     /**
      * Subtracts a duration from the QronoDate instance.
-     * @param value - The duration to subtract.
+     * @param value - A millisecond offset to subtract.
      * @returns A new QronoDate instance with the subtracted duration.
      */
-    minus(value: TimeFields | number[]): QronoDate
+    minus(value: number): QronoDate
+
+    /**
+     * Subtracts a duration from the QronoDate instance.
+     * @param value - An object of time fields to subtract.
+     * @returns A new QronoDate instance with the subtracted duration.
+     */
+    minus(value: TimeFields): QronoDate
+
+    /**
+     * Subtracts a duration from the QronoDate instance.
+     * @param value - An array of time fields to subtract.
+     * @returns A new QronoDate instance with the subtracted duration.
+     */
+    minus(value: number[]): QronoDate
   }
 }
