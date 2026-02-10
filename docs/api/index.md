@@ -321,9 +321,17 @@ local.localtime()  // true
 Add time to the date.
 
 ```javascript
-time.plus({ year: 1 })
 time.plus({ month: 2, day: 15 })
 time.plus({ hour: 5, minute: 30, second: 45, millisecond: 500 })
+time.plus(3600 * 1000)                // add one hour via milliseconds
+time.plus([0, 1, 1, 4])               // add 1 month, 1 day, 4 hours
+time.plus({ minute: 15, second: 30 }) // add minutes + seconds
+```
+`QronoDate` variants also accept:
+```javascript
+qrono.date('2024-01-01').plus(1)            // +1 day
+qrono.date('2024-01-01').plus([0, 1, 1])    // +1 month, +1 day
+qrono.date('2024-01-01').plus({ year: 1 })  // same object form
 ```
 
 ### minus(duration) {#minus}
@@ -333,6 +341,16 @@ Subtract time from the date.
 ```javascript
 time.minus({ year: 1 })
 time.minus({ month: 2, day: 15 })
+time.minus({ hour: 5, minute: 30 })
+time.minus(15 * 60 * 1000)          // subtract 15 minutes via milliseconds
+time.minus([0, 0, 0, 6])            // subtract 6 hours
+time.minus({ day: 1, minute: 45 })  // subtract days + minutes
+```
+`QronoDate` variants also accept:
+```javascript
+qrono.date('2024-01-05').minus(2)             // -2 days
+qrono.date('2024-01-05').minus([0, 0, 5])     // -5 days
+qrono.date('2024-01-05').minus({ month: 1 })  // subtract month
 ```
 
 ## Comparison Methods {#comparison}

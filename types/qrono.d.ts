@@ -108,7 +108,10 @@ declare function qrono(context?: qrono.Context, date?: number[]): qrono.Qrono
  * @param date - An object of time fields.
  * @returns A new Qrono instance.
  */
-declare function qrono(context?: qrono.Context, date?: qrono.TimeFields): qrono.Qrono
+declare function qrono(
+  context?: qrono.Context,
+  date?: qrono.TimeFields
+): qrono.Qrono
 
 /**
  * Creates a new Qrono instance with a specific context.
@@ -837,7 +840,7 @@ declare namespace qrono {
 
     /**
      * Adds a duration to the QronoDate instance.
-     * @param value - A millisecond offset to add.
+     * @param value - A day count to add.
      * @returns A new QronoDate instance with the added duration.
      */
     plus(value: number): QronoDate
@@ -865,7 +868,7 @@ declare namespace qrono {
 
     /**
      * Subtracts a duration from the QronoDate instance.
-     * @param value - A millisecond offset to subtract.
+     * @param value - A day count to subtract.
      * @returns A new QronoDate instance with the subtracted duration.
      */
     minus(value: number): QronoDate

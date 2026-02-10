@@ -431,6 +431,12 @@ test('QronoDate', () => {
   expect(nextDay.toArray()).toEqual([2021, 10, 1])
   expect(nextDay.valid()).toBe(true)
 
+  const nextDayByNumber = baseDate.plus(1)
+  expect(nextDayByNumber.toString()).toBe('2021-10-01')
+
+  const prevDayByNumber = baseDate.minus(1)
+  expect(prevDayByNumber.toString()).toBe('2021-09-29')
+
   const prevMonth = baseDate.minus({ month: 1 })
   expect(prevMonth.toString()).toBe('2021-08-30')
   expect(prevMonth.toObject()).toEqual({ year: 2021, month: 8, day: 30 })

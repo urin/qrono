@@ -792,9 +792,19 @@ QronoDate.prototype.isBetween = function (a, b) {
 }
 
 QronoDate.prototype.plus = function (...args) {
+  const arg0 = args[0]
+  const arg1 = args[1]
+  if (Number.isFinite(arg0) && !Number.isFinite(arg1)) {
+    return this[internalDate].datetime.plus({ day: arg0 }).toDate()
+  }
   return this[internalDate].datetime.plus(...args).toDate()
 }
 
 QronoDate.prototype.minus = function (...args) {
+  const arg0 = args[0]
+  const arg1 = args[1]
+  if (Number.isFinite(arg0) && !Number.isFinite(arg1)) {
+    return this[internalDate].datetime.minus({ day: arg0 }).toDate()
+  }
   return this[internalDate].datetime.minus(...args).toDate()
 }
