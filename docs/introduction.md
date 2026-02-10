@@ -55,8 +55,8 @@ Other date-time libraries have larger codebases and more complicated usage to su
 - **[Luxon](https://moment.github.io/luxon/)**  
   It is feature-rich, but it cannot strictly handle ambiguous DST times by default.
 - **[Day.js](https://day.js.org/)**  
-  3.4kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
-  **Qrono** achieves **3.9kB with 100+ APIs** without plugins.
+  3.0kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
+  **Qrono** achieves **3.5kB with 100+ APIs** without plugins.
 - **[date-fns](https://date-fns.org/)**  
   Tree-shakable pure functions, but inherits JavaScript Date problems (mutability, 0-indexed months).
 

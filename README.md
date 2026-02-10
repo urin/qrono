@@ -1,5 +1,6 @@
 # <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) - 🕥 _Just right date time library_
 
+[![CodeQL][image-codeql]][url-codeql]
 [![MIT License][image-license]][url-license]
 [![NPM version][image-npm-version]][url-npm]
 [![NPM downloads][image-npm-downloads]][url-npm-downloads]
@@ -44,10 +45,10 @@ sufficient.
 
 - **[Day.js](https://day.js.org/)**  
   A [Moment.js](https://github.com/moment/moment) compatible library with small size, which has [many GitHub stars](https://github.com/iamkun/dayjs/stargazers) and is becoming the de-facto standard.  
-  3.4kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
-  **Qrono** achieves **3.9kB with 100+ APIs** without plugins.
-  The codebase is large due to time zone and locale support (178 source files as of 2021-11-02).  
+  3.0kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
+  The codebase is large due to time zone and locale support (184 source files as of 2026-02-08).  
   Planning a major version upgrade while solving [many issues](https://github.com/iamkun/dayjs/issues?q=is%3Aissue+is%3Aopen).  
+  **Qrono** achieves **3.5kB with 100+ APIs** without plugins.
 
 - **[date-fns](https://date-fns.org/)**  
   Provides 200+ pure functions for manipulating JavaScript `Date` objects, implemented in TypeScript and tree-shaking enabled.  
@@ -258,6 +259,9 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 
 
 <!-- Reference -->
+[image-codeql]: https://github.com/urin/qrono/actions/workflows/github-code-scanning/codeql/badge.svg
+[url-codeql]: https://github.com/urin/qrono/actions/workflows/github-code-scanning/codeql
+
 [image-license]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [url-license]: LICENSE
 
