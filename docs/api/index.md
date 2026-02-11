@@ -2,6 +2,82 @@
 
 Complete API reference for Qrono.
 
+The library provides two classes: `Qrono`, which represents a point in time, and `QronoDate`, which represents a calendar date. `QronoDate` is not affected by time zones.
+
+- [Factory](#factory)
+  - [qrono(...args)](#qrono) <Badge type="info" text="static" /> <small>14 overloads</small>
+  - [qrono.date(...args)](#qrono-date) <Badge type="info" text="static" /> <small>7 overloads</small>
+- [Conversion](#conversion)
+  - [.toString()](#tostring) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.numeric()](#numeric) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.valueOf()](#valueof) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.toArray()](#toarray) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.toObject()](#toobject) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.nativeDate()](#nativedate) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.toDate()](#todate) <Badge type="tip" text="Qrono" />
+  - [.toDatetime()](#todatetime) <Badge type="warning" text="QronoDate" />
+- [Constants](#constants)
+  - [qrono.monday](#day-constants) <Badge type="info" text="static" />
+  - [qrono.tuesday](#day-constants) <Badge type="info" text="static" />
+  - [qrono.wednesday](#day-constants) <Badge type="info" text="static" />
+  - [qrono.thursday](#day-constants) <Badge type="info" text="static" />
+  - [qrono.friday](#day-constants) <Badge type="info" text="static" />
+  - [qrono.saturday](#day-constants) <Badge type="info" text="static" />
+  - [qrono.sunday](#day-constants) <Badge type="info" text="static" />
+- [Accessors](#accessors)
+  - [.year()](#year) <Badge type="tip" text="Qrono" /> <small>2 overloads</small> <Badge type="warning" text="QronoDate" /> <small>2 overloads</small>
+  - [.month()](#month) <Badge type="tip" text="Qrono" /> <small>2 overloads</small> <Badge type="warning" text="QronoDate" /> <small>2 overloads</small>
+  - [.day()](#day) <Badge type="tip" text="Qrono" /> <small>2 overloads</small> <Badge type="warning" text="QronoDate" /> <small>2 overloads</small>
+  - [.hour()](#hour) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
+  - [.minute()](#minute) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
+  - [.second()](#second) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
+  - [.millisecond()](#millisecond) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
+  - [.offset()](#offset) <Badge type="tip" text="Qrono" />
+- [Context](#context-methods)
+  - [qrono.context()](#default-context) <Badge type="info" text="static" /> <small>2 overloads</small>
+  - [qrono.asUtc()](#default-asutc) <Badge type="info" text="static" />
+  - [qrono.asLocaltime()](#default-aslocaltime) <Badge type="info" text="static" />
+  - [qrono.localtime()](#default-localtime) <Badge type="info" text="static" /> <small>2 overloads</small>
+  - [.context()](#context) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
+  - [.localtime()](#localtime) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
+  - [.ambiguousAsDst()](#ambiguousasdst) <Badge type="tip" text="Qrono" />
+  - [.asUtc()](#asutc) <Badge type="tip" text="Qrono" />
+  - [.asLocaltime()](#aslocaltime) <Badge type="tip" text="Qrono" />
+- [Calculation](#calculation)
+  - [.plus(duration)](#plus) <Badge type="tip" text="Qrono" /> <small>4 overloads</small> <Badge type="warning" text="QronoDate" /> <small>4 overloads</small>
+  - [.minus(duration)](#minus) <Badge type="tip" text="Qrono" /> <small>4 overloads</small> <Badge type="warning" text="QronoDate" /> <small>4 overloads</small>
+  - [.valid()](#valid) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+- [Comparison](#comparison)
+  - [.isSame(other)](#issame) <Badge type="tip" text="Qrono" /> <small>3 overloads</small> <Badge type="warning" text="QronoDate" /> <small>3 overloads</small>
+  - [.isBefore(other)](#isbefore) <Badge type="tip" text="Qrono" /> <small>3 overloads</small> <Badge type="warning" text="QronoDate" /> <small>3 overloads</small>
+  - [.isAfter(other)](#isafter) <Badge type="tip" text="Qrono" /> <small>3 overloads</small> <Badge type="warning" text="QronoDate" /> <small>3 overloads</small>
+  - [.isSameOrBefore(other)](#issameorbefore) <Badge type="tip" text="Qrono" /> <small>3 overloads</small> <Badge type="warning" text="QronoDate" /> <small>3 overloads</small>
+  - [.isSameOrAfter(other)](#issameorafter) <Badge type="tip" text="Qrono" /> <small>3 overloads</small> <Badge type="warning" text="QronoDate" /> <small>3 overloads</small>
+  - [.isBetween(start, end)](#isbetween) <Badge type="tip" text="Qrono" /> <small>3 overloads</small> <Badge type="warning" text="QronoDate" /> <small>3 overloads</small>
+- [Time Unit Boundary](#boundary)
+  - [.startOfYear()](#startofyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.startOfMonth()](#startofmonth) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.startOfDay()](#startofday) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.startOfHour()](#startofhour) <Badge type="tip" text="Qrono" />
+  - [.startOfMinute()](#startofminute) <Badge type="tip" text="Qrono" />
+  - [.startOfSecond()](#startofsecond) <Badge type="tip" text="Qrono" />
+  - [.endOfYear()](#endofyear) <Badge type="warning" text="QronoDate" />
+  - [.endOfMonth()](#endofmonth) <Badge type="warning" text="QronoDate" />
+- [Date Information](#date-info)
+  - [.dayOfWeek()](#dayofweek) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.dayOfYear()](#dayofyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.weekOfYear()](#weekofyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.yearOfWeek()](#yearofweek) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.isLeapYear()](#isleapyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.daysInMonth()](#daysinmonth) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.daysInYear()](#daysinyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.weeksInYear()](#weeksinyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+- [Daylight Saving Time](#dst)
+  - [.hasDstInYear()](#hasdstinyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.isInDst()](#isindst) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.isDstTransitionDay()](#isdsttransitionday) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.minutesInDay()](#minutesinday) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+
 ## Factory {#factory}
 
 All Factory methods accept an optional `context` object as the first argument to configure how the instance handles timezone and DST settings.
@@ -60,15 +136,6 @@ qrono.date([2024, 1, 15])
 
 // From object
 qrono.date({ year: 2024, month: 1, day: 15 })
-```
-
-### valid() {#valid}
-
-Check if the instance represents a valid date.
-
-```javascript
-qrono('2024-01-15').valid()        // true
-qrono(new Date('invalid')).valid() // false
 ```
 
 ## Conversion {#conversion}
@@ -353,7 +420,16 @@ qrono.date('2024-01-05').minus([0, 0, 5])     // -5 days
 qrono.date('2024-01-05').minus({ month: 1 })  // subtract month
 ```
 
-## Comparison Methods {#comparison}
+### valid() {#valid}
+
+Check if the instance represents a valid date.
+
+```javascript
+qrono('2024-01-15').valid()        // true
+qrono(new Date('invalid')).valid() // false
+```
+
+## Comparison {#comparison}
 
 ### isSame(other) {#issame}
 
@@ -405,7 +481,7 @@ Check if this date is between two dates (inclusive).
 time.isBetween(qrono('2024-01-01'), qrono('2024-12-31'))  // true or false
 ```
 
-## Start Of Methods {#start-of}
+## Time Unit Boundary {#boundary}
 
 ### startOfYear() {#startofyear}
 
@@ -460,8 +536,6 @@ Get the start of the second.
 qrono('2024-06-15 14:30:45.123').startOfSecond()
 // 2024-06-15T14:30:45.000Z
 ```
-
-## End Of Methods {#end-of}
 
 ### endOfYear() {#endofyear}
 
@@ -545,7 +619,7 @@ Get the number of ISO weeks in the current year (52 or 53).
 qrono('2024-01-01').weeksInYear()  // 52
 ```
 
-## DST Methods {#dst}
+## Daylight Saving Time {#dst}
 
 ### hasDstInYear() {#hasdstinyear}
 

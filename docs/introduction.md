@@ -33,18 +33,17 @@ Full TypeScript definitions included for type-safe development.
 ## Design Philosophy
 
 - **Type-safe, immutable, and chainable**  
-  Provides functions necessary for most cases.
-- **Locality-Agnostic**  
-  Localization can be done with the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
-- **UTC and Local Time Only**  
-  Supports only UTC (default) and the local time of the environment. In most cases, supporting only the client's time zone is
-sufficient.
-- **Strict DST Handling**  
-  The only library that handles ambiguous daylight saving time strictly, with dedicated APIs for DST transitions.
-- **ISO 8601 Compliant**  
-  Follows the [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) standard.
-- **Zero Dependencies**  
-  Pure JavaScript without external dependencies.
+  Covers the majority of common use cases.
+- **UTC-first with local time support**  
+  Supports only UTC (by default) and the environment’s local time zone. In most cases, supporting only the client’s time zone is sufficient.
+- **Strict DST handling**  
+  Provides explicit handling of ambiguous daylight saving time transitions through dedicated APIs.
+- **ISO 8601 compliant**  
+  Fully compliant with the [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) standard.
+- **Zero dependencies**  
+  Written in pure JavaScript with no external dependencies.
+- **Locale-agnostic**  
+  Delegates localization to the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
 
 ## Why Qrono?
 
