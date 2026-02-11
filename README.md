@@ -16,48 +16,46 @@ qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.
 
 ---
 
-## Design philosophy 🎨
+## Design Philosophy 🎨
 
 - **Type-safe, immutable, and chainable**  
-  Provides functions necessary for most cases.
-- **Locality-Agnostic**  
-  Localization can be done with the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
-- **UTC and Local Time Only**  
-  Supports only UTC (default) and the local time of the environment. In most cases, supporting only the client's time zone is
-sufficient.
-- **Strict DST Handling**  
-  The only library that handles ambiguous daylight saving time strictly, with dedicated APIs for DST transitions.
-- **ISO 8601 Compliant**  
-  Follows the [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) standard.
-- **Zero Dependencies**  
-  Pure JavaScript without external dependencies.
+  Covers the majority of common use cases.
+- **UTC-first with local time support**  
+  Supports only UTC (by default) and the environment’s local time zone. In most cases, supporting only the client’s time zone is sufficient.
+- **Strict DST handling**  
+  Provides explicit handling of ambiguous daylight saving time transitions through dedicated APIs.
+- **ISO 8601 compliant**  
+  Fully compliant with the ISO 8601 standard.
+- **Zero dependencies**  
+  Written in pure JavaScript with no external dependencies.
+- **Locale-agnostic**  
+  Delegates localization to the ECMAScript® Internationalization API.
 
 ### Alternatives
 
 - **[Moment.js](https://momentjs.com/)**  
-  A widely used library that was the de-facto standard. It went into maintenance mode in 2020.  
-  It has a fundamental problem with mutable objects, making it prone to bugs. The later date-time libraries introduced below are all designed to be immutable.  
-        
+  A widely used library that was once the de facto standard for date-time handling in JavaScript. It entered maintenance mode in 2020.  
+  Its mutable API design can lead to unintended side effects and bugs. Most modern date-time libraries introduced below are designed to be immutable.
+
 - **[Luxon](https://moment.github.io/luxon/)**  
-  An immutable and rich library created by the maintainers of [Moment.js](https://github.com/moment/moment).  Sophisticated and feature-rich. Good codebase to explore.  
-  By default, it handles time in local time and [cannot strictly handle ambiguous times](https://moment.github.io/luxon/#/zones?id=ambiguous-times).  
-  It differs from other libraries in that the documentation clearly shows how it behaves with ambiguous time.  
+  An immutable, feature-rich library created by the maintainers of Moment.js. It provides comprehensive timezone and formatting support.  
+  By default, it operates in the system’s local time zone and does not provide strict disambiguation for ambiguous local times.  
+  Its documentation clearly explains how ambiguous times are handled.
 
 - **[Day.js](https://day.js.org/)**  
-  A [Moment.js](https://github.com/moment/moment) compatible library with small size, which has [many GitHub stars](https://github.com/iamkun/dayjs/stargazers) and is becoming the de-facto standard.  
-  3.0kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
-  The codebase is large due to time zone and locale support (184 source files as of 2026-02-08).  
-  Planning a major version upgrade while solving [many issues](https://github.com/iamkun/dayjs/issues?q=is%3Aissue+is%3Aopen).  
-  **Qrono** achieves **3.5kB with 100+ APIs** without plugins.
+  A small, Moment.js-compatible library with a large GitHub following, increasingly considered a de facto standard.  
+  Approximately 3.0 kB with 30+ core APIs. Timezone, locale support, and additional functionality require plugins.  
+  Currently preparing a major version upgrade.
 
 - **[date-fns](https://date-fns.org/)**  
-  Provides 200+ pure functions for manipulating JavaScript `Date` objects, implemented in TypeScript and tree-shaking enabled.  
-  Since the JavaScript `Date` object takes the lead, problems such as mutability and month starting at 0 are inherited.   
+  Provides 200+ pure functions for manipulating JavaScript `Date` objects. Implemented in TypeScript and fully tree-shakeable.  
+  Because it builds directly on the native `Date` object, it inherits limitations such as mutability and zero-based months.
 
 - **[The ECMA TC39 Temporal Proposal](https://tc39.es/proposal-temporal/docs/index.html)**  
-  An ECMAScript® API proposal that may become a future standard. The specification is rigorous, spectacular, and inspired by [java.time](https://jcp.org/aboutJava/communityprocess/pfd/jsr310/JSR-310-guide.html).
+  A proposed ECMAScript® API that may become a future standard. The specification is rigorous and heavily inspired by `java.time`.
 
-None of these libraries provide APIs to detect or handle DST transitions properly. Qrono fills this gap with a balanced approach - not too simple, not too complex, just right.
+None of these libraries provide dedicated APIs for strict DST transition handling.  
+Qrono addresses this gap with a balanced and pragmatic approach.
 
 ### Repository Size Comparison
 
