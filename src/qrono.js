@@ -811,13 +811,17 @@ function plusDate(sign, ...args) {
     timeFields = {
       year: sign * (arg0.year ?? 0),
       month: sign * (arg0.month ?? 0),
-      day: sign * (arg0.day ?? 0)
+      day: sign * (arg0.day ?? 0),
     }
   } else if (Number.isFinite(arg0)) {
-    if (args.length > 3) { throw RangeError('Too many arguments') }
+    if (args.length > 3) {
+      throw RangeError('Too many arguments')
+    }
     timeFields = { year: args[0], month: args[1], day: args[2] }
   } else if (Array.isArray(arg0)) {
-    if (arg0.length > 3) { throw RangeError('Too many elements') }
+    if (arg0.length > 3) {
+      throw RangeError('Too many elements')
+    }
     timeFields = { year: arg0[0], month: arg0[1], day: arg0[2] }
   } else {
     throw TypeError()
