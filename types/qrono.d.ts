@@ -180,7 +180,7 @@ declare namespace qrono {
    * @param date - An object of time fields.
    * @returns A new QronoDate instance.
    */
-  export function date(date?: qrono.TimeFields): QronoDate
+  export function date(date?: qrono.DateFields): QronoDate
 
   /**
    * Creates a new QronoDate instance.
@@ -250,6 +250,12 @@ declare namespace qrono {
     minute?: number
     second?: number
     millisecond?: number
+  }
+
+  export type DateFields = {
+    year?: number
+    month?: number
+    day?: number
   }
 
   type Comparable = Qrono | number | Date
@@ -850,7 +856,7 @@ declare namespace qrono {
      * @param value - An object of time fields to add.
      * @returns A new QronoDate instance with the added duration.
      */
-    plus(value: TimeFields): QronoDate
+    plus(value: DateFields): QronoDate
 
     /**
      * Adds a duration to the QronoDate instance.
@@ -878,7 +884,7 @@ declare namespace qrono {
      * @param value - An object of time fields to subtract.
      * @returns A new QronoDate instance with the subtracted duration.
      */
-    minus(value: TimeFields): QronoDate
+    minus(value: DateFields): QronoDate
 
     /**
      * Subtracts a duration from the QronoDate instance.

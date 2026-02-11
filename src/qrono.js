@@ -792,19 +792,35 @@ QronoDate.prototype.isBetween = function (a, b) {
 }
 
 QronoDate.prototype.plus = function (...args) {
-  const arg0 = args[0]
-  const arg1 = args[1]
-  if (Number.isFinite(arg0) && !Number.isFinite(arg1)) {
-    return this[internalDate].datetime.plus({ day: arg0 }).toDate()
-  }
-  return this[internalDate].datetime.plus(...args).toDate()
+  return plusDate.call(this, 1, ...args)
 }
 
 QronoDate.prototype.minus = function (...args) {
+  return plusDate.call(this, -1, ...args)
+}
+
+function plusDate(sign, ...args) {
   const arg0 = args[0]
   const arg1 = args[1]
+  const datetime = this[internalDate].datetime
   if (Number.isFinite(arg0) && !Number.isFinite(arg1)) {
-    return this[internalDate].datetime.minus({ day: arg0 }).toDate()
+    return datetime.plus({ day: sign * arg0 }).toDate()
   }
-  return this[internalDate].datetime.minus(...args).toDate()
+  let timeFields = null
+  if (isObject(arg0) && hasDatetimeField(arg0)) {
+    timeFields = {
+      year: sign * (arg0.year ?? 0),
+      month: sign * (arg0.month ?? 0),
+      day: sign * (arg0.day ?? 0)
+    }
+  } else if (Number.isFinite(arg0)) {
+    if (args.length > 3) { throw RangeError('Too many arguments') }
+    timeFields = { year: args[0], month: args[1], day: args[2] }
+  } else if (Array.isArray(arg0)) {
+    if (arg0.length > 3) { throw RangeError('Too many elements') }
+    timeFields = { year: arg0[0], month: arg0[1], day: arg0[2] }
+  } else {
+    throw TypeError()
+  }
+  return datetime.plus(timeFields).toDate()
 }

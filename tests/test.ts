@@ -430,6 +430,7 @@ test('QronoDate', () => {
   expect(nextDay.toString()).toBe('2021-10-01')
   expect(nextDay.toArray()).toEqual([2021, 10, 1])
   expect(nextDay.valid()).toBe(true)
+  expect(nextDay.isSame(qrono.date(baseDate + 1))).toBe(true)
 
   const nextDayByNumber = baseDate.plus(1)
   expect(nextDayByNumber.toString()).toBe('2021-10-01')
