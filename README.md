@@ -1,7 +1,7 @@
 # <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) - 🕥 _Just right date time library_
 
-[![CodeQL][image-codeql]][url-codeql]
 [![MIT License][image-license]][url-license]
+[![CodeQL][image-codeql]][url-codeql]
 [![NPM version][image-npm-version]][url-npm]
 [![NPM downloads][image-npm-downloads]][url-npm-downloads]
 [![gzip size][image-size]][url-size]
@@ -10,6 +10,9 @@
 qrono('2021-08-31 12:34').plus({ month: 1 }).isSame(qrono('2021-09-30 12:34'))
 qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
 qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
+const today = qrono.date('2021-08-31')
+const tomorrow = qrono.date(today + 1)
+tommorow - today === 1
 ```
 
 [🌐 Website<sup> ↗</sup>](https://qronojs.dev/) \| [🎨 Design philosophy](#design-philosophy-) \| [📥 Getting started](#getting-started-) \| [🚀 Quick tour](#quick-tour-) \| [🌏 License](#license-)
@@ -135,7 +138,81 @@ const { qrono } = require('qrono')
 
 ## Quick tour 🚀
 
-Visit [official website](https://qronojs.dev/) for complete documentation.
+Visit [official website<sup> ↗</sup>](https://qronojs.dev/) for complete documentation.
+
+- Factory
+  - [qrono(...args)](https://qronojs.dev/api/#qrono) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>14 overloads</sup>
+  - [qrono.date(...args)](https://qronojs.dev/api/#qrono-date) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>7 overloads</sup>
+- Conversion
+  - [.toString()](https://qronojs.dev/api/#tostring) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.numeric()](https://qronojs.dev/api/#numeric) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.valueOf()](https://qronojs.dev/api/#valueof) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.toArray()](https://qronojs.dev/api/#toarray) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.toObject()](https://qronojs.dev/api/#toobject) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.nativeDate()](https://qronojs.dev/api/#nativedate) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.toDate()](https://qronojs.dev/api/#todate) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+  - [.toDatetime()](https://qronojs.dev/api/#todatetime) <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+- Constants
+  - [qrono.monday](https://qronojs.dev/api/#day-constants) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.tuesday](https://qronojs.dev/api/#day-constants) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.wednesday](https://qronojs.dev/api/#day-constants) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.thursday](https://qronojs.dev/api/#day-constants) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.friday](https://qronojs.dev/api/#day-constants) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.saturday](https://qronojs.dev/api/#day-constants) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.sunday](https://qronojs.dev/api/#day-constants) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+- Accessors
+  - [.year()](https://qronojs.dev/api/#year) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>2 overloads</sup>
+  - [.month()](https://qronojs.dev/api/#month) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>2 overloads</sup>
+  - [.day()](https://qronojs.dev/api/#day) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>2 overloads</sup>
+  - [.hour()](https://qronojs.dev/api/#hour) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
+  - [.minute()](https://qronojs.dev/api/#minute) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
+  - [.second()](https://qronojs.dev/api/#second) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
+  - [.millisecond()](https://qronojs.dev/api/#millisecond) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
+  - [.offset()](https://qronojs.dev/api/#offset) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+- Context
+  - [qrono.context()](https://qronojs.dev/api/#default-context) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>2 overloads</sup>
+  - [qrono.asUtc()](https://qronojs.dev/api/#default-asutc) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.asLocaltime()](https://qronojs.dev/api/#default-aslocaltime) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
+  - [qrono.localtime()](https://qronojs.dev/api/#default-localtime) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>2 overloads</sup>
+  - [.context()](https://qronojs.dev/api/#context) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
+  - [.localtime()](https://qronojs.dev/api/#localtime) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
+  - [.ambiguousAsDst()](https://qronojs.dev/api/#ambiguousasdst) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+  - [.asUtc()](https://qronojs.dev/api/#asutc) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+  - [.asLocaltime()](https://qronojs.dev/api/#aslocaltime) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+- Calculation
+  - [.plus(duration)](https://qronojs.dev/api/#plus) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>4 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>4 overloads</sup>
+  - [.minus(duration)](https://qronojs.dev/api/#minus) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>4 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>4 overloads</sup>
+  - [.valid()](https://qronojs.dev/api/#valid) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+- Comparison
+  - [.isSame(other)](https://qronojs.dev/api/#issame) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>3 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>3 overloads</sup>
+  - [.isBefore(other)](https://qronojs.dev/api/#isbefore) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>3 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>3 overloads</sup>
+  - [.isAfter(other)](https://qronojs.dev/api/#isafter) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>3 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>3 overloads</sup>
+  - [.isSameOrBefore(other)](https://qronojs.dev/api/#issameorbefore) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>3 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>3 overloads</sup>
+  - [.isSameOrAfter(other)](https://qronojs.dev/api/#issameorafter) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>3 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>3 overloads</sup>
+  - [.isBetween(start, end)](https://qronojs.dev/api/#isbetween) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>3 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>3 overloads</sup>
+- Time Unit Boundary
+  - [.startOfYear()](https://qronojs.dev/api/#startofyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.startOfMonth()](https://qronojs.dev/api/#startofmonth) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.startOfDay()](https://qronojs.dev/api/#startofday) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.startOfHour()](https://qronojs.dev/api/#startofhour) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+  - [.startOfMinute()](https://qronojs.dev/api/#startofminute) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+  - [.startOfSecond()](https://qronojs.dev/api/#startofsecond) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+  - [.endOfYear()](https://qronojs.dev/api/#endofyear) <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.endOfMonth()](https://qronojs.dev/api/#endofmonth) <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+- Date Information
+  - [.dayOfWeek()](https://qronojs.dev/api/#dayofweek) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.dayOfYear()](https://qronojs.dev/api/#dayofyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.weekOfYear()](https://qronojs.dev/api/#weekofyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.yearOfWeek()](https://qronojs.dev/api/#yearofweek) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.isLeapYear()](https://qronojs.dev/api/#isleapyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.daysInMonth()](https://qronojs.dev/api/#daysinmonth) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.daysInYear()](https://qronojs.dev/api/#daysinyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.weeksInYear()](https://qronojs.dev/api/#weeksinyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+- Daylight Saving Time
+  - [.hasDstInYear()](https://qronojs.dev/api/#hasdstinyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.isInDst()](https://qronojs.dev/api/#isindst) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.isDstTransitionDay()](https://qronojs.dev/api/#isdsttransitionday) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.minutesInDay()](https://qronojs.dev/api/#minutesinday) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
 
 ### Construction
 
@@ -266,7 +343,7 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 [image-npm-version]: https://img.shields.io/npm/v/qrono.svg?style=flat
 [url-npm]: https://npmjs.org/package/qrono
 
-[image-npm-downloads]: https://img.shields.io/npm/dm/qrono.svg?style=flat
+[image-npm-downloads]: https://img.shields.io/npm/dy/qrono.svg?style=flat
 [url-npm-downloads]: https://npmcharts.com/compare/qrono?minimal=true
 
 [image-size]: https://img.badgesize.io/https://unpkg.com/qrono/dist/qrono.min.js?compression=gzip&color=blue

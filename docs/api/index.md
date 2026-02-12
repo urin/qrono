@@ -383,6 +383,15 @@ local.localtime()  // true
 
 ## Calculation {#calculation}
 
+When a `Qrono` instance is cast to a number, it represents the milliseconds since the UNIX epoch, just like a `Date` object. A `QronoDate` instance uses “days” as its unit. Therefore, expressions like the following work as expected.
+
+```javascript
+qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
+const today = qrono.date('2021-08-31')
+const tomorrow = qrono.date(today + 1)
+tommorow - today === 1
+```
+
 ### plus(duration) {#plus}
 
 Add time to the date.
