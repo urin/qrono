@@ -4,7 +4,7 @@ import MockDate from 'mockdate'
 
 beforeEach(() => {
   MockDate.set(new Date())
-  qrono.context({ localtime: false, ambiguousAsDst: false })
+  qrono.context({ localtime: false, interpretAsDst: false })
 })
 
 afterEach(() => {
@@ -84,12 +84,12 @@ test('Construction from number', () => {
 
 test('Accessor', () => {
   expect(
-    qrono().context({ localtime: true, ambiguousAsDst: true }).context()
-  ).toEqual({ localtime: true, ambiguousAsDst: true })
+    qrono().context({ localtime: true, interpretAsDst: true }).context()
+  ).toEqual({ localtime: true, interpretAsDst: true })
   expect(qrono().nativeDate().toISOString()).toBe(dateText())
   expect(qrono().offset()).toBe(0)
   expect(qrono().localtime(true).localtime()).toBe(true)
-  expect(qrono().ambiguousAsDst(true).ambiguousAsDst()).toBe(true)
+  expect(qrono().interpretAsDst(true).interpretAsDst()).toBe(true)
   expect(qrono().valid()).toBe(true)
   expect(qrono(new Date(NaN)).valid()).toBe(false)
   expect(qrono().numeric()).toBe(qrono().valueOf())
@@ -246,7 +246,7 @@ test('Calculation and comparison', () => {
 })
 
 test('Daylight saving time', () => {
-  qrono.context({ localtime: true, ambiguousAsDst: true })
+  qrono.context({ localtime: true, interpretAsDst: true })
   expect(qrono(1950, 1).hasDstInYear()).toBe(true)
   expect(qrono(1954, 1).hasDstInYear()).toBe(false)
   expect(qrono('1950-09-10 00:59:59.999').isInDst()).toBe(true)
@@ -261,10 +261,10 @@ test('Daylight saving time', () => {
   expect(qrono('1950-05-07 00:00:00.000').isDstTransitionDay()).toBe(true)
   expect(qrono('1950-09-09 23:59:59.999').isDstTransitionDay()).toBe(false)
   expect(qrono('1950-09-10 01:00:00.000').isDstTransitionDay()).toBe(true)
-  qrono.context({ localtime: true, ambiguousAsDst: false })
+  qrono.context({ localtime: true, interpretAsDst: false })
   expect(qrono('1950-05-07 01:00:00.000').minutesInDay()).toBe(1380)
   expect(qrono('1950-09-10 00:00:00.000').minutesInDay()).toBe(1500)
-  qrono.context({ ambiguousAsDst: false })
+  qrono.context({ interpretAsDst: false })
   ;[
     { q: '1950-05-06 23:59:59.999', a: '1950-05-06T23:59:59.999+09:00' },
     { q: '1950-05-07 00:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
@@ -275,7 +275,7 @@ test('Daylight saving time', () => {
   ].forEach(({ q, a }) => {
     expect(qrono(q).toString()).toBe(a)
   })
-  qrono.context({ ambiguousAsDst: true })
+  qrono.context({ interpretAsDst: true })
   ;[
     { q: '1950-05-06 23:59:59.999', a: '1950-05-06T23:59:59.999+09:00' },
     { q: '1950-05-07 00:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },

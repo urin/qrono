@@ -48,7 +48,7 @@ Qrono.date = QronoDate
 // NOTE Must be flat object for shallow cloning.
 const defaultContext = {
   localtime: false,
-  ambiguousAsDst: false,
+  interpretAsDst: false,
 }
 
 fields(defaultContext).forEach(key => {
@@ -106,7 +106,7 @@ function Qrono(...args) {
     // properties
     nativeDate: null,
     localtime: false,
-    ambiguousAsDst: false,
+    interpretAsDst: false,
     // methods
     set,
     parse,
@@ -207,7 +207,7 @@ function set(values) {
       args.second ?? baseDate.getSeconds(),
       args.millisecond ?? baseDate.getMilliseconds()
     )
-    this.nativeDate = asDst(this.ambiguousAsDst, newDate)
+    this.nativeDate = asDst(this.interpretAsDst, newDate)
   } else {
     const baseDate = this.nativeDate ?? new Date(0)
     const newDate = new Date(0)
@@ -265,7 +265,7 @@ function parse(str) {
   if (offset) {
     this.nativeDate = native
   } else if (this.localtime) {
-    this.nativeDate = asDst(this.ambiguousAsDst, native)
+    this.nativeDate = asDst(this.interpretAsDst, native)
   } else {
     this.set({ year, month, day, hour, minute, second, millisecond })
   }
@@ -310,7 +310,7 @@ Qrono.prototype.context = function (context) {
     ? this.clone(context)
     : {
         localtime: this[internal].localtime,
-        ambiguousAsDst: this[internal].ambiguousAsDst,
+        interpretAsDst: this[internal].interpretAsDst,
       }
 }
 
@@ -328,10 +328,10 @@ Qrono.prototype.localtime = function (arg) {
   return given(arg) ? this.clone({ localtime: arg }) : this[internal].localtime
 }
 
-Qrono.prototype.ambiguousAsDst = function (arg) {
+Qrono.prototype.interpretAsDst = function (arg) {
   return given(arg)
-    ? this.clone({ ambiguousAsDst: arg })
-    : this[internal].ambiguousAsDst
+    ? this.clone({ interpretAsDst: arg })
+    : this[internal].interpretAsDst
 }
 
 Qrono.prototype.valid = function () {
@@ -660,7 +660,7 @@ function plus(sign, ...args) {
       )
     }
   })
-  return this.clone(asDst(this[internal].ambiguousAsDst, date))
+  return this.clone(asDst(this[internal].interpretAsDst, date))
 }
 
 // -----------------------------------------------------------------------------

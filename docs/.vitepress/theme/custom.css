@@ -1,0 +1,6 @@
+.VPHome .VPHero .name,
+.VPHome .VPHero .text,
+.VPHome .VPHero .tagline {
+  max-width: 100% !important;
+  width: 100% !important;
+}

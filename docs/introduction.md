@@ -1,51 +1,35 @@
 # Introduction
 
-Qrono is a just-right date-time library for JavaScript - not too simple, not too complex. All features are packed into just **4kB**.
+Qrono is a **4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**. Designed for _single-timezone_ applications.
 
 ```javascript
-qrono('2021-08-31 12:34').plus({ month: 1 }).isSame(qrono('2021-09-30 12:34'))
-qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
-qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
+import { qrono } from 'qrono'
+
+// America/New_York — DST ends
+qrono('2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
+qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
+qrono('2026-08-31 12:34') < qrono('2026-09-30 12:34')
+const today = qrono.date('2021-08-31')
+const tomorrow = qrono.date(today + 1)
+tommorow - today === 1
 ```
-
-## Features
-
-### 🚀 Simple & Intuitive
-
-API for common date-time operations without extra complexity.
-
-### 🔒 Immutable
-
-All operations return new instances for safe, predictable data.
-
-### ⚡ Lightweight
-
-Pure JavaScript without dependencies. Minimal bundle size for optimal performance.
-
-### 🌍 Timezone & DST Aware
-
-Built-in support for UTC and local time operations. Unique DST-aware APIs that no other library provides.
-
-### 🔧 TypeScript Ready
-
-Full TypeScript definitions included for type-safe development.
 
 ## Design Philosophy
 
-- **Type-safe, immutable, and chainable**  
-  Covers the majority of common use cases.
-- **UTC-first with local time support**  
-  Supports only UTC (by default) and the environment’s local time zone. In most cases, supporting only the client’s time zone is sufficient.
-- **Strict DST handling**  
-  Provides explicit handling of ambiguous daylight saving time transitions through dedicated APIs.
-- **ISO 8601 compliant**  
+- 🔐 **Type-safe, immutable, and chainable**  
+  All operations return new instances for safe, predictable data and intuitive API. Covers the majority of common use cases.
+- 🌍 **UTC-first with local time support**  
+  Supports only UTC (by default) and the environment's local time zone. In most cases, supporting only the client's time zone is sufficient.
+- 🕐 **Strict DST handling**  
+  Unique DST-aware APIs that no other library provides. Explicit handling of ambiguous daylight saving time transitions through dedicated APIs.
+- ✨ **Minimal and focused**  
+  Pure JavaScript with zero dependencies. Lightweight (4kB) with 100+ APIs through focused design.
+- ✅ **ISO 8601 compliant**  
   Fully compliant with the [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) standard.
-- **Zero dependencies**  
-  Written in pure JavaScript with no external dependencies.
-- **Locale-agnostic**  
-  Delegates localization to the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+- 🔷 **TypeScript ready**  
+  Full TypeScript definitions included for type-safe development. Locale-agnostic design delegates localization to the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
 
-## Why Qrono?
+### Why Qrono?
 
 Other date-time libraries have larger codebases and more complicated usage to support multiple time zones and locales. Qrono takes a different approach:
 
@@ -54,8 +38,7 @@ Other date-time libraries have larger codebases and more complicated usage to su
 - **[Luxon](https://moment.github.io/luxon/)**  
   It is feature-rich, but it cannot strictly handle ambiguous DST times by default.
 - **[Day.js](https://day.js.org/)**  
-  3.0kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
-  **Qrono** achieves **3.5kB with 100+ APIs** without plugins.
+  3kB with 30+ APIs, but requires plugin imports for timezone/locale support and other functions.
 - **[date-fns](https://date-fns.org/)**  
   Tree-shakable pure functions, but inherits JavaScript Date problems (mutability, 0-indexed months).
 
@@ -65,9 +48,9 @@ None of these libraries provide APIs to detect or handle DST transitions properl
 
 [![Comparison of repository size](/comparison-repo-size.svg)](/comparison-repo-size.svg)
 
-This comparison shows that **Qrono clearly stands out for its remarkably small codebase** among other libraries. Its compact size reflects a strong focus on minimalism and efficiency, making it well suited for situations where bundle size and simplicity are important.
+This comparison shows that **Qrono stands out for its small codebase** among other libraries. Its compact size reflects a strong focus on minimalism and efficiency, making it well suited for situations where bundle size and simplicity are important.
 
-For many of the other libraries, their larger size is due to the fact that a significant portion of the codebase is dedicated to supporting a wide range of locales. Meanwhile, the larger size of date-fns is intentional and not a drawback. It is designed with tree-shaking in mind, so unused functions are removed at build time, and its API is intentionally fine-grained and verbose to provide clarity and flexibility. The size difference therefore represents a difference in design philosophy, not a measure of overall quality.
+For many of the other libraries, their larger size is due to the fact that a significant portion of the codebase is dedicated to supporting a wide range of locales and time zones. Meanwhile, the larger size of date-fns is intentional and not a drawback. It is designed with tree-shaking in mind, so unused functions are removed at build time, and its API is intentionally fine-grained and verbose to provide clarity and flexibility. The size difference therefore represents a difference in design philosophy, not a measure of overall quality.
 
 ### Supporting Only the Local Time of the Execution Environment
 
@@ -80,6 +63,8 @@ For example, a user who resides in Japan may start using the application in the 
 
 For this reason, to keep the system design simple, the server should avoid managing user-specific time zones. Instead, the server should store and handle time exclusively in UTC. All time values should be transmitted to clients in UTC (typically as ISO 8601–formatted strings), and converting them into local time should be the responsibility of the client.
 
+Qrono is designed precisely for this model. Because it is UTC-first while also supporting the local time zone of the runtime environment, it works naturally on both sides of this architecture: servers can stay simple with UTC-based logic, and clients can reliably handle local-time behavior.
+
 Even when support for multiple locales is required, storing time data in UTC is usually sufficient. In most cases, locale-specific formatting can be handled entirely on the client side by using the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
 
 One important caveat of this design is that the time zone database of the client environment (OS) must be properly maintained. Daylight saving time rules — for example, in Brazil — may change from year to year, and time zone definitions themselves are determined by laws that are frequently revised. This means that the underlying time zone database must be kept up to date.
@@ -90,7 +75,7 @@ In most typical environments, this requirement is satisfied automatically throug
 
 Considering these factors, **Qrono** is deliberately designed to forgo support for multiple time zones in order to achieve greater overall benefits, such as a **small code base and easy handling of daylight saving time transitions**.
 
-### About Daylight Saving Time
+### Handling Daylight Saving Time
 
 Qrono is the only JavaScript date-time library with dedicated APIs for DST handling ([`hasDstInYear()`](./api/#hasdstinyear), [`isInDst()`](./api/#isindst), [`isDstTransitionDay()`](./api/#isdsttransitionday), [`minutesInDay()`](./api/#minutesinday)).
 
@@ -113,7 +98,7 @@ Additionally, a `Date` object created from a duplicated time during daylight sav
 
 **Qrono** addresses these issues by providing a more understandable approach to handling such transitions.
 
-## Installation
+## Getting Started
 
 ::: code-group
 
@@ -170,7 +155,7 @@ import { qrono } from '@urin/qrono'
 qrono()
 
 // from various types of arguments
-qrono('2022-12-31')           // => 2022-12-31T00:00:00.000Z
+qrono('2022-12-31')  // => 2022-12-31T00:00:00.000Z
 qrono(new Date())
 
 // the following are the same 2022-12-31T15:23:11.321Z

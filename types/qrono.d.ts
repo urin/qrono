@@ -216,16 +216,16 @@ declare namespace qrono {
   export function localtime(value: boolean): typeof qrono
 
   /**
-   * Returns whether ambiguousAsDst is enabled.
+   * Returns whether interpretAsDst is enabled.
    */
-  export function ambiguousAsDst(): boolean
+  export function interpretAsDst(): boolean
 
   /**
-   * Sets whether ambiguousAsDst is enabled.
-   * @param value - True to enable ambiguousAsDst.
+   * Sets whether interpretAsDst is enabled.
+   * @param value - True to enable interpretAsDst.
    * @returns The qrono object.
    */
-  export function ambiguousAsDst(value: boolean): typeof qrono
+  export function interpretAsDst(value: boolean): typeof qrono
 
   /**
    * Returns new qrono instance with UTC context.
@@ -239,7 +239,7 @@ declare namespace qrono {
 
   export type Context = {
     localtime?: boolean
-    ambiguousAsDst?: boolean
+    interpretAsDst?: boolean
   }
 
   export type TimeFields = {
@@ -306,16 +306,16 @@ declare namespace qrono {
     localtime(yes: boolean): Qrono
 
     /**
-     * Returns whether ambiguousAsDst is enabled for the Qrono instance.
+     * Returns whether interpretAsDst is enabled for the Qrono instance.
      */
-    ambiguousAsDst(): boolean
+    interpretAsDst(): boolean
 
     /**
-     * Sets whether ambiguousAsDst is enabled for the Qrono instance.
-     * @param yes - True to enable ambiguousAsDst, false to disable.
+     * Sets whether interpretAsDst is enabled for the Qrono instance.
+     * @param yes - True to enable interpretAsDst, false to disable.
      * @returns The Qrono instance.
      */
-    ambiguousAsDst(yes: boolean): Qrono
+    interpretAsDst(yes: boolean): Qrono
 
     /**
      * Returns whether the Qrono instance is valid.

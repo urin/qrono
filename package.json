@@ -1,7 +1,8 @@
 {
   "name": "qrono",
-  "version": "0.3.0",
-  "description": "Just right date time library",
+  "version": "0.4.0",
+  "description":
+    "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
   "license": "MIT",
   "keywords": [
     "qrono",
@@ -9,6 +10,12 @@
     "time",
     "immutable"
   ],
+  "author": "urin <urinkun@gmail.com> (https://github.com/urin/)",
+  "homepage": "https://qronojs.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urin/qrono.git"
+  },
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -55,11 +62,5 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "author": "urin <urinkun@gmail.com> (https://github.com/urin/)",
-  "homepage": "https://qronojs.dev/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/urin/qrono.git"
   }
 }

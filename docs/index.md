@@ -2,16 +2,19 @@
 layout: home
 
 hero:
-  name: "Qrono"
-  text: "Just right date time library"
-  tagline: Simple, immutable, and powerful date-time manipulation for JavaScript
+  name: Qrono
+  text: Small. Complete. Deterministic.
+  tagline: A <strong>4kB</strong> JavaScript date library with <strong>100+</strong> APIs and strict DST guarantees.<br>Designed for single-timezone applications.
   actions:
     - theme: brand
       text: Get Started
-      link: /introduction
+      link: /introduction#getting-started
     - theme: alt
       text: API Reference
       link: /api/
+    - theme: alt
+      text: Design Philosophy
+      link: /introduction#design-philosophy
 
 features:
   - icon: 🚀
@@ -42,7 +45,7 @@ features:
 <style>
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #3b82f6 30%, #ec4899);
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #3b82f6 75%, #ec4899);
 }
 </style>
 

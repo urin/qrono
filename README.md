@@ -1,4 +1,6 @@
-# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) - 🕥 _Just right date time library_
+# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) — Small. Complete. Deterministic. JavaScript date-time.
+
+_**4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**. Designed for **single-timezone** applications._
 
 [![MIT License][image-license]][url-license]
 [![CodeQL][image-codeql]][url-codeql]
@@ -7,9 +9,12 @@
 [![gzip size][image-size]][url-size]
 
 ```js
-qrono('2021-08-31 12:34').plus({ month: 1 }).isSame(qrono('2021-09-30 12:34'))
-qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
-qrono({ localtime: true }, '2021-08-31 12:34').toString() === '2021-08-31T12:34.000-04:00'
+import { qrono } from 'qrono'
+
+// America/New_York — DST ends
+qrono('2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
+qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
+qrono('2026-08-31 12:34') < qrono('2026-09-30 12:34')
 const today = qrono.date('2021-08-31')
 const tomorrow = qrono.date(today + 1)
 tommorow - today === 1
@@ -47,7 +52,7 @@ tommorow - today === 1
 
 - **[Day.js](https://day.js.org/)**  
   A small, Moment.js-compatible library with a large GitHub following, increasingly considered a de facto standard.  
-  Approximately 3.0 kB with 30+ core APIs. Timezone, locale support, and additional functionality require plugins.  
+  Approximately 3kB with 30+ core APIs. Timezone, locale support, and additional functionality require plugins.  
   Currently preparing a major version upgrade.
 
 - **[date-fns](https://date-fns.org/)**  
@@ -176,7 +181,7 @@ Visit [official website<sup> ↗</sup>](https://qronojs.dev/) for complete docum
   - [qrono.localtime()](https://qronojs.dev/api/#default-localtime) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>2 overloads</sup>
   - [.context()](https://qronojs.dev/api/#context) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
   - [.localtime()](https://qronojs.dev/api/#localtime) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
-  - [.ambiguousAsDst()](https://qronojs.dev/api/#ambiguousasdst) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
+  - [.interpretAsDst()](https://qronojs.dev/api/#interpretasdst) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
   - [.asUtc()](https://qronojs.dev/api/#asutc) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
   - [.asLocaltime()](https://qronojs.dev/api/#aslocaltime) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
 - Calculation

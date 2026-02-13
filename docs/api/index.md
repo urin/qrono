@@ -40,7 +40,7 @@ The library provides two classes: `Qrono`, which represents a point in time, and
   - [qrono.localtime()](#default-localtime) <Badge type="info" text="static" /> <small>2 overloads</small>
   - [.context()](#context) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
   - [.localtime()](#localtime) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
-  - [.ambiguousAsDst()](#ambiguousasdst) <Badge type="tip" text="Qrono" />
+  - [.interpretAsDst()](#interpretasdst) <Badge type="tip" text="Qrono" />
   - [.asUtc()](#asutc) <Badge type="tip" text="Qrono" />
   - [.asLocaltime()](#aslocaltime) <Badge type="tip" text="Qrono" />
 - [Calculation](#calculation)
@@ -114,7 +114,7 @@ qrono({ year: 2024, month: 1, day: 15 })
 qrono({ localtime: true }, '2024-01-15')
 
 // Context options are applied to the instance
-qrono({ localtime: true, ambiguousAsDst: false }, '2024-01-15')
+qrono({ localtime: true, interpretAsDst: false }, '2024-01-15')
 ```
 
 ### qrono.date(...args) {#qrono-date}
@@ -297,12 +297,12 @@ qrono().asLocaltime().offset() // e.g., 540 (JST)
 Sets the default context for all new instances.
 
 ```javascript
-qrono.context({ localtime: true, ambiguousAsDst: false })
+qrono.context({ localtime: true, interpretAsDst: false })
 ```
 
 **Parameters:**
 - `localtime` - `boolean` - Use local time instead of UTC
-- `ambiguousAsDst` - `boolean` - Interpret ambiguous times as DST
+- `interpretAsDst` - `boolean` - Interpret ambiguous times as DST
 
 ### qrono.asUtc() {#default-asutc}
 
@@ -339,7 +339,7 @@ Get or set context options.
 
 ```javascript
 // Get current context
-time.context()  // { localtime: false, ambiguousAsDst: false }
+time.context()  // { localtime: false, interpretAsDst: false }
 
 // Set context (returns new instance)
 time.context({ localtime: true })
@@ -354,13 +354,13 @@ time.localtime()      // Get: true or false
 time.localtime(true)  // Set: returns new instance
 ```
 
-### ambiguousAsDst() {#ambiguousasdst}
+### interpretAsDst() {#interpretasdst}
 
 Get or set ambiguous DST handling.
 
 ```javascript
-time.ambiguousAsDst()      // Get: true or false
-time.ambiguousAsDst(true)  // Set: returns new instance
+time.interpretAsDst()      // Get: true or false
+time.interpretAsDst(true)  // Set: returns new instance
 ```
 
 ### asUtc() {#asutc}

@@ -84,14 +84,14 @@ export function hasDatetimeField(object) {
   ])
 }
 
-export function asDst(ambiguousAsDst, date) {
+export function asDst(interpretAsDst, date) {
   const numeric = date.getTime()
   const result = new Date(numeric)
   const adjacentDay = new Date(numeric)
-  const sign = ambiguousAsDst ? 1 : -1
+  const sign = interpretAsDst ? 1 : -1
   adjacentDay.setDate(date.getDate() + sign)
   const adjust = adjacentDay.getTimezoneOffset() - date.getTimezoneOffset()
-  if ((ambiguousAsDst && adjust < 0) || (!ambiguousAsDst && adjust > 0)) {
+  if ((interpretAsDst && adjust < 0) || (!interpretAsDst && adjust > 0)) {
     const adjusted = new Date(numeric).setMinutes(
       date.getMinutes() + sign * adjust
     )
