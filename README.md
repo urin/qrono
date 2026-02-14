@@ -5,15 +5,17 @@ _**4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees*
 [![MIT License][image-license]][url-license]
 [![CodeQL][image-codeql]][url-codeql]
 [![NPM version][image-npm-version]][url-npm]
-[![NPM downloads][image-npm-downloads]][url-npm-downloads]
+[![NPM downloads][image-downloads]][url-downloads]
 [![gzip size][image-size]][url-size]
 
 ```js
 import { qrono } from 'qrono'
 
 // America/New_York — DST ends
-qrono('2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
+qrono({ localtime: true },'2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
+// UTC first
 qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
+// Flexible APIs
 qrono('2026-08-31 12:34') < qrono('2026-09-30 12:34')
 const today = qrono.date('2021-08-31')
 const tomorrow = qrono.date(today + 1)
@@ -26,18 +28,28 @@ tommorow - today === 1
 
 ## Design Philosophy 🎨
 
-- **Type-safe, immutable, and chainable**  
-  Covers the majority of common use cases.
-- **UTC-first with local time support**  
-  Supports only UTC (by default) and the environment’s local time zone. In most cases, supporting only the client’s time zone is sufficient.
-- **Strict DST handling**  
-  Provides explicit handling of ambiguous daylight saving time transitions through dedicated APIs.
-- **ISO 8601 compliant**  
-  Fully compliant with the ISO 8601 standard.
-- **Zero dependencies**  
-  Written in pure JavaScript with no external dependencies.
-- **Locale-agnostic**  
-  Delegates localization to the ECMAScript® Internationalization API.
+#### 🔐 **Immutable, Intuitive and Chainable**
+- All operations return new instances for safe, predictable data and intuitive API.
+- Covers the majority of common use cases.
+
+#### 🔷 **TypeScript Ready**
+- Full TypeScript definitions included for type-safe development.
+- Designed to work seamlessly in both server-side and browser-side JavaScript environments.
+
+#### ⚡ **Minimal and Focused**
+- Pure JavaScript with zero dependencies.
+- Lightweight (**4kB**) with **100+** APIs through focused design.
+
+#### 🌍 **UTC-first with Local Time Support**
+- Supports UTC by default and the environment's local time zone.
+- Locale-agnostic design delegates localization to the [ECMAScript Internationalization API](https://402.ecma-international.org/#overview).
+
+#### 🕐 **Strict DST Handling**
+- Unique DST-aware APIs that no other library provides.
+- Explicit handling of ambiguous daylight saving time transitions through dedicated APIs.
+
+#### ✅ **ISO 8601 Compliant**
+- Fully compliant with the [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) standard for reliable date-time exchange and interoperability.
 
 ### Alternatives
 
@@ -59,11 +71,12 @@ tommorow - today === 1
   Provides 200+ pure functions for manipulating JavaScript `Date` objects. Implemented in TypeScript and fully tree-shakeable.  
   Because it builds directly on the native `Date` object, it inherits limitations such as mutability and zero-based months.
 
-- **[The ECMA TC39 Temporal Proposal](https://tc39.es/proposal-temporal/docs/index.html)**  
-  A proposed ECMAScript® API that may become a future standard. The specification is rigorous and heavily inspired by `java.time`.
-
 None of these libraries provide dedicated APIs for strict DST transition handling.  
 Qrono addresses this gap with a balanced and pragmatic approach.
+
+- **[The ECMA TC39 Temporal Proposal](https://tc39.es/proposal-temporal/docs/index.html)**  
+  A proposed ECMAScript API that may become a future standard. Temporal (TC39) defines a comprehensive and rigorous date-time model, including numerous classes such as `Instant`, `Duration`, and `ZonedDateTime`, and provides a complete API covering locale handling and the IANA time zone database. While this design ensures correctness and precision across a wide range of use cases, its breadth and strictness can make it heavyweight and difficult to grasp for developers who simply need to handle date and time operations.
+  In contrast, Qrono focuses on delivering the simplest possible API surface while remaining practical for real-world applications, prioritizing clarity and usability over exhaustive completeness.
 
 ### Repository Size Comparison
 
@@ -84,7 +97,7 @@ For example, a user who resides in Japan may start using the application in the 
 
 For this reason, to keep the system design simple, the server should avoid managing user-specific time zones. Instead, the server should store and handle time exclusively in UTC. All time values should be transmitted to clients in UTC (typically as ISO 8601–formatted strings), and converting them into local time should be the responsibility of the client.
 
-Even when support for multiple locales is required, storing time data in UTC is usually sufficient. In most cases, locale-specific formatting can be handled entirely on the client side by using the [ECMAScript® Internationalization API](https://402.ecma-international.org/#overview).
+Even when support for multiple locales is required, storing time data in UTC is usually sufficient. In most cases, locale-specific formatting can be handled entirely on the client side by using the [ECMAScript Internationalization API](https://402.ecma-international.org/#overview).
 
 One important caveat of this design is that the time zone database of the client environment (OS) must be properly maintained. Daylight saving time rules — for example, in Brazil — may change from year to year, and time zone definitions themselves are determined by laws that are frequently revised. This means that the underlying time zone database must be kept up to date.
 
@@ -348,8 +361,8 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 [image-npm-version]: https://img.shields.io/npm/v/qrono.svg?style=flat
 [url-npm]: https://npmjs.org/package/qrono
 
-[image-npm-downloads]: https://img.shields.io/npm/dy/qrono.svg?style=flat
-[url-npm-downloads]: https://npmcharts.com/compare/qrono?minimal=true
+[image-downloads]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/urin/my-actions/main/badges/downloads.json
+[url-downloads]: https://npmcharts.com/compare/qrono?minimal=true
 
 [image-size]: https://img.badgesize.io/https://unpkg.com/qrono/dist/qrono.min.js?compression=gzip&color=blue
 [url-size]: https://unpkg.com/qrono/dist/qrono.min.js

@@ -17,29 +17,30 @@ hero:
       link: /introduction#design-philosophy
 
 features:
-  - icon: 🚀
-    title: Simple & Intuitive
-    details: Easy-to-use API designed for common date-time operations without the complexity
-  
-  - icon: 🔒
-    title: Immutable
-    details: All operations return new instances, ensuring your data remains predictable and safe
-  
-  - icon: ⚡
-    title: Lightweight
-    details: All features packed into just 4kB. Pure JavaScript without dependencies. Minimal bundle size for optimal performance
-  
-  - icon: 🌍
-    title: Unique DST Handling
-    details: The only library with dedicated APIs for daylight saving time transitions — detect, inspect, and handle edge cases properly
-  
-  - icon: 🔧
-    title: TypeScript Ready
-    details: Full TypeScript definitions included for type-safe development
+  - icon: 🔐
+    title: Immutable, Intuitive and Chainable
+    details: All operations return new instances for safe, predictable data and intuitive API.<br>Covers the majority of common use cases.
 
-  - icon: 🎯
-    title: Chainable API
-    details: Fluent method chaining for expressive and readable date-time transformations
+  - icon: 🔷
+    title: TypeScript Ready
+    details: Full TypeScript definitions included for type-safe development.<br>Designed to work seamlessly in both server-side and browser-side JavaScript environments.
+
+  - icon: ⚡
+    title: Minimal and Focused
+    details: Pure JavaScript with zero dependencies.<br>Lightweight (<strong>4kB</strong>) with <strong>100+</strong> APIs through focused design.
+
+  - icon: 🌍
+    title: UTC-first with Local Time Support
+    details: Supports UTC by default and the environment's local time zone.<br>Locale-agnostic design delegates localization to the ECMAScript Internationalization API.
+
+  - icon: 🕐
+    title: Strict DST Handling
+    details: Unique DST-aware APIs that no other library provides.<br>Explicit handling of ambiguous daylight saving time transitions through dedicated APIs.
+
+  - icon: ✅
+    title: ISO 8601 Compliant
+    details: Fully compliant with the ISO 8601 standard for reliable date-time exchange and interoperability.
+
 ---
 
 <style>
@@ -74,20 +75,15 @@ deno add jsr:@urin/qrono
 ```javascript
 import { qrono } from 'qrono'
 
-// Get current time
-const now = qrono()
-
-// Add 7 days
-const nextWeek = now.plus({ day: 7 })
-
-// Comparisons work naturally
-if (now < nextWeek) {
-  ...
-}
-
-// ISO 8601 format (UTC default)
-now.toString()                        // 2026-02-08T21:28:12.214Z
-qrono({ localtime: true }).toString() // 2026-02-08T17:28:12.214-04:00
+// America/New_York — DST ends
+qrono({ localtime: true },'2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
+// UTC first
+qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
+// Flexible APIs
+qrono('2026-08-31 12:34') < qrono('2026-09-30 12:34')
+const today = qrono.date('2021-08-31')
+const tomorrow = qrono.date(today + 1)
+tommorow - today === 1
 ```
 
 ## Learn More
