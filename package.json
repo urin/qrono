@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description":
     "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
   "license": "MIT",
@@ -48,9 +48,9 @@
     "@commitlint/config-conventional": "^20.4.1",
     "@vitest/ui": "^4.0.18",
     "husky": "^9.1.7",
-    "jsr": "^0.14.2",
+    "jsr": "^0.14.3",
     "mockdate": "^3.0.5",
-    "oxlint": "^1.43.0",
+    "oxlint": "^1.47.0",
     "prettier": "^3.8.1",
     "vite": "^7.3.1",
     "vite-plugin-dts": "^4.5.4",
