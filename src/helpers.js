@@ -86,24 +86,29 @@ export function hasDatetimeField(object) {
 
 export function asDst(interpretAsDst, date) {
   const numeric = date.getTime()
-  const result = new Date(numeric)
-  const adjacentDay = new Date(numeric)
-  const sign = interpretAsDst ? 1 : -1
-  adjacentDay.setDate(date.getDate() + sign)
-  const adjust = adjacentDay.getTimezoneOffset() - date.getTimezoneOffset()
-  if ((interpretAsDst && adjust < 0) || (!interpretAsDst && adjust > 0)) {
-    const adjusted = new Date(numeric).setMinutes(
-      date.getMinutes() + sign * adjust
-    )
-    const adjustedUTC = new Date(numeric).setUTCMinutes(
-      date.getUTCMinutes() + sign * adjust
-    )
-    if (
-      adjusted !== adjustedUTC &&
-      (adjusted - adjustedUTC) / millisecondsPerMinute !== adjust
-    ) {
-      result.setUTCMinutes(date.getUTCMinutes() + sign * adjust)
-    }
+  const original = new Date(numeric)
+  if (interpretAsDst) { return original }
+  const nextDay = new Date(numeric)
+  nextDay.setDate(date.getDate() + 1)
+  const prevDay = new Date(numeric)
+  prevDay.setDate(date.getDate() - 1)
+  const adjust = nextDay.getTimezoneOffset() - prevDay.getTimezoneOffset()
+  if (adjust === 0) { return original }
+  const adjusted = new Date(numeric).setMinutes(date.getMinutes() + adjust)
+  const adjustedUTC = new Date(numeric).setUTCMinutes(date.getUTCMinutes() + adjust)
+  const a = new Date(adjusted)
+  const u = new Date(adjustedUTC)
+  console.log(
+    adjust,
+    date.toLocaleTimeString(), date.getTimezoneOffset() / 60,
+    a.toLocaleTimeString(), a.getTimezoneOffset() / 60,
+    u.toLocaleTimeString(), u.getTimezoneOffset() / 60
+  )
+  if (adjusted === adjustedUTC || (
+    (adjust < 0 && adjusted === numeric) ||
+    (adjust > 0 && adjusted !== numeric)
+  )) {
+    return original
   }
-  return result
+  return new Date(adjustedUTC)
 }
