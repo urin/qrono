@@ -283,7 +283,12 @@ time.millisecond(500)  // New instance with millisecond 500
 
 ### offset() {#offset}
 
-Get the timezone offset in minutes.
+Returns the time zone offset of the Qrono instance in minutes.  
+A positive value indicates that the base time is ahead of UTC, and a negative value indicates that it is behind UTC.  
+
+::: tip
+This is the opposite sign convention of JavaScript's `Date.prototype.getTimezoneOffset`.
+:::
 
 ```javascript
 qrono().asUtc().offset()       // 0
@@ -394,7 +399,10 @@ tommorow - today === 1
 
 ### plus(duration) {#plus}
 
-Add time to the date.
+Add time to the date.  
+In operations using Object, `year`, `month`, and `day` are calculated _literally_.  
+For example, adding one month at the end of a month results in the end of the following month.  
+`hour`, `minute`, `second`, and `millisecond` are treated as a duration in calculations.
 
 ```javascript
 time.plus({ month: 2, day: 15 })
@@ -412,7 +420,10 @@ qrono.date('2024-01-01').plus({ year: 1 })  // same object form
 
 ### minus(duration) {#minus}
 
-Subtract time from the date.
+Subtract time from the date.  
+In operations using Object, `year`, `month`, and `day` are calculated _literally_.  
+For example, subtracting `{ month: 1 }` from July 31 results in June 28.  
+`hour`, `minute`, `second`, and `millisecond` are treated as a duration in calculations.
 
 ```javascript
 time.minus({ year: 1 })

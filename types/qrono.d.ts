@@ -289,7 +289,9 @@ declare namespace qrono {
     nativeDate(): Date
 
     /**
-     * Returns the offset of the Qrono instance.
+     * Returns the time zone offset of the Qrono instance in minutes.
+     * A positive value indicates that the base time is ahead of UTC, and a negative value indicates that it is behind UTC.
+     * This is the opposite sign convention of Date.prototype.getTimezoneOffset in JavaScript.
      */
     offset(): number
 
