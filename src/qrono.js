@@ -760,7 +760,10 @@ QronoDate.prototype.startOfDay = function () {
 })
 ;['minutesInDay', 'hasDstInYear', 'isDstTransitionDay'].forEach(method => {
   QronoDate.prototype[method] = function () {
-    return this[internalDate].datetime.localtime(true)[method]()
+    return qrono(
+      { interpretAsDst: true },
+      this[internalDate].datetime.toArray().slice(0, 3)
+    )[method]()
   }
 })
 

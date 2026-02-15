@@ -263,7 +263,8 @@ test('Daylight saving time', () => {
   expect(qrono('1950-09-10 01:00:00.000').isDstTransitionDay()).toBe(true)
   qrono.context({ localtime: true, interpretAsDst: false })
   expect(qrono('1950-05-07 01:00:00.000').minutesInDay()).toBe(1380)
-  expect(qrono('1950-09-10 00:00:00.000').minutesInDay()).toBe(1500)
+  expect(qrono('1950-09-10 00:00:00.000').minutesInDay()).toBe(1440)
+  qrono.context({ interpretAsDst: true })
   ;[
     { q: '1950-05-06 23:59:59.999', a: '1950-05-06T23:59:59.999+09:00' },
     { q: '1950-05-07 00:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
@@ -274,13 +275,13 @@ test('Daylight saving time', () => {
   ].forEach(({ q, a }) => {
     expect(qrono(q).toString()).toBe(a)
   })
-  qrono.context({ interpretAsDst: true })
+  qrono.context({ interpretAsDst: false })
   ;[
     { q: '1950-05-06 23:59:59.999', a: '1950-05-06T23:59:59.999+09:00' },
     { q: '1950-05-07 00:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
     { q: '1950-05-07 01:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
     { q: '1950-09-09 23:59:59.999', a: '1950-09-09T23:59:59.999+10:00' },
-    { q: '1950-09-10 00:59:59.999', a: '1950-09-10T00:59:59.999+10:00' },
+    { q: '1950-09-10 00:59:59.999', a: '1950-09-10T00:59:59.999+09:00' },
     { q: '1950-09-10 01:00:00.000', a: '1950-09-10T01:00:00.000+09:00' },
   ].forEach(({ q, a }) => {
     expect(qrono(q).toString()).toBe(a)

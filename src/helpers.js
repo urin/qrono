@@ -100,19 +100,22 @@ export function hasDatetimeField(object) {
 export function asDst(interpretAsDst, date) {
   const numeric = date.getTime()
   const original = new Date(numeric)
-  if (interpretAsDst) { return original }
+  if (interpretAsDst) {
+    return original
+  }
   const nextDay = new Date(numeric)
   nextDay.setDate(date.getDate() + 1)
   const prevDay = new Date(numeric)
   prevDay.setDate(date.getDate() - 1)
   const adjust = nextDay.getTimezoneOffset() - prevDay.getTimezoneOffset()
-  if (adjust === 0) { return original }
+  if (adjust === 0) {
+    return original
+  }
   const adjusted = new Date(numeric).setMinutes(date.getMinutes() + adjust)
-  const adjustedUTC = new Date(numeric).setUTCMinutes(date.getUTCMinutes() + adjust)
-  if (adjusted === adjustedUTC || (
-    (adjust < 0 && adjusted === numeric) ||
-    (adjust > 0 && adjusted !== numeric)
-  )) {
+  const adjustedUTC = new Date(numeric).setUTCMinutes(
+    date.getUTCMinutes() + adjust
+  )
+  if (adjusted === adjustedUTC || adjusted === numeric) {
     return original
   }
   return new Date(adjustedUTC)
