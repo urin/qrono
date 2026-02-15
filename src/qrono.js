@@ -487,7 +487,7 @@ Qrono.prototype.minutesInDay = function () {
   if (!this[internal].localtime) {
     return minutesPerDay
   }
-  const startOfDay = this.startOfDay()
+  const startOfDay = this.context({ interpretAsDst: true }).startOfDay()
   const nextDay = startOfDay.plus({ day: 1 }).startOfDay()
   if (startOfDay.day() === nextDay.day()) {
     return minutesPerDay
@@ -518,54 +518,27 @@ Qrono.prototype.weeksInYear = function () {
 }
 
 Qrono.prototype.startOfYear = function () {
-  return this.clone({
-    month: 1,
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  })
+  return this.clone({ month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
 }
 
 Qrono.prototype.startOfMonth = function () {
-  return this.clone({
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  })
+  return this.clone({ day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
 }
 
 Qrono.prototype.startOfDay = function () {
-  return this.clone({
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  })
+  return this.clone({ hour: 0, minute: 0, second: 0, millisecond: 0 })
 }
 
 Qrono.prototype.startOfHour = function () {
-  return this.clone({
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  })
+  return this.clone({ minute: 0, second: 0, millisecond: 0 })
 }
 
 Qrono.prototype.startOfMinute = function () {
-  return this.clone({
-    second: 0,
-    millisecond: 0,
-  })
+  return this.clone({ second: 0, millisecond: 0 })
 }
 
 Qrono.prototype.startOfSecond = function () {
-  return this.clone({
-    millisecond: 0,
-  })
+  return this.clone({ millisecond: 0 })
 }
 
 Qrono.prototype.isSame = function (another) {

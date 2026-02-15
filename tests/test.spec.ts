@@ -263,7 +263,7 @@ test('Daylight saving time', () => {
   expect(qrono('1950-09-10 01:00:00.000').isDstTransitionDay()).toBe(true)
   qrono.context({ localtime: true, interpretAsDst: false })
   expect(qrono('1950-05-07 01:00:00.000').minutesInDay()).toBe(1380)
-  expect(qrono('1950-09-10 00:00:00.000').minutesInDay()).toBe(1440)
+  expect(qrono('1950-09-10 00:00:00.000').minutesInDay()).toBe(1500)
   qrono.context({ interpretAsDst: true })
   ;[
     { q: '1950-05-06 23:59:59.999', a: '1950-05-06T23:59:59.999+09:00' },
