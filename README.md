@@ -82,7 +82,7 @@ Qrono addresses this gap with a balanced and pragmatic approach.
 
 [![Comparison of repository size](docs/public/comparison-repo-size.svg)](docs/public/comparison-repo-size.svg)
 
-This comparison shows that **Qrono clearly stands out for its remarkably small codebase** among other libraries. Its compact size reflects a strong focus on minimalism and efficiency, making it well suited for situations where bundle size and simplicity are important.
+This comparison shows that **Qrono stands out for its small codebase** among other libraries. Its compact size reflects a strong focus on minimalism and efficiency, making it well suited for situations where bundle size and simplicity are important.
 
 For many of the other libraries, their larger size is due to the fact that a significant portion of the codebase is dedicated to supporting a wide range of locales. Meanwhile, the larger size of date-fns is intentional and not a drawback. It is designed with tree-shaking in mind, so unused functions are removed at build time, and its API is intentionally fine-grained and verbose to provide clarity and flexibility. The size difference therefore represents a difference in design philosophy, not a measure of overall quality.
 
