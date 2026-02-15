@@ -48,7 +48,7 @@ Qrono.date = QronoDate
 // NOTE Must be flat object for shallow cloning.
 const defaultContext = {
   localtime: false,
-  interpretAsDst: false,
+  interpretAsDst: true,
 }
 
 fields(defaultContext).forEach(key => {
