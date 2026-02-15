@@ -518,7 +518,14 @@ Qrono.prototype.weeksInYear = function () {
 }
 
 Qrono.prototype.startOfYear = function () {
-  return this.clone({ month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
+  return this.clone({
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  })
 }
 
 Qrono.prototype.startOfMonth = function () {

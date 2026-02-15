@@ -13,7 +13,7 @@ const J = new Date(1915, 0, 1, 12, 0, 0, 0), M = 7, k = 24, v = 60, E = v * k, x
 function w(t, ...e) {
   return e.flat().some(t.hasOwnProperty, t);
 }
-function A(t) {
+function F(t) {
   return Object.entries(t).filter(([, e]) => !rt(e)).map(([e]) => e);
 }
 function m(t) {
@@ -58,19 +58,19 @@ function U(t, e) {
   );
   return y === p || y === n ? c : new Date(p);
 }
-const F = i;
+const A = i;
 i.date = r;
 const g = {
   localtime: !1,
   interpretAsDst: !0
 };
-A(g).forEach((t) => {
+F(g).forEach((t) => {
   i[t] = function(e) {
     return m(e) ? (g[t] = e, this) : g[t];
   };
 });
 i.context = function(t) {
-  return m(t) ? (A(g).filter((e) => w(t, e)).forEach((e) => {
+  return m(t) ? (F(g).filter((e) => w(t, e)).forEach((e) => {
     g[e] = t[e];
   }), this) : N({}, g);
 };
@@ -108,7 +108,7 @@ function i(...t) {
   };
   if (e.context(g), t[0] instanceof i) {
     const o = t.shift();
-    A(e).forEach((u) => {
+    F(e).forEach((u) => {
       e[u] = o[u]();
     });
   }
@@ -152,7 +152,7 @@ function at() {
 }
 function ut(t) {
   if (t)
-    return A(g).filter((e) => w(t, e)).forEach((e) => {
+    return F(g).filter((e) => w(t, e)).forEach((e) => {
       this[e] = t[e];
     }), this;
 }
@@ -347,7 +347,7 @@ i.prototype.isDstTransitionDay = function() {
 i.prototype.minutesInDay = function() {
   if (!this[s].localtime)
     return E;
-  const t = this.startOfDay(), e = t.plus({ day: 1 }).startOfDay();
+  const t = this.context({ interpretAsDst: !0 }).startOfDay(), e = t.plus({ day: 1 }).startOfDay();
   return t.day() === e.day() ? E : (e - t) / K;
 };
 i.prototype.daysInMonth = function() {
@@ -372,39 +372,19 @@ i.prototype.startOfYear = function() {
   });
 };
 i.prototype.startOfMonth = function() {
-  return this.clone({
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0
-  });
+  return this.clone({ day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 });
 };
 i.prototype.startOfDay = function() {
-  return this.clone({
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0
-  });
+  return this.clone({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 };
 i.prototype.startOfHour = function() {
-  return this.clone({
-    minute: 0,
-    second: 0,
-    millisecond: 0
-  });
+  return this.clone({ minute: 0, second: 0, millisecond: 0 });
 };
 i.prototype.startOfMinute = function() {
-  return this.clone({
-    second: 0,
-    millisecond: 0
-  });
+  return this.clone({ second: 0, millisecond: 0 });
 };
 i.prototype.startOfSecond = function() {
-  return this.clone({
-    millisecond: 0
-  });
+  return this.clone({ millisecond: 0 });
 };
 i.prototype.isSame = function(t) {
   return +this == +t;
@@ -487,7 +467,7 @@ function r(...t) {
   let n = null;
   t[0] instanceof r && (n = t.shift().toDatetime());
   const c = t[0], a = t[1];
-  return Number.isFinite(c) && !Number.isFinite(a) && (t[0] *= $), n = (n ? n.clone(...t) : F(...t)).startOfDay(), e.datetime = F({ localtime: !1 }, n.toObject()), this;
+  return Number.isFinite(c) && !Number.isFinite(a) && (t[0] *= $), n = (n ? n.clone(...t) : A(...t)).startOfDay(), e.datetime = A({ localtime: !1 }, n.toObject()), this;
 }
 r.prototype.toString = function() {
   return this[l].datetime.toString().substring(0, 10);
@@ -502,7 +482,7 @@ r.prototype.clone = function(...t) {
   return new r(this, ...t);
 };
 r.prototype.toDatetime = function() {
-  return F(this[l].datetime.toArray());
+  return A(this[l].datetime.toArray());
 };
 r.prototype.numeric = function() {
   return this[l].datetime.numeric() / $;
@@ -547,7 +527,7 @@ r.prototype.startOfDay = function() {
 });
 ["minutesInDay", "hasDstInYear", "isDstTransitionDay"].forEach((t) => {
   r.prototype[t] = function() {
-    return F(
+    return A(
       { interpretAsDst: !0 },
       this[l].datetime.toArray().slice(0, 3)
     )[t]();
@@ -610,7 +590,7 @@ function Z(t, ...e) {
 export {
   nt as friday,
   tt as monday,
-  F as qrono,
+  A as qrono,
   it as saturday,
   ot as sunday,
   T as thursday,
