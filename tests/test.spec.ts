@@ -2,6 +2,8 @@ import { test, expect, beforeEach, afterEach } from 'vitest'
 import { qrono } from '../src/qrono.js'
 import MockDate from 'mockdate'
 
+process.env.TZ = 'America/Sao_Paulo'
+
 beforeEach(() => {
   MockDate.set(new Date())
   qrono.context({ localtime: false, interpretAsDst: false })
@@ -247,42 +249,42 @@ test('Calculation and comparison', () => {
 
 test('Daylight saving time', () => {
   qrono.context({ localtime: true, interpretAsDst: true })
-  expect(qrono(1950, 1).hasDstInYear()).toBe(true)
-  expect(qrono(1954, 1).hasDstInYear()).toBe(false)
-  expect(qrono('1950-09-10 00:59:59.999').isInDst()).toBe(true)
-  expect(qrono('1950-09-10 01:00:00.000').isInDst()).toBe(false)
-  expect(qrono('1950-05-06 00:00:00.000').minutesInDay()).toBe(1440)
-  expect(qrono('1950-05-06 23:59:59.999').minutesInDay()).toBe(1440)
-  expect(qrono('1950-05-07 00:00:00.000').minutesInDay()).toBe(1380)
-  expect(qrono('1950-09-09 23:59:59.999').minutesInDay()).toBe(1440)
-  expect(qrono('1950-09-10 00:00:00.000').minutesInDay()).toBe(1500)
-  expect(qrono('1950-09-10 01:00:00.000').minutesInDay()).toBe(1500)
-  expect(qrono('1950-05-06 23:59:59.999').isDstTransitionDay()).toBe(false)
-  expect(qrono('1950-05-07 00:00:00.000').isDstTransitionDay()).toBe(true)
-  expect(qrono('1950-09-09 23:59:59.999').isDstTransitionDay()).toBe(false)
-  expect(qrono('1950-09-10 01:00:00.000').isDstTransitionDay()).toBe(true)
+  expect(qrono(2018, 1).hasDstInYear()).toBe(true)
+  expect(qrono(2020, 1).hasDstInYear()).toBe(false)
+  expect(qrono('2018-11-04 01:00:00.000').isInDst()).toBe(true)
+  expect(qrono('2019-02-17 00:00:00.000').isInDst()).toBe(true)
+  expect(qrono('2018-11-03 00:00:00.000').minutesInDay()).toBe(1440)
+  expect(qrono('2018-11-03 23:59:59.999').minutesInDay()).toBe(1440)
+  expect(qrono('2018-11-04 00:00:00.000').minutesInDay()).toBe(1380)
+  expect(qrono('2019-02-15 23:59:59.999').minutesInDay()).toBe(1440)
+  expect(qrono('2019-02-16 00:00:00.000').minutesInDay()).toBe(1500)
+  expect(qrono('2019-02-16 23:59:59.999').minutesInDay()).toBe(1500)
+  expect(qrono('2018-11-03 23:59:59.999').isDstTransitionDay()).toBe(false)
+  expect(qrono('2018-11-04 00:00:00.000').isDstTransitionDay()).toBe(true)
+  expect(qrono('2019-02-15 23:59:59.999').isDstTransitionDay()).toBe(false)
+  expect(qrono('2019-02-16 23:59:59.999').isDstTransitionDay()).toBe(true)
   qrono.context({ localtime: true, interpretAsDst: false })
-  expect(qrono('1950-05-07 01:00:00.000').minutesInDay()).toBe(1380)
-  expect(qrono('1950-09-10 00:00:00.000').minutesInDay()).toBe(1500)
+  expect(qrono('2018-11-04 01:00:00.000').minutesInDay()).toBe(1380)
+  expect(qrono('2019-02-16 23:59:59.999').minutesInDay()).toBe(1500)
   qrono.context({ interpretAsDst: true })
   ;[
-    { q: '1950-05-06 23:59:59.999', a: '1950-05-06T23:59:59.999+09:00' },
-    { q: '1950-05-07 00:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
-    { q: '1950-05-07 01:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
-    { q: '1950-09-09 23:59:59.999', a: '1950-09-09T23:59:59.999+10:00' },
-    { q: '1950-09-10 00:59:59.999', a: '1950-09-10T00:59:59.999+10:00' },
-    { q: '1950-09-10 01:00:00.000', a: '1950-09-10T01:00:00.000+09:00' },
+    { q: '2018-11-03 23:59:59.999', a: '2018-11-03T23:59:59.999-03:00' },
+    { q: '2018-11-04 00:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
+    { q: '2018-11-04 01:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
+    { q: '2019-02-16 23:30:00.000', a: '2019-02-16T23:30:00.000-02:00' },
+    { q: '2019-02-16 23:59:59.999', a: '2019-02-16T23:59:59.999-02:00' },
+    { q: '2019-02-17 00:00:00.000', a: '2019-02-17T00:00:00.000-03:00' },
   ].forEach(({ q, a }) => {
     expect(qrono(q).toString()).toBe(a)
   })
   qrono.context({ interpretAsDst: false })
   ;[
-    { q: '1950-05-06 23:59:59.999', a: '1950-05-06T23:59:59.999+09:00' },
-    { q: '1950-05-07 00:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
-    { q: '1950-05-07 01:00:00.000', a: '1950-05-07T01:00:00.000+10:00' },
-    { q: '1950-09-09 23:59:59.999', a: '1950-09-09T23:59:59.999+10:00' },
-    { q: '1950-09-10 00:59:59.999', a: '1950-09-10T00:59:59.999+09:00' },
-    { q: '1950-09-10 01:00:00.000', a: '1950-09-10T01:00:00.000+09:00' },
+    { q: '2018-11-03 23:59:59.999', a: '2018-11-03T23:59:59.999-03:00' },
+    { q: '2018-11-04 00:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
+    { q: '2018-11-04 01:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
+    { q: '2019-02-16 23:30:00.000', a: '2019-02-16T23:30:00.000-03:00' },
+    { q: '2019-02-16 23:59:59.999', a: '2019-02-16T23:59:59.999-03:00' },
+    { q: '2019-02-17 00:00:00.000', a: '2019-02-17T00:00:00.000-03:00' },
   ].forEach(({ q, a }) => {
     expect(qrono(q).toString()).toBe(a)
   })
@@ -301,7 +303,7 @@ test('QronoDate', () => {
   )
   qrono.asLocaltime()
   expect(qrono.date(2000, 1, 1).toDatetime().toString()).toBe(
-    '2000-01-01T00:00:00.000+09:00'
+    '2000-01-01T00:00:00.000-02:00'
   )
   expect(qrono.date(3000, 12, 31).startOfYear().toString()).toBe('3000-01-01')
   expect(qrono.date(3000, 12, 31).startOfMonth().toString()).toBe('3000-12-01')
@@ -323,10 +325,10 @@ test('QronoDate', () => {
   expect(qrono.date(2041, 1).isLeapYear()).toBe(false)
   expect(qrono.date('1950-05-07').daysInMonth()).toBe(31)
   expect(qrono.date('1950-02-07').daysInMonth()).toBe(28)
-  expect(qrono.date('1950-05-06').isDstTransitionDay()).toBe(false)
-  expect(qrono.date('1950-05-07').isDstTransitionDay()).toBe(true)
-  expect(qrono.date('1950-09-09').isDstTransitionDay()).toBe(false)
-  expect(qrono.date('1950-09-10').isDstTransitionDay()).toBe(true)
+  expect(qrono.date('2018-11-03').isDstTransitionDay()).toBe(false)
+  expect(qrono.date('2018-11-04').isDstTransitionDay()).toBe(true)
+  expect(qrono.date('2019-02-15').isDstTransitionDay()).toBe(false)
+  expect(qrono.date('2019-02-16').isDstTransitionDay()).toBe(true)
   expect(qrono.date(2025, 12, 29).endOfYear()).toEqual(qrono.date(2025, 12, 31))
   expect(qrono.date(2025, 12, 29).endOfMonth()).toEqual(
     qrono.date(2025, 12, 31)
@@ -360,12 +362,12 @@ test('QronoDate', () => {
   const startOfDay = date.startOfDay()
   expect(startOfDay.isSame(qrono('2021-09-30'))).toBe(true)
 
-  expect(qrono.date('1950-05-06').minutesInDay()).toBe(1440)
-  expect(qrono.date('1950-05-07').minutesInDay()).toBe(1380)
-  expect(qrono.date('1950-09-10').minutesInDay()).toBe(1500)
+  expect(qrono.date('2018-11-03').minutesInDay()).toBe(1440)
+  expect(qrono.date('2018-11-04').minutesInDay()).toBe(1380)
+  expect(qrono.date('2019-02-16').minutesInDay()).toBe(1500)
 
-  expect(qrono.date('1950-01-01').hasDstInYear()).toBe(true)
-  expect(qrono.date('1954-01-01').hasDstInYear()).toBe(false)
+  expect(qrono.date('2018-01-01').hasDstInYear()).toBe(true)
+  expect(qrono.date('2020-01-01').hasDstInYear()).toBe(false)
   expect(qrono.date('2021-06-15').hasDstInYear()).toBe(false)
 
   const date1 = qrono.date('2021-09-30')
