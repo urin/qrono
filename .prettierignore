@@ -2,7 +2,7 @@
 node_modules/
 dist/
 docs/.vitepress/cache/
-*.min.js
 package-lock.json
+*.min.js
 *.md
 *.json
