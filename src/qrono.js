@@ -264,8 +264,6 @@ function parse(str) {
   }
   if (offset) {
     this.nativeDate = native
-  } else if (this.localtime) {
-    this.nativeDate = asDst(this.interpretAsDst, native)
   } else {
     this.set({ year, month, day, hour, minute, second, millisecond })
   }
@@ -618,7 +616,7 @@ function plus(sign, ...args) {
     const month = this.month() + sign * (timeFields.month ?? 0)
     const endOfMonth = new Date(date.getTime())
     endOfMonth[`set${utc}FullYear`](year, month, 0)
-    const lastDay = endOfMonth.getDate()
+    const lastDay = endOfMonth[`get${utc}Date`]()
     if (lastDay < this.day()) {
       date[`set${utc}FullYear`](year, endOfMonth[`get${utc}Month`](), lastDay)
     } else {
@@ -662,10 +660,10 @@ function QronoDate(...args) {
   const first = args[0]
   const second = args[1]
   if (Number.isFinite(first) && !Number.isFinite(second)) {
-    args[0] *= millisecondsPerDay
+    args[0] = Math.floor(first) * millisecondsPerDay
   }
-  source = (source ? source.clone(...args) : qrono(...args)).startOfDay()
-  self.datetime = qrono({ localtime: false }, source.toObject())
+  source = source ? source.clone(...args) : qrono(...args)
+  self.datetime = source.startOfDay()
   return this
 }
 
