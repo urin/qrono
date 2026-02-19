@@ -99,6 +99,14 @@ qrono(new Date())
 qrono(1704067200000)
 
 // From ISO string
+//
+// Conforms to ISO 8601 format except for a few exceptions.
+// If no time zone is specified, parsing is performed
+// according to the current context (`localtime`).
+//
+// Format:
+// yyyy[[-|/]MM[[-|/]DD]][(T| )HH[:]mm[[:]ss[(.|:)SSS]]][Z|(+|-)hh:mm]
+//
 qrono('2024-01-15T10:30:00.000Z')
 
 // From components (year, month, day, hour, minute, second, millisecond)
@@ -112,9 +120,6 @@ qrono({ year: 2024, month: 1, day: 15 })
 
 // With context options (context as first argument)
 qrono({ localtime: true }, '2024-01-15')
-
-// Context options are applied to the instance
-qrono({ localtime: true, interpretAsDst: false }, '2024-01-15')
 ```
 
 ### qrono.date(...args) {#qrono-date}
