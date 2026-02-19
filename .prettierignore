@@ -6,3 +6,4 @@ package-lock.json
 *.min.js
 *.md
 *.json
+~*

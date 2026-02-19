@@ -1,14 +1,8 @@
 import { defineConfig } from 'vite'
-import dts from 'vite-plugin-dts'
 import oxlint from 'vite-plugin-oxlint'
-import { resolve, dirname } from 'path'
-import { fileURLToPath } from 'url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+import { resolve } from 'path'
 
 export default defineConfig({
-  // Library build configuration
   build: {
     lib: {
       entry: resolve(__dirname, 'src/qrono.js'),
@@ -28,19 +22,19 @@ export default defineConfig({
     rollupOptions: {
       output: {
         exports: 'named',
-        // Minify IIFE build
         plugins: [],
       },
     },
   },
 
-  // Vitest configuration
   test: {
     globals: true,
     environment: 'node',
     globalSetup: './vitest.setup.js',
     setupFiles: [],
-    include: ['tests/**/*.ts', 'tests/**/*.test.ts', 'tests/**/*.spec.ts'],
+    include: [
+      'tests/**/*.{js,mjs,cjs,ts,tsx,jsx}',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -55,11 +49,9 @@ export default defineConfig({
       path: 'src',
       configFile: './oxlint.json',
     }),
-    // Generate TypeScript declaration files
-    dts({
-      outDir: 'types',
-      include: ['src/**/*.js', 'src/**/*.ts'],
-      exclude: ['node_modules/**', 'tests/**'],
+    oxlint({
+      path: 'tests',
+      configFile: './oxlint.json',
     }),
   ],
 })

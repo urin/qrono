@@ -98,6 +98,17 @@
     "dist",
     "coverage",
     "*.min.js",
-    "docs/.vitepress/cache"
+    "docs/.vitepress/cache",
+    "~*",
+  ],
+  "overrides": [
+    {
+      "files": [
+        "tests/**/*.{js,mjs,cjs,ts,tsx,jsx}"
+      ],
+      "globals": {
+        "process": "readonly"
+      }
+    }
   ]
 }

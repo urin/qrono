@@ -1,8 +1,7 @@
 {
   "name": "qrono",
   "version": "1.0.4",
-  "description":
-    "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
+  "description": "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
   "license": "MIT",
   "keywords": [
     "qrono",
@@ -44,19 +43,31 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.4.1",
-    "@commitlint/config-conventional": "^20.4.1",
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2",
     "@vitest/ui": "^4.0.18",
     "husky": "^9.1.7",
     "jsr": "^0.14.3",
+    "lint-staged": "^16.2.7",
     "mockdate": "^3.0.5",
-    "oxlint": "^1.47.0",
+    "oxlint": "^1.48.0",
     "prettier": "^3.8.1",
     "vite": "^7.3.1",
-    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-oxlint": "^1.6.0",
     "vitepress": "^1.6.4",
     "vitest": "^4.0.18"
+  },
+  "lint-staged": {
+    "src/**/*.{js,mjs,cjs,ts,tsx,jsx}": [
+      "npm run format",
+      "npm run lint",
+      "npm run test -- --related"
+    ],
+    "tests/**/*.{js,mjs,cjs,ts,tsx,jsx}": [
+      "npm run format",
+      "npm run lint",
+      "npm run test"
+    ]
   },
   "commitlint": {
     "extends": [
