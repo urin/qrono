@@ -12,7 +12,7 @@ _**4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees*
 import { qrono } from 'qrono'
 
 // America/New_York — DST ends
-qrono({ localtime: true },'2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
+qrono({ localtime: true }, '2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
 // UTC first
 qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
 // Flexible APIs
