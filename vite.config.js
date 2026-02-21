@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite'
-import oxlint from 'vite-plugin-oxlint'
 import { resolve } from 'path'
 
 export default defineConfig({
@@ -32,26 +31,11 @@ export default defineConfig({
     environment: 'node',
     globalSetup: './vitest.setup.js',
     setupFiles: [],
-    include: [
-      'tests/**/*.{js,mjs,cjs,ts,tsx,jsx}',
-    ],
+    include: ['tests/**/*.{js,mjs,cjs,ts,tsx,jsx}'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'tests/', 'dist/', '**/*.config.js'],
     },
   },
-
-  // Plugins
-  plugins: [
-    // Oxlint for fast linting during development
-    oxlint({
-      path: 'src',
-      configFile: './oxlint.json',
-    }),
-    oxlint({
-      path: 'tests',
-      configFile: './oxlint.json',
-    }),
-  ],
 })

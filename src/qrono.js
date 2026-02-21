@@ -51,7 +51,7 @@ const defaultContext = {
   interpretAsDst: true,
 }
 
-fields(defaultContext).forEach(key => {
+for (const key of fields(defaultContext)) {
   Qrono[key] = function (arg) {
     if (given(arg)) {
       defaultContext[key] = arg
@@ -59,16 +59,17 @@ fields(defaultContext).forEach(key => {
     }
     return defaultContext[key]
   }
-})
+}
 
 Qrono.context = function (context) {
   if (given(context)) {
-    fields(defaultContext)
-      .filter(key => has(context, key))
-      .forEach(key => {
-        defaultContext[key] = context[key]
-      })
-    return this
+    for (const key of fields(defaultContext)) {
+      if (!has(context, key)) {
+        continue
+      }
+      defaultContext[key] = context[key]
+      return this
+    }
   }
   return { ...defaultContext }
 }
@@ -102,7 +103,7 @@ function Qrono(...args) {
   if (!new.target) {
     return new Qrono(...args)
   }
-  const self = (this[internal] = {
+  const self = {
     // properties
     nativeDate: null,
     localtime: false,
@@ -113,15 +114,16 @@ function Qrono(...args) {
     valid,
     context,
     getNative,
-  })
+  }
+  this[internal] = self
 
   // Construction
   self.context(defaultContext)
   if (args[0] instanceof Qrono) {
     const source = args.shift()
-    fields(self).forEach(key => {
+    for (const key of fields(self)) {
       self[key] = source[key]()
-    })
+    }
   }
   if (isObject(args[0]) && !hasDatetimeField(args[0])) {
     self.context(args.shift())
@@ -178,11 +180,11 @@ function context(context) {
   if (!context) {
     return
   }
-  fields(defaultContext)
-    .filter(key => has(context, key))
-    .forEach(key => {
+  for (const key of fields(defaultContext)) {
+    if (has(context, key)) {
       this[key] = context[key]
-    })
+    }
+  }
   return this
 }
 
@@ -626,18 +628,18 @@ function plus(sign, ...args) {
   if (has(timeFields, 'day')) {
     date[`set${utc}Date`](date[`get${utc}Date`]() + sign * timeFields.day)
   }
-  ;[
+  for (const [key, nativeKey] of [
     ['hour', 'Hours'],
     ['minute', 'Minutes'],
     ['second', 'Seconds'],
     ['millisecond', 'Milliseconds'],
-  ].forEach(([key, nativeKey]) => {
+  ]) {
     if (has(timeFields, key)) {
       date[`setUTC${nativeKey}`](
         date[`getUTC${nativeKey}`]() + sign * timeFields[key]
       )
     }
-  })
+  }
   return this.clone(asDst(this[internal].interpretAsDst, date))
 }
 
@@ -650,9 +652,8 @@ function QronoDate(...args) {
   if (!new.target) {
     return new QronoDate(...args)
   }
-  const self = (this[internalDate] = {
-    datetime: null,
-  })
+  const self = { datetime: null }
+  this[internalDate] = self
   let source = null
   if (args[0] instanceof QronoDate) {
     source = args.shift().toDatetime()
@@ -714,15 +715,15 @@ QronoDate.prototype.startOfMonth = function () {
 QronoDate.prototype.startOfDay = function () {
   return this[internalDate].datetime.clone()
 }
-;['year', 'month', 'day'].forEach(field => {
+for (const field of ['year', 'month', 'day']) {
   QronoDate.prototype[field] = function (value) {
     if (given(value)) {
       return new QronoDate(this[internalDate].datetime[field](value))
     }
     return this[internalDate].datetime[field]()
   }
-})
-;[
+}
+for (const method of [
   'dayOfWeek',
   'dayOfYear',
   'weekOfYear',
@@ -731,19 +732,19 @@ QronoDate.prototype.startOfDay = function () {
   'daysInMonth',
   'daysInYear',
   'weeksInYear',
-].forEach(method => {
+]) {
   QronoDate.prototype[method] = function () {
     return this[internalDate].datetime[method]()
   }
-})
-;['minutesInDay', 'hasDstInYear', 'isDstTransitionDay'].forEach(method => {
+}
+for (const method of ['minutesInDay', 'hasDstInYear', 'isDstTransitionDay']) {
   QronoDate.prototype[method] = function () {
     return qrono(
       { interpretAsDst: true },
       this[internalDate].datetime.toArray().slice(0, 3)
     )[method]()
   }
-})
+}
 
 QronoDate.prototype.endOfYear = function () {
   return this.clone({ month: 12, day: 31 })

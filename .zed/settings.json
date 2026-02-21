@@ -2,19 +2,19 @@
   "languages": {
     "JavaScript": {
       "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        "language_server": {
+          "name": "biome"
         }
-      }
+      },
+      "language_servers": ["biome", "..."]
     },
     "TypeScript": {
       "formatter": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        "language_server": {
+          "name": "biome"
         }
-      }
+      },
+      "language_servers": ["biome", "..."]
     }
   }
 }

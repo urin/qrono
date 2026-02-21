@@ -63,7 +63,7 @@ export function isObject(a) {
 }
 
 export function isValidDate(date) {
-  return !isNaN(date.getTime())
+  return !Number.isNaN(date.getTime())
 }
 
 export function hasDateField(object) {

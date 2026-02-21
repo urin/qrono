@@ -1,9 +1,0 @@
-.*
-node_modules/
-dist/
-docs/.vitepress/cache/
-package-lock.json
-*.min.js
-*.md
-*.json
-~*

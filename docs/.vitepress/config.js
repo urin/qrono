@@ -2,7 +2,8 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'Qrono',
-  description: 'A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.',
+  description:
+    'A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.',
   head: [
     [
       'link',
@@ -37,7 +38,10 @@ export default defineConfig({
         text: 'Introduction',
         link: '/introduction',
         items: [
-          { text: 'Design Philosophy', link: '/introduction#design-philosophy' },
+          {
+            text: 'Design Philosophy',
+            link: '/introduction#design-philosophy',
+          },
           { text: 'Getting Started', link: '/introduction#getting-started' },
           { text: 'Quick Tour', link: '/introduction#quick-tour' },
         ],

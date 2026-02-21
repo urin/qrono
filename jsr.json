@@ -4,11 +4,6 @@
   "license": "MIT",
   "exports": "./src/qrono.js",
   "publish": {
-    "include": [
-      "LICENSE",
-      "README.md",
-      "src",
-      "types"
-    ]
+    "include": ["LICENSE", "README.md", "src", "types"]
   }
 }

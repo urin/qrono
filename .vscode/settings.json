@@ -1,16 +1,14 @@
 {
-  "launch": {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Vitest Tests",
-        "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
-        "args": ["run"],
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen",
-      },
-    ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
   },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }

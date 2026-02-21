@@ -30,10 +30,10 @@
   "scripts": {
     "prepare": "husky && npm run format && npm run lint && npm run build",
     "postpublish": "jsr publish --no-provenance",
-    "lint": "oxlint ./src ./tests",
-    "lint:fix": "oxlint --fix ./src ./tests && prettier --write .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "lint": "biome lint ./src ./tests",
+    "lint:fix": "biome lint --write ./src ./tests",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
     "build": "vite build --minify",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -43,6 +43,7 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.4",
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@vitest/ui": "^4.0.18",
@@ -50,23 +51,18 @@
     "jsr": "^0.14.3",
     "lint-staged": "^16.2.7",
     "mockdate": "^3.0.5",
-    "oxlint": "^1.48.0",
-    "prettier": "^3.8.1",
     "vite": "^7.3.1",
-    "vite-plugin-oxlint": "^1.6.0",
     "vitepress": "^1.6.4",
     "vitest": "^4.0.18"
   },
   "lint-staged": {
     "src/**/*.{js,mjs,cjs,ts,tsx,jsx}": [
-      "npm run format",
-      "npm run lint",
-      "npm run test -- --related"
+      "biome check --write",
+      "vitest related"
     ],
     "tests/**/*.{js,mjs,cjs,ts,tsx,jsx}": [
-      "npm run format",
-      "npm run lint",
-      "npm run test"
+      "biome check --write",
+      "vitest related"
     ]
   },
   "commitlint": {
