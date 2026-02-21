@@ -6,7 +6,7 @@ import {
   isObject,
   isString,
   isValidDate,
-  asDst,
+  resolveDstTime,
   hasDatetimeField,
   initialSafeDate,
   daysPerWeek,
@@ -196,20 +196,41 @@ function set(values) {
   const args = { ...values }
   args.month = args.month && args.month - 1
   if (this.localtime) {
+    const dateOnly = !has(values, 'hour', 'minute', 'second', 'millisecond')
+    const interpretAsDst = dateOnly ? true : this.interpretAsDst
     const baseDate = this.nativeDate ?? new Date(0, 0)
     const newDate = new Date(initialSafeDate.getTime())
-    newDate.setFullYear(
-      args.year ?? baseDate.getFullYear(),
-      args.month ?? baseDate.getMonth(),
-      args.day ?? baseDate.getDate()
-    )
+    const requested = {
+      year: args.year ?? baseDate.getFullYear(),
+      month: args.month ?? baseDate.getMonth(),
+      day: args.day ?? baseDate.getDate(),
+      hour: args.hour ?? (dateOnly ? 0 : baseDate.getHours()),
+      minute: args.minute ?? (dateOnly ? 0 : baseDate.getMinutes()),
+      second: args.second ?? (dateOnly ? 0 : baseDate.getSeconds()),
+      millisecond:
+        args.millisecond ?? (dateOnly ? 0 : baseDate.getMilliseconds()),
+    }
+    newDate.setFullYear(requested.year, requested.month, requested.day)
     newDate.setHours(
-      args.hour ?? baseDate.getHours(),
-      args.minute ?? baseDate.getMinutes(),
-      args.second ?? baseDate.getSeconds(),
-      args.millisecond ?? baseDate.getMilliseconds()
+      requested.hour,
+      requested.minute,
+      requested.second,
+      requested.millisecond
     )
-    this.nativeDate = asDst(this.interpretAsDst, newDate)
+    // Detect whether the constructed Date landed in a DST gap (missing time).
+    // In a gap, JavaScript silently shifts the time forward.
+    const isGap =
+      requested.year * 1e8 +
+        requested.month * 1e6 +
+        requested.day * 1e4 +
+        requested.hour * 1e2 +
+        requested.minute <
+      newDate.getFullYear() * 1e8 +
+        newDate.getMonth() * 1e6 +
+        newDate.getDate() * 1e4 +
+        newDate.getHours() * 1e2 +
+        newDate.getMinutes()
+    this.nativeDate = resolveDstTime(interpretAsDst, newDate, isGap)
   } else {
     const baseDate = this.nativeDate ?? new Date(0)
     const newDate = new Date(0)
@@ -247,14 +268,11 @@ function parse(str) {
         ' Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]'
     )
   }
-  const [year, month, day, hour, minute, second, millisecond, offset] = [
+  const hasTime = values[4] !== undefined
+  const [year, month, day, offset] = [
     +values[1],
     +values[2] || 1,
     +values[3] || 1,
-    +values[4] || 0,
-    +values[5] || 0,
-    +values[6] || 0,
-    +values[7]?.padStart(3, '0') || 0,
     values[8],
   ]
   const native = new Date(text)
@@ -266,8 +284,18 @@ function parse(str) {
   }
   if (offset) {
     this.nativeDate = native
+  } else if (hasTime) {
+    this.set({
+      year,
+      month,
+      day,
+      hour: +values[4] || 0,
+      minute: +values[5] || 0,
+      second: +values[6] || 0,
+      millisecond: +values[7]?.padStart(3, '0') || 0,
+    })
   } else {
-    this.set({ year, month, day, hour, minute, second, millisecond })
+    this.set({ year, month, day })
   }
   return this
 }
@@ -533,7 +561,11 @@ Qrono.prototype.startOfMonth = function () {
 }
 
 Qrono.prototype.startOfDay = function () {
-  return this.clone({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+  const timestamp = this.clone(
+    { interpretAsDst: true },
+    { hour: 0, minute: 0, second: 0, millisecond: 0 }
+  ).numeric()
+  return this.clone(timestamp)
 }
 
 Qrono.prototype.startOfHour = function () {
@@ -640,7 +672,7 @@ function plus(sign, ...args) {
       )
     }
   }
-  return this.clone(asDst(this[internal].interpretAsDst, date))
+  return this.clone(resolveDstTime(this[internal].interpretAsDst, date, false))
 }
 
 // -----------------------------------------------------------------------------
@@ -657,13 +689,19 @@ function QronoDate(...args) {
   let source = null
   if (args[0] instanceof QronoDate) {
     source = args.shift().toDatetime()
+  } else if (args[0] instanceof Qrono) {
+    source = args.shift()
   }
   const first = args[0]
   const second = args[1]
   if (Number.isFinite(first) && !Number.isFinite(second)) {
     args[0] = Math.floor(first) * millisecondsPerDay
   }
-  source = source ? source.clone(...args) : qrono(...args)
+  if (source) {
+    source = source.clone(...args)
+  } else {
+    source = qrono(...args)
+  }
   self.datetime = source.startOfDay()
   return this
 }

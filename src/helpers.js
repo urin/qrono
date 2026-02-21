@@ -87,17 +87,39 @@ export function hasDatetimeField(object) {
 }
 
 /**
- * Adjust a Date to respect the caller's interpretation of DST (Daylight Saving Time).
+ * Resolve a local time that falls on or near a DST transition boundary.
  *
- * - If `interpretAsDst` is true, the function returns a copy of the original `date`
- *   unchanged. `Date` always treats the ambiguous time as DST.
- * - If `interpretAsDst` is false, the function will attempt to detect a nearby DST
- *   offset change and adjust the moment in time so that the returned `Date` represents
- *   the same nominal local fields but interpreted as the non-DST side of the
- *   transition. This helps disambiguate ambiguous local times by moving to the
- *   corresponding instant in UTC that matches the requested DST interpretation.
+ * Handles two distinct cases that arise when constructing a local Date:
+ *
+ * GAP (spring-forward, isGap = true):
+ *   A range of local times is skipped entirely. JavaScript automatically advances
+ *   the time to the next valid moment (post-transition / DST side), adding the gap
+ *   size to the UTC timestamp. The caller detects a gap by comparing the constructed
+ *   Date's local fields against the originally requested values.
+ *   - interpretAsDst = true  → accept JS's forward-shift as-is (DST side)
+ *   - interpretAsDst = false → shift UTC back by the gap size (pre-transition side)
+ *
+ * OVERLAP (fall-back, isGap = false):
+ *   A range of local times occurs twice. JavaScript always picks the DST side
+ *   (first occurrence). If the time is not actually in an overlap, the adjustment
+ *   will not preserve the original local fields and the original Date is returned.
+ *   - interpretAsDst = true  → accept JS's DST-side interpretation as-is
+ *   - interpretAsDst = false → shift UTC by the offset difference (standard-time side)
+ *
+ * In both cases the UTC adjustment uses the same formula:
+ *   adjustedUTC = date.getTime() + adjust * millisecondsPerMinute
+ * where adjust = nextDay.timezoneOffset - prevDay.timezoneOffset.
+ * For a gap  the adjust is negative (offsets decrease going forward),
+ * so subtracting it moves UTC backward to the pre-transition side.
+ * For an overlap the adjust is also negative in the same direction,
+ * and the same subtraction moves to the standard-time side.
+ *
+ * @param {boolean} interpretAsDst
+ * @param {Date}    date  - The Date constructed from the requested local fields.
+ * @param {boolean} isGap - true if the requested time fell in a DST gap (spring-forward).
+ * @returns {Date}
  */
-export function asDst(interpretAsDst, date) {
+export function resolveDstTime(interpretAsDst, date, isGap) {
   const numeric = date.getTime()
   const original = new Date(numeric)
   if (interpretAsDst) {
@@ -111,12 +133,19 @@ export function asDst(interpretAsDst, date) {
   if (adjust === 0) {
     return original
   }
-  const adjusted = new Date(numeric).setMinutes(date.getMinutes() + adjust)
-  const adjustedUTC = new Date(numeric).setUTCMinutes(
-    date.getUTCMinutes() + adjust
+  const adjustedUTC = new Date(
+    new Date(numeric).setUTCMinutes(date.getUTCMinutes() + adjust)
   )
-  if (adjusted === adjustedUTC || adjusted === numeric) {
+  if (isGap) {
+    return adjustedUTC
+  }
+  // For an overlap, verify the candidate preserves the original local fields.
+  // If it does not, the time is not actually in an overlap — return as-is.
+  if (
+    adjustedUTC.getHours() !== date.getHours() ||
+    adjustedUTC.getMinutes() !== date.getMinutes()
+  ) {
     return original
   }
-  return new Date(adjustedUTC)
+  return adjustedUTC
 }

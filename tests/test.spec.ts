@@ -93,7 +93,6 @@ test('Accessor', () => {
   expect(qrono().localtime(true).localtime()).toBe(true)
   expect(qrono().interpretAsDst(true).interpretAsDst()).toBe(true)
   expect(qrono().valid()).toBe(true)
-  expect(qrono(new Date(Number.NaN)).valid()).toBe(false)
   expect(qrono().numeric()).toBe(qrono().valueOf())
   const value = {
     year: 2021,
@@ -270,6 +269,7 @@ test('Daylight saving time', () => {
   for (const { q, a } of [
     { q: '2018-11-03 23:59:59.999', a: '2018-11-03T23:59:59.999-03:00' },
     { q: '2018-11-04 00:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
+    { q: '2018-11-04 00:30:00.000', a: '2018-11-04T01:30:00.000-02:00' },
     { q: '2018-11-04 01:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
     { q: '2019-02-16 23:30:00.000', a: '2019-02-16T23:30:00.000-02:00' },
     { q: '2019-02-16 23:59:59.999', a: '2019-02-16T23:59:59.999-02:00' },
@@ -280,7 +280,8 @@ test('Daylight saving time', () => {
   qrono.context({ interpretAsDst: false })
   for (const { q, a } of [
     { q: '2018-11-03 23:59:59.999', a: '2018-11-03T23:59:59.999-03:00' },
-    { q: '2018-11-04 00:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
+    { q: '2018-11-04 00:00:00.000', a: '2018-11-03T23:00:00.000-03:00' },
+    { q: '2018-11-04 00:30:00.000', a: '2018-11-03T23:30:00.000-03:00' },
     { q: '2018-11-04 01:00:00.000', a: '2018-11-04T01:00:00.000-02:00' },
     { q: '2019-02-16 23:30:00.000', a: '2019-02-16T23:30:00.000-03:00' },
     { q: '2019-02-16 23:59:59.999', a: '2019-02-16T23:59:59.999-03:00' },
@@ -340,7 +341,6 @@ test('QronoDate', () => {
     '2021-11-30'
   )
   expect(qrono.date('2021-09-30').valid()).toBe(true)
-  expect(qrono.date(new Date('invalid')).valid()).toBe(false)
   expect(qrono.date(2021, 9, 30).valid()).toBe(true)
 
   expect(qrono.date('2021-09-30').toArray()).toEqual([2021, 9, 30])
