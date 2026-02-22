@@ -43,20 +43,20 @@ function N(t) {
   ]);
 }
 function q(t, e, n) {
-  const c = e.getTime(), s = new Date(c);
+  const f = e.getTime(), s = new Date(f);
   if (t)
     return s;
-  const i = new Date(c);
+  const i = new Date(f);
   i.setDate(e.getDate() + 1);
-  const u = new Date(c);
+  const u = new Date(f);
   u.setDate(e.getDate() - 1);
   const y = i.getTimezoneOffset() - u.getTimezoneOffset();
   if (y === 0)
     return s;
-  const f = new Date(
-    new Date(c).setUTCMinutes(e.getUTCMinutes() + y)
+  const h = new Date(
+    new Date(f).setUTCMinutes(e.getUTCMinutes() + y)
   );
-  return n ? f : f.getHours() !== e.getHours() || f.getMinutes() !== e.getMinutes() ? s : f;
+  return n ? h : h.getHours() !== e.getHours() || h.getMinutes() !== e.getMinutes() ? s : h;
 }
 const H = o;
 o.date = r;
@@ -114,7 +114,7 @@ function o(...t) {
       e[u] = i[u]();
   }
   F(t[0]) && !N(t[0]) && e.context(t.shift());
-  const n = t[0], c = t[1];
+  const n = t[0], f = t[1];
   if (n == null)
     (s = e.nativeDate) != null || (e.nativeDate = /* @__PURE__ */ new Date());
   else if (n instanceof Date)
@@ -127,7 +127,7 @@ function o(...t) {
         "Missing time field (year, minute, day, hour, minute, second or millisecond)"
       );
     e.set(n);
-  } else if (Number.isFinite(n) && !Number.isFinite(c))
+  } else if (Number.isFinite(n) && !Number.isFinite(f))
     e.nativeDate = new Date(n);
   else if (Number.isFinite(n) || Array.isArray(n)) {
     const i = t.flat().filter((u) => Number.isSafeInteger(u));
@@ -162,17 +162,17 @@ function yt(t) {
   return this.nativeDate[`get${this.localtime ? "" : "UTC"}${t}`]();
 }
 function mt(t) {
-  var n, c, s, i, u, y, f, h, D, T, v, I, E, P, R, W;
+  var n, f, s, i, u, y, h, c, D, T, v, I, E, P, R, W;
   const e = k({}, t);
   if (e.month = e.month && e.month - 1, this.localtime) {
     const m = !S(t, "hour", "minute", "second", "millisecond"), Y = m ? !0 : this.interpretAsDst, w = (n = this.nativeDate) != null ? n : new Date(0, 0), O = new Date(tt.getTime()), p = {
-      year: (c = e.year) != null ? c : w.getFullYear(),
+      year: (f = e.year) != null ? f : w.getFullYear(),
       month: (s = e.month) != null ? s : w.getMonth(),
       day: (i = e.day) != null ? i : w.getDate(),
       hour: (u = e.hour) != null ? u : m ? 0 : w.getHours(),
       minute: (y = e.minute) != null ? y : m ? 0 : w.getMinutes(),
-      second: (f = e.second) != null ? f : m ? 0 : w.getSeconds(),
-      millisecond: (h = e.millisecond) != null ? h : m ? 0 : w.getMilliseconds()
+      second: (h = e.second) != null ? h : m ? 0 : w.getSeconds(),
+      millisecond: (c = e.millisecond) != null ? c : m ? 0 : w.getMilliseconds()
     };
     O.setFullYear(p.year, p.month, p.day), O.setHours(
       p.hour,
@@ -202,30 +202,30 @@ const dt = new RegExp(
   "^(\\d{4})(?:[-/]?([0-2]?\\d)(?:[-/]?([0-3]?\\d))?)?(?:[T\\s]([0-2]?\\d)(?::([0-5]?\\d)?(?::([0-6]?\\d)?(?:[.:](\\d{1,3})?\\d*)?)?)?)?(Z|[-+]\\d{2}:?\\d{2})?$"
 );
 function pt(t) {
-  var h;
+  var c;
   const e = t.trim().toUpperCase(), n = e.match(dt);
   if (!n)
     throw RangeError(
       `Failed to parse '${t}'. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`
     );
-  const c = n[4] !== void 0, [s, i, u, y] = [
+  const f = n[4] !== void 0, [s, i, u, y] = [
     +n[1],
     +n[2] || 1,
     +n[3] || 1,
     n[8]
-  ], f = new Date(e);
-  if (!Z(f))
+  ], h = new Date(e);
+  if (!Z(h))
     throw RangeError(
       `Failed to parse '${t}' by Date. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`
     );
-  return y ? this.nativeDate = f : c ? this.set({
+  return y ? this.nativeDate = h : f ? this.set({
     year: s,
     month: i,
     day: u,
     hour: +n[4] || 0,
     minute: +n[5] || 0,
     second: +n[6] || 0,
-    millisecond: +((h = n[7]) == null ? void 0 : h.padStart(3, "0")) || 0
+    millisecond: +((c = n[7]) == null ? void 0 : c.padStart(3, "0")) || 0
   }) : this.set({ year: s, month: i, day: u }), this;
 }
 o.prototype.toString = function() {
@@ -331,10 +331,10 @@ o.prototype.dayOfYear = function() {
   return 1 + t - t.startOfYear();
 };
 o.prototype.weekOfYear = function() {
-  const t = this.toDate(), e = t.day(t.day() - t.dayOfWeek() + M), n = e.startOfYear(), c = n.dayOfWeek() === M ? n : n.day(
+  const t = this.toDate(), e = t.day(t.day() - t.dayOfWeek() + M), n = e.startOfYear(), f = n.dayOfWeek() === M ? n : n.day(
     1 + (M - n.dayOfWeek() + b) % b
   );
-  return 1 + Math.ceil((e - c) / b);
+  return 1 + Math.ceil((e - f) / b);
 };
 o.prototype.yearOfWeek = function() {
   const t = this.toDate();
@@ -427,9 +427,9 @@ o.prototype.minus = function(...t) {
   return G.call(this, -1, ...t);
 };
 function G(t, ...e) {
-  var y, f;
-  const n = e[0], c = e[1];
-  if (Number.isFinite(n) && !Number.isFinite(c))
+  var y, h;
+  const n = e[0], f = e[1];
+  if (Number.isFinite(n) && !Number.isFinite(f))
     return this.clone(this.numeric() + n);
   let s = null;
   if (F(n)) {
@@ -439,38 +439,38 @@ function G(t, ...e) {
       );
     s = n;
   } else if (Number.isFinite(n) || Array.isArray(n)) {
-    const h = e.flat().filter((D) => Number.isSafeInteger(D));
-    if (h.length !== e.flat().length)
+    const c = e.flat().filter((D) => Number.isSafeInteger(D));
+    if (c.length !== e.flat().length)
       throw RangeError("Should be safe integers");
-    if (h.length > 7)
+    if (c.length > 7)
       throw RangeError("Too many numbers");
     s = {
-      year: e[0],
-      month: e[1],
-      day: e[2],
-      hour: e[3],
-      minute: e[4],
-      second: e[5],
-      millisecond: e[6]
+      year: c[0],
+      month: c[1],
+      day: c[2],
+      hour: c[3],
+      minute: c[4],
+      second: c[5],
+      millisecond: c[6]
     };
   } else
     throw TypeError();
   const i = this.nativeDate(), u = this[a].localtime ? "" : "UTC";
   if (S(s, "year") || S(s, "month")) {
-    const h = this.year() + t * ((y = s.year) != null ? y : 0), D = this.month() + t * ((f = s.month) != null ? f : 0), T = new Date(i.getTime());
-    T[`set${u}FullYear`](h, D, 0);
+    const c = this.year() + t * ((y = s.year) != null ? y : 0), D = this.month() + t * ((h = s.month) != null ? h : 0), T = new Date(i.getTime());
+    T[`set${u}FullYear`](c, D, 0);
     const v = T[`get${u}Date`]();
-    v < this.day() ? i[`set${u}FullYear`](h, T[`get${u}Month`](), v) : i[`set${u}FullYear`](h, D - 1);
+    v < this.day() ? i[`set${u}FullYear`](c, T[`get${u}Month`](), v) : i[`set${u}FullYear`](c, D - 1);
   }
   S(s, "day") && i[`set${u}Date`](i[`get${u}Date`]() + t * s.day);
-  for (const [h, D] of [
+  for (const [c, D] of [
     ["hour", "Hours"],
     ["minute", "Minutes"],
     ["second", "Seconds"],
     ["millisecond", "Milliseconds"]
   ])
-    S(s, h) && i[`setUTC${D}`](
-      i[`getUTC${D}`]() + t * s[h]
+    !S(s, c) || s[c] == null || i[`setUTC${D}`](
+      i[`getUTC${D}`]() + t * s[c]
     );
   return this.clone(q(this[a].interpretAsDst, i, !1));
 }
@@ -482,8 +482,8 @@ function r(...t) {
   this[l] = e;
   let n = null;
   t[0] instanceof r ? n = t.shift().toDatetime() : t[0] instanceof o && (n = t.shift());
-  const c = t[0], s = t[1];
-  return Number.isFinite(c) && !Number.isFinite(s) && (t[0] = Math.floor(c) * C), n ? n = n.clone(...t) : n = H(...t), e.datetime = n.startOfDay(), this;
+  const f = t[0], s = t[1];
+  return Number.isFinite(f) && !Number.isFinite(s) && (t[0] = Math.floor(f) * C), n ? n = n.clone(...t) : n = H(...t), e.datetime = n.startOfDay(), this;
 }
 r.prototype.toString = function() {
   return this[l].datetime.toString().substring(0, 10);
@@ -577,25 +577,29 @@ r.prototype.minus = function(...t) {
   return K.call(this, -1, ...t);
 };
 function K(t, ...e) {
-  var u, y, f;
-  const n = e[0], c = e[1], s = this[l].datetime;
-  if (Number.isFinite(n) && !Number.isFinite(c))
+  var u, y, h;
+  const n = e[0], f = e[1], s = this[l].datetime;
+  if (Number.isFinite(n) && !Number.isFinite(f))
     return s.plus({ day: t * n }).toDate();
   let i = null;
   if (F(n) && N(n))
     i = {
       year: t * ((u = n.year) != null ? u : 0),
       month: t * ((y = n.month) != null ? y : 0),
-      day: t * ((f = n.day) != null ? f : 0)
+      day: t * ((h = n.day) != null ? h : 0)
     };
   else if (Number.isFinite(n)) {
     if (e.length > 3)
       throw RangeError("Too many arguments");
-    i = { year: e[0], month: e[1], day: e[2] };
+    i = { year: t * n, month: t * f, day: t * arg2 };
   } else if (Array.isArray(n)) {
     if (n.length > 3)
       throw RangeError("Too many elements");
-    i = { year: n[0], month: n[1], day: n[2] };
+    i = {
+      year: t * n[0],
+      month: t * n[1],
+      day: t * n[2]
+    };
   } else
     throw TypeError();
   return s.plus(i).toDate();

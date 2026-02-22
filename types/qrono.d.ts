@@ -100,7 +100,10 @@ declare function qrono(context?: qrono.Context, date?: qrono.Qrono): qrono.Qrono
  * @param date - An array of time fields: `[year, month, day, hour, minute, second, millisecond]`.
  * @returns A new Qrono instance.
  */
-declare function qrono(context?: qrono.Context, date?: qrono.TimeTuple): qrono.Qrono
+declare function qrono(
+  context?: qrono.Context,
+  date?: qrono.TimeTuple
+): qrono.Qrono
 
 /**
  * Creates a new Qrono instance with a specific context.

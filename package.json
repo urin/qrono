@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
   "license": "MIT",
   "keywords": [
