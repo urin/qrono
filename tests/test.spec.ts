@@ -244,6 +244,14 @@ test('Calculation and comparison', () => {
       qrono('1111 11:11:11.998')
     )
   ).toBe(false)
+
+  const plusByArray = qrono('2024-01-01T00:00:00.000Z').plus([0, 1, 1, 4])
+  expect(plusByArray.valid()).toBe(true)
+  expect(plusByArray.toString()).toBe('2024-02-02T04:00:00.000Z')
+
+  const minusByArray = qrono('2024-01-01T12:00:00.000Z').minus([0, 0, 0, 6])
+  expect(minusByArray.valid()).toBe(true)
+  expect(minusByArray.toString()).toBe('2024-01-01T06:00:00.000Z')
 })
 
 test('Daylight saving time', () => {
@@ -439,6 +447,10 @@ test('QronoDate', () => {
 
   const prevDayByNumber = baseDate.minus(1)
   expect(prevDayByNumber.toString()).toBe('2021-09-29')
+
+  expect(qrono.date('2024-01-05').minus([0, 0, 5]).toString()).toBe(
+    '2023-12-31'
+  )
 
   const prevMonth = baseDate.minus({ month: 1 })
   expect(prevMonth.toString()).toBe('2021-08-30')

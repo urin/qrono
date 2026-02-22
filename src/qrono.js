@@ -632,13 +632,13 @@ function plus(sign, ...args) {
       throw RangeError('Too many numbers')
     }
     timeFields = {
-      year: args[0],
-      month: args[1],
-      day: args[2],
-      hour: args[3],
-      minute: args[4],
-      second: args[5],
-      millisecond: args[6],
+      year: values[0],
+      month: values[1],
+      day: values[2],
+      hour: values[3],
+      minute: values[4],
+      second: values[5],
+      millisecond: values[6],
     }
   } else {
     throw TypeError()
@@ -666,11 +666,12 @@ function plus(sign, ...args) {
     ['second', 'Seconds'],
     ['millisecond', 'Milliseconds'],
   ]) {
-    if (has(timeFields, key)) {
-      date[`setUTC${nativeKey}`](
-        date[`getUTC${nativeKey}`]() + sign * timeFields[key]
-      )
+    if (!has(timeFields, key) || timeFields[key] == null) {
+      continue
     }
+    date[`setUTC${nativeKey}`](
+      date[`getUTC${nativeKey}`]() + sign * timeFields[key]
+    )
   }
   return this.clone(resolveDstTime(this[internal].interpretAsDst, date, false))
 }
@@ -837,12 +838,16 @@ function plusDate(sign, ...args) {
     if (args.length > 3) {
       throw RangeError('Too many arguments')
     }
-    timeFields = { year: args[0], month: args[1], day: args[2] }
+    timeFields = { year: sign * arg0, month: sign * arg1, day: sign * arg2 }
   } else if (Array.isArray(arg0)) {
     if (arg0.length > 3) {
       throw RangeError('Too many elements')
     }
-    timeFields = { year: arg0[0], month: arg0[1], day: arg0[2] }
+    timeFields = {
+      year: sign * arg0[0],
+      month: sign * arg0[1],
+      day: sign * arg0[2],
+    }
   } else {
     throw TypeError()
   }
