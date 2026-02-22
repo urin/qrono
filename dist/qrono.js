@@ -1,15 +1,15 @@
-var J = Object.defineProperty;
-var j = Object.getOwnPropertySymbols;
-var X = Object.prototype.hasOwnProperty, _ = Object.prototype.propertyIsEnumerable;
-var x = (t, e, n) => e in t ? J(t, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : t[e] = n, k = (t, e) => {
+var _ = Object.defineProperty;
+var x = Object.getOwnPropertySymbols;
+var J = Object.prototype.hasOwnProperty, X = Object.prototype.propertyIsEnumerable;
+var j = (t, e, n) => e in t ? _(t, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : t[e] = n, k = (t, e) => {
   for (var n in e || (e = {}))
-    X.call(e, n) && x(t, n, e[n]);
-  if (j)
-    for (var n of j(e))
-      _.call(e, n) && x(t, n, e[n]);
+    J.call(e, n) && j(t, n, e[n]);
+  if (x)
+    for (var n of x(e))
+      X.call(e, n) && j(t, n, e[n]);
   return t;
 };
-const tt = new Date(1915, 0, 1, 12, 0, 0, 0), b = 7, L = 24, A = 60, U = A * L, B = 60, et = B * A, nt = et * L, z = 1e3, ot = B * z, C = nt * z, it = 1, rt = 2, Q = 3, M = 4, st = 5, at = 6, ut = 7;
+const tt = new Date(1915, 0, 1, 12, 0, 0, 0), b = 7, L = 24, A = 60, U = A * L, B = 60, et = B * A, nt = et * L, z = 1e3, ot = B * z, C = nt * z, it = 1, rt = 2, Q = 3, T = 4, st = 5, at = 6, ut = 7;
 function S(t, ...e) {
   return e.flat().some(t.hasOwnProperty, t);
 }
@@ -71,8 +71,8 @@ for (const t of $(g))
 o.context = function(t) {
   if (d(t)) {
     for (const e of $(g))
-      if (S(t, e))
-        return g[e] = t[e], this;
+      S(t, e) && (g[e] = t[e]);
+    return this;
   }
   return k({}, g);
 };
@@ -86,7 +86,7 @@ Object.assign(o, {
   monday: it,
   tuesday: rt,
   wednesday: Q,
-  thursday: M,
+  thursday: T,
   friday: st,
   saturday: at,
   sunday: ut
@@ -162,7 +162,7 @@ function yt(t) {
   return this.nativeDate[`get${this.localtime ? "" : "UTC"}${t}`]();
 }
 function mt(t) {
-  var n, f, s, i, u, y, h, c, D, T, v, I, E, P, R, W;
+  var n, f, s, i, u, y, h, c, D, M, v, I, E, P, R, W;
   const e = k({}, t);
   if (e.month = e.month && e.month - 1, this.localtime) {
     const m = !S(t, "hour", "minute", "second", "millisecond"), Y = m ? !0 : this.interpretAsDst, w = (n = this.nativeDate) != null ? n : new Date(0, 0), O = new Date(tt.getTime()), p = {
@@ -185,7 +185,7 @@ function mt(t) {
   } else {
     const m = (D = this.nativeDate) != null ? D : /* @__PURE__ */ new Date(0), Y = /* @__PURE__ */ new Date(0);
     Y.setUTCFullYear(
-      (T = e.year) != null ? T : m.getUTCFullYear(),
+      (M = e.year) != null ? M : m.getUTCFullYear(),
       (v = e.month) != null ? v : m.getUTCMonth(),
       (I = e.day) != null ? I : m.getUTCDate()
     ), Y.setUTCHours(
@@ -331,14 +331,14 @@ o.prototype.dayOfYear = function() {
   return 1 + t - t.startOfYear();
 };
 o.prototype.weekOfYear = function() {
-  const t = this.toDate(), e = t.day(t.day() - t.dayOfWeek() + M), n = e.startOfYear(), f = n.dayOfWeek() === M ? n : n.day(
-    1 + (M - n.dayOfWeek() + b) % b
+  const t = this.toDate(), e = t.day(t.day() - t.dayOfWeek() + T), n = e.startOfYear(), f = n.dayOfWeek() === T ? n : n.day(
+    1 + (T - n.dayOfWeek() + b) % b
   );
   return 1 + Math.ceil((e - f) / b);
 };
 o.prototype.yearOfWeek = function() {
   const t = this.toDate();
-  return t.day(t.day() - t.dayOfWeek() + M).year();
+  return t.day(t.day() - t.dayOfWeek() + T).year();
 };
 o.prototype.isLeapYear = function() {
   const t = this.year();
@@ -351,7 +351,13 @@ o.prototype.hasDstInYear = function() {
   return [3, 6, 9, 12].map((e) => this.month(e).offset()).some((e) => e !== t);
 };
 o.prototype.isInDst = function() {
-  return this[a].localtime ? this.offset() === Math.max(...[3, 6, 9, 12].map((t) => this.month(t).offset())) : !1;
+  if (!this[a].localtime)
+    return !1;
+  const t = Array.from(
+    { length: 12 },
+    (f, s) => this.month(s + 1).offset()
+  ), e = Math.min(...t), n = Math.max(...t);
+  return e !== n && this.offset() === n;
 };
 o.prototype.isDstTransitionDay = function() {
   return this[a].localtime ? this.minutesInDay() !== U : !1;
@@ -371,7 +377,7 @@ o.prototype.daysInYear = function() {
 };
 o.prototype.weeksInYear = function() {
   const t = this.toDate({ month: 12, day: 31 }), e = t.minus({ year: 1 });
-  return t.dayOfWeek() === M || e.dayOfWeek() === Q ? 53 : 52;
+  return t.dayOfWeek() === T || e.dayOfWeek() === Q ? 53 : 52;
 };
 o.prototype.startOfYear = function() {
   return this.clone({
@@ -457,10 +463,10 @@ function G(t, ...e) {
     throw TypeError();
   const i = this.nativeDate(), u = this[a].localtime ? "" : "UTC";
   if (S(s, "year") || S(s, "month")) {
-    const c = this.year() + t * ((y = s.year) != null ? y : 0), D = this.month() + t * ((h = s.month) != null ? h : 0), T = new Date(i.getTime());
-    T[`set${u}FullYear`](c, D, 0);
-    const v = T[`get${u}Date`]();
-    v < this.day() ? i[`set${u}FullYear`](c, T[`get${u}Month`](), v) : i[`set${u}FullYear`](c, D - 1);
+    const c = this.year() + t * ((y = s.year) != null ? y : 0), D = this.month() + t * ((h = s.month) != null ? h : 0), M = new Date(i.getTime());
+    M[`set${u}FullYear`](c, D, 0);
+    const v = M[`get${u}Date`]();
+    v < this.day() ? i[`set${u}FullYear`](c, M[`get${u}Month`](), v) : i[`set${u}FullYear`](c, D - 1);
   }
   S(s, "day") && i[`set${u}Date`](i[`get${u}Date`]() + t * s.day);
   for (const [c, D] of [
@@ -610,7 +616,7 @@ export {
   H as qrono,
   at as saturday,
   ut as sunday,
-  M as thursday,
+  T as thursday,
   rt as tuesday,
   Q as wednesday
 };
