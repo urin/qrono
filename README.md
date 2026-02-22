@@ -19,7 +19,7 @@ qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
 qrono('2026-08-31 12:34') < qrono('2026-09-30 12:34')
 const today = qrono.date('2021-08-31')
 const tomorrow = qrono.date(today + 1)
-tommorow - today === 1
+tomorrow - today === 1
 ```
 
 [🌐 Website<sup> ↗</sup>](https://qronojs.dev/) \| [🎨 Design philosophy](#design-philosophy-) \| [📥 Getting started](#getting-started-) \| [🚀 Quick tour](#quick-tour-) \| [🌏 License](#license-)

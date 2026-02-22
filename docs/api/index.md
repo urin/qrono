@@ -399,7 +399,7 @@ When a `Qrono` instance is cast to a number, it represents the milliseconds sinc
 qrono('2021-08-31 12:34') < qrono('2021-09-30 12:34')
 const today = qrono.date('2021-08-31')
 const tomorrow = qrono.date(today + 1)
-tommorow - today === 1
+tomorrow - today === 1
 ```
 
 ### plus(duration) {#plus}
