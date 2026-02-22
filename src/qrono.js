@@ -68,8 +68,8 @@ Qrono.context = function (context) {
         continue
       }
       defaultContext[key] = context[key]
-      return this
     }
+    return this
   }
   return { ...defaultContext }
 }
@@ -498,10 +498,12 @@ Qrono.prototype.isInDst = function () {
   if (!this[internal].localtime) {
     return false
   }
-  return (
-    this.offset() ===
-    Math.max(...[3, 6, 9, 12].map(month => this.month(month).offset()))
+  const offsets = Array.from({ length: 12 }, (_, index) =>
+    this.month(index + 1).offset()
   )
+  const minOffset = Math.min(...offsets)
+  const maxOffset = Math.max(...offsets)
+  return minOffset !== maxOffset && this.offset() === maxOffset
 }
 
 Qrono.prototype.isDstTransitionDay = function () {
