@@ -4,3 +4,19 @@
   max-width: 100% !important;
   width: 100% !important;
 }
+
+.VPDoc .container > .content {
+  padding-inline: 0 !important;
+}
+
+.VPDoc .content-container {
+  margin-inline: 0 !important;
+}
+
+.VPDoc .container .aside {
+  padding-left: 0;
+}
+
+.VPDoc.has-aside .content-container {
+  max-width: calc(688px + 3 * 32px) !important;
+}

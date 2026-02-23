@@ -30,6 +30,7 @@ export default defineConfig({
     nav: [
       { text: 'Top', link: '/' },
       { text: 'Introduction', link: '/introduction' },
+      { text: 'Comparison', link: '/comparison' },
       { text: 'API Reference', link: '/api/' },
     ],
 
@@ -44,6 +45,7 @@ export default defineConfig({
           },
           { text: 'Getting Started', link: '/introduction#getting-started' },
           { text: 'Quick Tour', link: '/introduction#quick-tour' },
+          { text: 'Comparison', link: '/comparison' },
         ],
       },
       {

@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: Design Philosophy
       link: /introduction#design-philosophy
+    - theme: alt
+      text: Comparison
+      link: /comparison
 
 features:
   - icon: 🔐

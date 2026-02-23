@@ -15,6 +15,21 @@
         }
       },
       "language_servers": ["biome", "..."]
+    },
+    "Markdown": {
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      },
+      "language_servers": ["biome", "..."]
+    },
+    "Vue.js": {
+      "language_servers": [
+        "vue-language-server",
+        "!vtsls",
+        "!typescript-language-server"
+      ]
     }
   }
 }
