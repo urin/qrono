@@ -1,28 +1,28 @@
-var _ = Object.defineProperty;
+var V = Object.defineProperty;
 var x = Object.getOwnPropertySymbols;
-var J = Object.prototype.hasOwnProperty, X = Object.prototype.propertyIsEnumerable;
-var j = (t, e, n) => e in t ? _(t, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : t[e] = n, k = (t, e) => {
+var _ = Object.prototype.hasOwnProperty, J = Object.prototype.propertyIsEnumerable;
+var j = (t, e, n) => e in t ? V(t, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : t[e] = n, k = (t, e) => {
   for (var n in e || (e = {}))
-    J.call(e, n) && j(t, n, e[n]);
+    _.call(e, n) && j(t, n, e[n]);
   if (x)
     for (var n of x(e))
-      X.call(e, n) && j(t, n, e[n]);
+      J.call(e, n) && j(t, n, e[n]);
   return t;
 };
-const tt = new Date(1915, 0, 1, 12, 0, 0, 0), b = 7, L = 24, A = 60, U = A * L, B = 60, et = B * A, nt = et * L, z = 1e3, ot = B * z, C = nt * z, it = 1, rt = 2, Q = 3, T = 4, st = 5, at = 6, ut = 7;
+const X = new Date(1915, 0, 1, 12, 0, 0, 0), b = 7, L = 24, A = 60, U = A * L, B = 60, tt = B * A, et = tt * L, z = 1e3, nt = B * z, C = et * z, ot = 1, it = 2, Q = 3, T = 4, rt = 5, st = 6, at = 7;
 function S(t, ...e) {
   return e.flat().some(t.hasOwnProperty, t);
 }
 function $(t) {
-  return Object.entries(t).filter(([, e]) => !ct(e)).map(([e]) => e);
+  return Object.entries(t).filter(([, e]) => !ut(e)).map(([e]) => e);
 }
 function d(t) {
   return t !== void 0;
 }
-function ct(t) {
+function ut(t) {
   return t instanceof Function;
 }
-function ft(t) {
+function ct(t) {
   return typeof t == "string" || t instanceof String;
 }
 function F(t) {
@@ -42,7 +42,7 @@ function N(t) {
     "millisecond"
   ]);
 }
-function q(t, e, n) {
+function ft(t, e, n) {
   const f = e.getTime(), s = new Date(f);
   if (t)
     return s;
@@ -83,13 +83,13 @@ o.asLocaltime = function() {
   return g.localtime = !0, this;
 };
 Object.assign(o, {
-  monday: it,
-  tuesday: rt,
+  monday: ot,
+  tuesday: it,
   wednesday: Q,
   thursday: T,
-  friday: st,
-  saturday: at,
-  sunday: ut
+  friday: rt,
+  saturday: st,
+  sunday: at
 });
 const a = /* @__PURE__ */ Symbol("Qrono.internal");
 function o(...t) {
@@ -119,7 +119,7 @@ function o(...t) {
     (s = e.nativeDate) != null || (e.nativeDate = /* @__PURE__ */ new Date());
   else if (n instanceof Date)
     e.nativeDate = new Date(n.getTime());
-  else if (ft(n))
+  else if (ct(n))
     e.parse(n);
   else if (F(n)) {
     if (!N(n))
@@ -165,7 +165,7 @@ function mt(t) {
   var n, f, s, i, u, y, h, c, D, M, v, I, E, P, R, W;
   const e = k({}, t);
   if (e.month = e.month && e.month - 1, this.localtime) {
-    const m = !S(t, "hour", "minute", "second", "millisecond"), Y = m ? !0 : this.interpretAsDst, w = (n = this.nativeDate) != null ? n : new Date(0, 0), O = new Date(tt.getTime()), p = {
+    const m = !S(t, "hour", "minute", "second", "millisecond"), Y = m ? !0 : this.interpretAsDst, w = (n = this.nativeDate) != null ? n : new Date(0, 0), O = new Date(X.getTime()), p = {
       year: (f = e.year) != null ? f : w.getFullYear(),
       month: (s = e.month) != null ? s : w.getMonth(),
       day: (i = e.day) != null ? i : w.getDate(),
@@ -180,8 +180,8 @@ function mt(t) {
       p.second,
       p.millisecond
     );
-    const V = p.year * 1e8 + p.month * 1e6 + p.day * 1e4 + p.hour * 100 + p.minute < O.getFullYear() * 1e8 + O.getMonth() * 1e6 + O.getDate() * 1e4 + O.getHours() * 100 + O.getMinutes();
-    this.nativeDate = q(Y, O, V);
+    const K = p.year * 1e8 + p.month * 1e6 + p.day * 1e4 + p.hour * 100 + p.minute < O.getFullYear() * 1e8 + O.getMonth() * 1e6 + O.getDate() * 1e4 + O.getHours() * 100 + O.getMinutes();
+    this.nativeDate = ft(Y, O, K);
   } else {
     const m = (D = this.nativeDate) != null ? D : /* @__PURE__ */ new Date(0), Y = /* @__PURE__ */ new Date(0);
     Y.setUTCFullYear(
@@ -366,7 +366,7 @@ o.prototype.minutesInDay = function() {
   if (!this[a].localtime)
     return U;
   const t = this.context({ interpretAsDst: !0 }).startOfDay(), e = t.plus({ day: 1 }).startOfDay();
-  return t.day() === e.day() ? U : (e - t) / ot;
+  return t.day() === e.day() ? U : (e - t) / nt;
 };
 o.prototype.daysInMonth = function() {
   const t = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], e = this.month();
@@ -427,12 +427,12 @@ o.prototype.isBetween = function(t, e) {
   return t <= this && this <= e || e <= this && this <= t;
 };
 o.prototype.plus = function(...t) {
-  return G.call(this, 1, ...t);
+  return q.call(this, 1, ...t);
 };
 o.prototype.minus = function(...t) {
-  return G.call(this, -1, ...t);
+  return q.call(this, -1, ...t);
 };
-function G(t, ...e) {
+function q(t, ...e) {
   var y, h;
   const n = e[0], f = e[1];
   if (Number.isFinite(n) && !Number.isFinite(f))
@@ -478,7 +478,7 @@ function G(t, ...e) {
     !S(s, c) || s[c] == null || i[`setUTC${D}`](
       i[`getUTC${D}`]() + t * s[c]
     );
-  return this.clone(q(this[a].interpretAsDst, i, !1));
+  return this.clone(i);
 }
 const l = /* @__PURE__ */ Symbol("QronoDate.internal");
 function r(...t) {
@@ -577,12 +577,12 @@ r.prototype.isBetween = function(t, e) {
   return t <= this && this <= e || e <= this && this <= t;
 };
 r.prototype.plus = function(...t) {
-  return K.call(this, 1, ...t);
+  return G.call(this, 1, ...t);
 };
 r.prototype.minus = function(...t) {
-  return K.call(this, -1, ...t);
+  return G.call(this, -1, ...t);
 };
-function K(t, ...e) {
+function G(t, ...e) {
   var u, y, h;
   const n = e[0], f = e[1], s = this[l].datetime;
   if (Number.isFinite(n) && !Number.isFinite(f))
@@ -611,13 +611,13 @@ function K(t, ...e) {
   return s.plus(i).toDate();
 }
 export {
-  st as friday,
-  it as monday,
+  rt as friday,
+  ot as monday,
   H as qrono,
-  at as saturday,
-  ut as sunday,
+  st as saturday,
+  at as sunday,
   T as thursday,
-  rt as tuesday,
+  it as tuesday,
   Q as wednesday
 };
 //# sourceMappingURL=qrono.js.map

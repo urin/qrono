@@ -443,26 +443,70 @@ test('Daylight saving time — startOfHour in OVERLAP', () => {
 test('Daylight saving time — plus/minus result lands in GAP', () => {
   qrono.context({ localtime: true, interpretAsDst: true })
 
-  // +1 day from the day before GAP → lands on 2018-11-04 00:00 (non-existent) → forwarded to DST side
+  // +1 day from the day before GAP
   const afterPlus = qrono('2018-11-03 00:00:00.000').plus({ day: 1 })
   expect(afterPlus.toString()).toBe('2018-11-04T01:00:00.000-02:00')
 
-  // -1 day from the day after GAP → same result
+  // -1 day from the day after GAP
   const afterMinus = qrono('2018-11-05 00:00:00.000').minus({ day: 1 })
   expect(afterMinus.toString()).toBe('2018-11-04T01:00:00.000-02:00')
+
+  // GAP: +1h lands on non-existent 00:30
+  const gapPlusDst = qrono('2018-11-03 23:30:00.000').plus({ hour: 1 })
+  expect(gapPlusDst.toString()).toBe('2018-11-04T01:30:00.000-02:00')
+
+  // GAP: -1h lands on non-existent 00:30
+  const gapMinusDst = qrono('2018-11-04 01:30:00.000').minus({ hour: 1 })
+  expect(gapMinusDst.toString()).toBe('2018-11-03T23:30:00.000-03:00')
+
+  qrono.context({ interpretAsDst: false })
+
+  // Arithmetic to GAP is resolved the same way even with interpretAsDst=false
+  const afterPlusStd = qrono('2018-11-03 00:00:00.000').plus({ day: 1 })
+  expect(afterPlusStd.toString()).toBe('2018-11-04T01:00:00.000-02:00')
+
+  const afterMinusStd = qrono('2018-11-05 00:00:00.000').minus({ day: 1 })
+  expect(afterMinusStd.toString()).toBe('2018-11-04T01:00:00.000-02:00')
+
+  const gapPlusStd = qrono('2018-11-03 23:30:00.000').plus({ hour: 1 })
+  expect(gapPlusStd.toString()).toBe('2018-11-04T01:30:00.000-02:00')
+
+  const gapMinusStd = qrono('2018-11-04 01:30:00.000').minus({ hour: 1 })
+  expect(gapMinusStd.toString()).toBe('2018-11-03T23:30:00.000-03:00')
 })
 
 test('Daylight saving time — plus/minus result lands in OVERLAP', () => {
   qrono.context({ localtime: true, interpretAsDst: true })
 
-  // +1 day from the day before OVERLAP → lands on 2019-02-16 23:30, DST side
+  // +1 day from the day before OVERLAP
   const afterPlus = qrono('2019-02-15 23:30:00.000').plus({ day: 1 })
   expect(afterPlus.toString()).toBe('2019-02-16T23:30:00.000-02:00')
 
+  // -1 day from the day after OVERLAP
+  const afterMinus = qrono('2019-02-17 23:30:00.000').minus({ day: 1 })
+  expect(afterMinus.toString()).toBe('2019-02-16T23:30:00.000-02:00')
+
+  // +1h lands on duplicated 23:30
+  const overlapPlusDst = qrono('2019-02-16 22:30:00.000').plus({ hour: 1 })
+  expect(overlapPlusDst.toString()).toBe('2019-02-16T23:30:00.000-02:00')
+
+  // -1h lands on duplicated 23:30
+  const overlapMinusDst = qrono('2019-02-17 00:30:00.000').minus({ hour: 1 })
+  expect(overlapMinusDst.toString()).toBe('2019-02-16T23:30:00.000-03:00')
+
   qrono.context({ interpretAsDst: false })
-  // same operation with interpretAsDst=false → standard side
+  // Arithmetic to GAP is resolved the same way even with interpretAsDst=false
   const afterPlusStd = qrono('2019-02-15 23:30:00.000').plus({ day: 1 })
-  expect(afterPlusStd.toString()).toBe('2019-02-16T23:30:00.000-03:00')
+  expect(afterPlusStd.toString()).toBe('2019-02-16T23:30:00.000-02:00')
+
+  const afterMinusStd = qrono('2019-02-17 23:30:00.000').minus({ day: 1 })
+  expect(afterMinusStd.toString()).toBe('2019-02-16T23:30:00.000-02:00')
+
+  const overlapPlusStd = qrono('2019-02-16 22:30:00.000').plus({ hour: 1 })
+  expect(overlapPlusStd.toString()).toBe('2019-02-16T23:30:00.000-02:00')
+
+  const overlapMinusStd = qrono('2019-02-17 00:30:00.000').minus({ hour: 1 })
+  expect(overlapMinusStd.toString()).toBe('2019-02-16T23:30:00.000-03:00')
 })
 
 test('Daylight saving time — plus/minus crossing DST boundary (wall clock)', () => {

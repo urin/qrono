@@ -675,7 +675,7 @@ function plus(sign, ...args) {
       date[`getUTC${nativeKey}`]() + sign * timeFields[key]
     )
   }
-  return this.clone(resolveDstTime(this[internal].interpretAsDst, date, false))
+  return this.clone(date)
 }
 
 // -----------------------------------------------------------------------------
