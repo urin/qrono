@@ -6,15 +6,23 @@ Designed for _single-timezone_ applications.
 ```javascript
 import { qrono } from 'qrono'
 
-// America/New_York — DST ends
-qrono({ localtime: true }, '2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
-// UTC first
-qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
-// Flexible APIs
-qrono('2026-08-31 12:34') < qrono('2026-09-30 12:34')
-const today = qrono.date('2021-08-31')
-const tomorrow = qrono.date(today + 1)
-tomorrow - today === 1
+// UTC-first
+const now = qrono().toString() // '2027-01-23T12:34:56:789Z'
+// DST overlap (occurs twice) of Europe/London
+qrono.asLocaltime()
+const t = '2019-10-27T01:30:00'
+qrono(t) // 01:30 +00:00 Same as JavaScript's `Date`
+qrono({ disambiguation: 'earlier' }, t) // 01:30 +00:00
+qrono({ disambiguation: 'later' }, t)   // 01:30 +01:00
+qrono({ disambiguation: 'reject' }, t)  // throws RangeError
+
+now.plus(0, 1, 10) // +1 month, +10 days
+now.startOfMonth()
+now.isBetween(qrono('2024-01-01'), qrono('2024-12-31'))
+const date = qrono.date('2024-06-15')
+date.dayOfYear()   // 167
+date.weekOfYear()  // 24
+date.endOfMonth()  // 2024-06-30
 ```
 
 ## Design Philosophy
@@ -116,7 +124,19 @@ This behavior is not a bug but a result of strictly following the [ECMAScript sp
 
 Additionally, a `Date` object created from a duplicated time during daylight saving time (DST) transition always refers to the time before DST ends. In other words, there is no simple way to obtain a `Date` object that refers to the UTC time **after** the end of DST from a duplicated time.
 
-**Qrono** addresses these issues by providing a more understandable approach to handling such transitions.
+**Qrono** addresses these issues by providing a more principled approach to handling such transitions. Ambiguous local times — those that fall in a DST gap (spring-forward) or overlap (fall-back) — are resolved through the `disambiguation` option, which mirrors the [Temporal API](https://tc39.es/proposal-temporal/docs/):
+
+```javascript
+qrono.asLocaltime()
+// Gap: 2019-03-31T01:30 does not exist in Europe/London
+qrono('2019-03-31T01:30')                                // → 02:30+01:00 (compatible, DST side)
+qrono({ disambiguation: 'earlier' }, '2019-03-31T01:30') // → 00:30+00:00 (standard side)
+qrono({ disambiguation: 'reject' }, '2019-03-31T01:30')  // throws RangeError
+
+// Overlap: 2019-10-27T01:30 occurs twice in Europe/London
+qrono('2019-10-27T01:30')                                // → 01:30+00:00 (compatible, standard side)
+qrono({ disambiguation: 'later' }, '2019-10-27T01:30')   // → 01:30+01:00 (standard side)
+```
 
 ## Getting Started
 

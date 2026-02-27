@@ -78,15 +78,23 @@ deno add jsr:@urin/qrono
 ```javascript
 import { qrono } from 'qrono'
 
-// America/New_York — DST ends
-qrono({ localtime: true }, '2026-03-29 01:30').plus({ hour: 1 }) // DST-safe
-// UTC first
-qrono('2026-08-31 12:34').toString() === '2026-08-31T12:34.000Z'
-// Flexible APIs
-qrono('2026-08-31 12:34') < qrono('2026-09-30 12:34')
-const today = qrono.date('2021-08-31')
-const tomorrow = qrono.date(today + 1)
-tomorrow - today === 1
+// UTC-first
+const now = qrono().toString() // '2027-01-23T12:34:56:789Z'
+// DST overlap (occurs twice) of Europe/London
+qrono.asLocaltime()
+const t = '2019-10-27T01:30:00'
+qrono(t) // 01:30 +00:00 Same as JavaScript's `Date`
+qrono({ disambiguation: 'earlier' }, t) // 01:30 +00:00
+qrono({ disambiguation: 'later' }, t)   // 01:30 +01:00
+qrono({ disambiguation: 'reject' }, t)  // throws RangeError
+
+now.plus(0, 1, 10) // +1 month, +10 days
+now.startOfMonth()
+now.isBetween(qrono('2024-01-01'), qrono('2024-12-31'))
+const date = qrono.date('2024-06-15')
+date.dayOfYear()   // 167
+date.weekOfYear()  // 24
+date.endOfMonth()  // 2024-06-30
 ```
 
 ## Learn More

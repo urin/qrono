@@ -110,9 +110,9 @@ parse('2024-01-15', 'yyyy-MM-dd', new Date())
 ## DST gap/overlap handling
 
 When a local time string falls in a DST gap or overlap, each library must resolve the ambiguity differently.
-Qrono, Day.js, and date-fns default to the DST-active offset, just like JavaScript's Date.
-Luxon defaults to the standard offset in overlap cases.
-Among them, only Qrono provides an explicit `{ interpretAsDst: false }` option to override this behavior.
+Day.js and date-fns default to the DST-active (later) offset, just like JavaScript's `Date`.
+Luxon defaults to the standard (earlier) offset in overlap cases.
+Qrono defaults to `'compatible'` — gap times are forwarded to the later (DST) side, overlap times use the earlier (standard-time) side — and uniquely exposes all four resolution strategies via its `disambiguation` option, mirroring the [Temporal API](https://tc39.es/proposal-temporal/docs/).
 
 Europe/London DST is used here as an example.
 
@@ -127,11 +127,13 @@ Europe/London DST is used here as an example.
 const input = '2019-03-31T01:30:00'
 
 qrono.asLocaltime() // defaults localtime
-qrono(input)                             // Qrono    2019-03-31T02:30:00.000+01:00
-qrono({ interpretAsDst: false }, input)  // Qrono    2019-03-31T00:30:00.000+00:00
-dayjs(input)                             // Day.js   2019-03-31T02:30:00.000+01:00
-DateTime.fromISO(input)                  // Luxon    2019-03-31T02:30:00.000+01:00
-parseISO(input)                          // date-fns 2019-03-31T02:30:00.000+01:00
+qrono(input)                                // Qrono    2019-03-31T02:30:00.000+01:00
+qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-03-31T00:30:00.000+00:00
+qrono({ disambiguation: 'later' }, input)   // Qrono    2019-03-31T02:30:00.000+01:00
+qrono({ disambiguation: 'reject' }, input)  // Qrono    throws RangeError
+dayjs(input)                                // Day.js   2019-03-31T02:30:00.000+01:00
+DateTime.fromISO(input)                     // Luxon    2019-03-31T02:30:00.000+01:00
+parseISO(input)                             // date-fns 2019-03-31T02:30:00.000+01:00
 ```
 
 ### Overlap (duplicated local time)
@@ -140,11 +142,13 @@ parseISO(input)                          // date-fns 2019-03-31T02:30:00.000+01:
 const input = '2019-10-27T01:30:00'
 
 qrono.asLocaltime() // defaults localtime
-qrono(input)                             // Qrono    2019-10-27T01:30:00.000+01:00
-qrono({ interpretAsDst: false }, input)  // Qrono    2019-10-27T01:30:00.000+00:00
-dayjs(input)                             // Day.js   2019-10-27T01:30:00.000+01:00
-DateTime.fromISO(input)                  // Luxon    2019-10-27T01:30:00.000+00:00
-parseISO(input)                          // date-fns 2019-10-27T01:30:00.000+01:00
+qrono(input)                                // Qrono    2019-10-27T01:30:00.000+00:00
+qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-10-27T01:30:00.000+00:00
+qrono({ disambiguation: 'later' }, input)   // Qrono    2019-10-27T01:30:00.000+01:00
+qrono({ disambiguation: 'reject' }, input)  // Qrono    throws RangeError
+dayjs(input)                                // Day.js   2019-10-27T01:30:00.000+01:00
+DateTime.fromISO(input)                     // Luxon    2019-10-27T01:30:00.000+00:00
+parseISO(input)                             // date-fns 2019-10-27T01:30:00.000+01:00
 ```
 
 ## Date-only instance

@@ -40,7 +40,8 @@ The library provides two classes: `Qrono`, which represents a point in time, and
   - [qrono.localtime()](#default-localtime) <Badge type="info" text="static" /> <small>2 overloads</small>
   - [.context()](#context) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
   - [.localtime()](#localtime) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
-  - [.interpretAsDst()](#interpretasdst) <Badge type="tip" text="Qrono" />
+  - [.disambiguation()](#disambiguation) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
+  - [qrono.disambiguation()](#default-disambiguation) <Badge type="info" text="static" /> <small>2 overloads</small>
   - [.asUtc()](#asutc) <Badge type="tip" text="Qrono" />
   - [.asLocaltime()](#aslocaltime) <Badge type="tip" text="Qrono" />
 - [Calculation](#calculation)
@@ -307,12 +308,18 @@ qrono().asLocaltime().offset() // e.g., 540 (JST)
 Sets the default context for all new instances.
 
 ```javascript
-qrono.context({ localtime: true, interpretAsDst: false })
+qrono.context({ localtime: true, disambiguation: 'earlier' })
 ```
 
 **Parameters:**
 - `localtime` - `boolean` - Use local time instead of UTC
-- `interpretAsDst` - `boolean` - Interpret ambiguous times as DST
+- `disambiguation` - `'compatible' | 'earlier' | 'later' | 'reject'` - How to resolve ambiguous local times at DST transitions (default: `'compatible'`)
+  | Option                     | Gap (spring-forward)    | Overlap (fall-back)     |
+  |----------------------------|-------------------------|-------------------------|
+  | `'compatible'` *(default)* | Later (DST side)        | Earlier (standard side) |
+  | `'earlier'`                | Earlier (standard side) | Earlier (standard side) |
+  | `'later'`                  | Later (DST side)        | Later (DST side)        |
+  | `'reject'`                 | Throws `RangeError`     | Throws `RangeError`     |
 
 ### qrono.asUtc() {#default-asutc}
 
@@ -349,7 +356,7 @@ Get or set context options.
 
 ```javascript
 // Get current context
-time.context()  // { localtime: false, interpretAsDst: false }
+time.context()  // { localtime: false, disambiguation: 'compatible' }
 
 // Set context (returns new instance)
 time.context({ localtime: true })
@@ -364,13 +371,29 @@ time.localtime()      // Get: true or false
 time.localtime(true)  // Set: returns new instance
 ```
 
-### interpretAsDst() {#interpretasdst}
+### disambiguation() {#disambiguation}
 
-Get or set ambiguous DST handling.
+Get or set the DST disambiguation strategy. Controls how local times that fall in a DST gap (spring-forward) or overlap (fall-back) are resolved.
 
 ```javascript
-time.interpretAsDst()      // Get: true or false
-time.interpretAsDst(true)  // Set: returns new instance
+time.disambiguation()            // Get: 'compatible' | 'earlier' | 'later' | 'reject'
+time.disambiguation('earlier')   // Set: returns new instance
+```
+
+| Value | Gap (spring-forward) | Overlap (fall-back) |
+|---|---|---|
+| `'compatible'` *(default)* | Later (DST side, JS native) | Earlier (standard-time side) |
+| `'earlier'` | Earlier (standard-time side) | Earlier (standard-time side) |
+| `'later'` | Later (DST side) | Later (DST side) |
+| `'reject'` | Throws `RangeError` | Throws `RangeError` |
+
+### qrono.disambiguation(value) {#default-disambiguation}
+
+Sets and returns the qrono default disambiguation setting.
+
+```javascript
+qrono.disambiguation('later')
+qrono.disambiguation()  // 'later'
 ```
 
 ### asUtc() {#asutc}
