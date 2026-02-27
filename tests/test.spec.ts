@@ -11,7 +11,7 @@ process.env.TZ = 'America/Sao_Paulo'
 
 beforeEach(() => {
   MockDate.set(new Date())
-  qrono.context({ localtime: false, interpretAsDst: false })
+  qrono.context({ localtime: false, disambiguation: 'earlier' })
 })
 
 afterEach(() => {
@@ -95,12 +95,17 @@ test('Construction from number', () => {
 
 test('Accessor', () => {
   expect(
-    qrono().context({ localtime: true, interpretAsDst: true }).context()
-  ).toEqual({ localtime: true, interpretAsDst: true })
+    qrono().context({ localtime: true, disambiguation: 'later' }).context()
+  ).toEqual({ localtime: true, disambiguation: 'later' })
   expect(qrono().nativeDate().toISOString()).toBe(dateText())
   expect(qrono().offset()).toBe(0)
   expect(qrono().localtime(true).localtime()).toBe(true)
-  expect(qrono().interpretAsDst(true).interpretAsDst()).toBe(true)
+  expect(qrono().disambiguation('later').disambiguation()).toBe('later')
+  expect(qrono().disambiguation('earlier').disambiguation()).toBe('earlier')
+  expect(qrono().disambiguation('compatible').disambiguation()).toBe(
+    'compatible'
+  )
+  expect(qrono().disambiguation('reject').disambiguation()).toBe('reject')
   expect(qrono().valid()).toBe(true)
   expect(qrono().numeric()).toBe(qrono().valueOf())
   const value = {
@@ -236,7 +241,7 @@ test('Calculation and comparison', () => {
 //   OVERLAP = fall back:      2019-02-16 local 23:00–23:59 occurs twice
 
 test('Daylight saving time — hasDstInYear / isInDst', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   expect(qrono(2018, 1).hasDstInYear()).toBe(true)
   expect(qrono(2020, 1).hasDstInYear()).toBe(false) // DST was abolished in 2020
@@ -246,12 +251,12 @@ test('Daylight saving time — hasDstInYear / isInDst', () => {
   expect(qrono('2018-11-04 01:00:00.000').isInDst()).toBe(true) // just after GAP: DST
 
   // isInDst around OVERLAP
-  expect(qrono('2019-02-16 23:59:59.999').isInDst()).toBe(true) // just before: DST side (interpretAsDst=true)
+  expect(qrono('2019-02-16 23:59:59.999').isInDst()).toBe(true) // just before: DST side (disambiguation='later')
   expect(qrono('2019-02-17 00:00:00.000').isInDst()).toBe(false) // next day: standard time
 })
 
 test('Daylight saving time — isDstTransitionDay', () => {
-  qrono.context({ localtime: true, interpretAsDst: false })
+  qrono.context({ localtime: true, disambiguation: 'earlier' })
 
   // GAP day
   expect(qrono('2018-11-03 23:59:59.999').isDstTransitionDay()).toBe(false) // day before
@@ -271,7 +276,7 @@ test('Daylight saving time — isDstTransitionDay', () => {
 })
 
 test('Daylight saving time — minutesInDay', () => {
-  qrono.context({ localtime: true, interpretAsDst: false })
+  qrono.context({ localtime: true, disambiguation: 'earlier' })
 
   // GAP day is 60 min shorter (1380 min)
   expect(qrono('2018-11-03 23:59:59.999').minutesInDay()).toBe(1440) // day before
@@ -285,22 +290,22 @@ test('Daylight saving time — minutesInDay', () => {
   expect(qrono('2019-02-16 23:59:59.999').minutesInDay()).toBe(1500) // OVERLAP day end
   expect(qrono('2019-02-17 00:00:00.000').minutesInDay()).toBe(1440) // day after
 
-  // interpretAsDst does not affect minutesInDay
-  qrono.context({ interpretAsDst: true })
+  // disambiguation does not affect minutesInDay (always uses 'later' internally)
+  qrono.context({ disambiguation: 'later' })
   expect(qrono('2018-11-04 01:00:00.000').minutesInDay()).toBe(1380)
   expect(qrono('2019-02-16 23:59:59.999').minutesInDay()).toBe(1500)
 
   // QronoDate behaves the same
-  qrono.context({ interpretAsDst: false })
+  qrono.context({ disambiguation: 'earlier' })
   expect(qrono.date('2018-11-03').minutesInDay()).toBe(1440)
   expect(qrono.date('2018-11-04').minutesInDay()).toBe(1380)
   expect(qrono.date('2019-02-16').minutesInDay()).toBe(1500)
 })
 
-test('Daylight saving time — toString / offset (interpretAsDst=true, GAP)', () => {
+test('Daylight saving time — toString / offset (disambiguation=later, GAP)', () => {
   // GAP: local 2018-11-04 00:00–00:59 does not exist
-  // interpretAsDst=true → ambiguous local time is mapped to the DST side (-02:00)
-  qrono.context({ localtime: true, interpretAsDst: true })
+  // disambiguation='later' → ambiguous local time is mapped to the DST side (-02:00)
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   expect(qrono('2018-11-03 23:59:59.999').toString()).toBe(
     '2018-11-03T23:59:59.999-03:00' // just before GAP: standard time
@@ -316,9 +321,28 @@ test('Daylight saving time — toString / offset (interpretAsDst=true, GAP)', ()
   )
 })
 
-test('Daylight saving time — toString / offset (interpretAsDst=false, GAP)', () => {
-  // interpretAsDst=false → ambiguous local time is mapped to the standard side (-03:00)
-  qrono.context({ localtime: true, interpretAsDst: false })
+test('Daylight saving time — toString / offset (disambiguation=compatible, GAP)', () => {
+  // GAP: local 2018-11-04 00:00–00:59 does not exist
+  // disambiguation='compatible' → gap times forwarded to later (DST) side, same as 'later'
+  qrono.context({ localtime: true, disambiguation: 'compatible' })
+
+  expect(qrono('2018-11-03 23:59:59.999').toString()).toBe(
+    '2018-11-03T23:59:59.999-03:00' // just before GAP: standard time
+  )
+  expect(qrono('2018-11-04 00:00:00.000').toString()).toBe(
+    '2018-11-04T01:00:00.000-02:00' // inside GAP: forwarded to DST side
+  )
+  expect(qrono('2018-11-04 00:30:00.000').toString()).toBe(
+    '2018-11-04T01:30:00.000-02:00'
+  )
+  expect(qrono('2018-11-04 01:00:00.000').toString()).toBe(
+    '2018-11-04T01:00:00.000-02:00' // just after GAP: DST
+  )
+})
+
+test('Daylight saving time — toString / offset (disambiguation=earlier, GAP)', () => {
+  // disambiguation='earlier' → ambiguous local time is mapped to the standard side (-03:00)
+  qrono.context({ localtime: true, disambiguation: 'earlier' })
 
   expect(qrono('2018-11-03 23:59:59.999').toString()).toBe(
     '2018-11-03T23:59:59.999-03:00'
@@ -334,10 +358,26 @@ test('Daylight saving time — toString / offset (interpretAsDst=false, GAP)', (
   )
 })
 
-test('Daylight saving time — toString / offset (interpretAsDst=true, OVERLAP)', () => {
+test('Daylight saving time — toString / offset (disambiguation=reject, GAP)', () => {
+  // disambiguation='reject' → throws RangeError for times inside the GAP
+  qrono.context({ localtime: true, disambiguation: 'reject' })
+
+  // Times outside the gap are fine
+  expect(qrono('2018-11-03 23:59:59.999').toString()).toBe(
+    '2018-11-03T23:59:59.999-03:00'
+  )
+  expect(qrono('2018-11-04 01:00:00.000').toString()).toBe(
+    '2018-11-04T01:00:00.000-02:00'
+  )
+  // Times inside the gap throw
+  expect(() => qrono('2018-11-04 00:00:00.000')).toThrow(RangeError)
+  expect(() => qrono('2018-11-04 00:30:00.000')).toThrow(RangeError)
+})
+
+test('Daylight saving time — toString / offset (disambiguation=later, OVERLAP)', () => {
   // OVERLAP: local 2019-02-16 23:00–23:59 occurs twice
-  // interpretAsDst=true → the DST side (-02:00) is preferred
-  qrono.context({ localtime: true, interpretAsDst: true })
+  // disambiguation='later' → the DST side (-02:00) is preferred
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   expect(qrono('2019-02-16 23:00:00.000').toString()).toBe(
     '2019-02-16T23:00:00.000-02:00' // DST side of 23:00
@@ -353,9 +393,9 @@ test('Daylight saving time — toString / offset (interpretAsDst=true, OVERLAP)'
   )
 })
 
-test('Daylight saving time — toString / offset (interpretAsDst=false, OVERLAP)', () => {
-  // interpretAsDst=false → the standard side (-03:00) is preferred
-  qrono.context({ localtime: true, interpretAsDst: false })
+test('Daylight saving time — toString / offset (disambiguation=earlier, OVERLAP)', () => {
+  // disambiguation='earlier' → the standard side (-03:00) is preferred
+  qrono.context({ localtime: true, disambiguation: 'earlier' })
 
   expect(qrono('2019-02-16 23:30:00.000').toString()).toBe(
     '2019-02-16T23:30:00.000-03:00' // standard side of 23:30
@@ -368,22 +408,57 @@ test('Daylight saving time — toString / offset (interpretAsDst=false, OVERLAP)
   )
 })
 
+test('Daylight saving time — toString / offset (disambiguation=compatible, OVERLAP)', () => {
+  // OVERLAP: local 2019-02-16 23:00–23:59 occurs twice
+  // disambiguation='compatible' → overlap times use the earlier DST side
+  qrono.context({ localtime: true, disambiguation: 'compatible' })
+
+  expect(qrono('2019-02-16 23:00:00.000').toString()).toBe(
+    '2019-02-16T23:00:00.000-02:00' // DST side of 23:00
+  )
+  expect(qrono('2019-02-16 23:30:00.000').toString()).toBe(
+    '2019-02-16T23:30:00.000-02:00'
+  )
+  expect(qrono('2019-02-16 23:59:59.999').toString()).toBe(
+    '2019-02-16T23:59:59.999-02:00'
+  )
+  expect(qrono('2019-02-17 00:00:00.000').toString()).toBe(
+    '2019-02-17T00:00:00.000-03:00' // after OVERLAP: standard time
+  )
+})
+
+test('Daylight saving time — toString / offset (disambiguation=reject, OVERLAP)', () => {
+  // disambiguation='reject' → throws RangeError for times inside the OVERLAP
+  qrono.context({ localtime: true, disambiguation: 'reject' })
+
+  // Times outside the overlap are fine
+  expect(qrono('2019-02-16 22:59:59.999').toString()).toBe(
+    '2019-02-16T22:59:59.999-02:00'
+  )
+  expect(qrono('2019-02-17 00:00:00.000').toString()).toBe(
+    '2019-02-17T00:00:00.000-03:00'
+  )
+  // Times inside the overlap throw
+  expect(() => qrono('2019-02-16 23:00:00.000')).toThrow(RangeError)
+  expect(() => qrono('2019-02-16 23:30:00.000')).toThrow(RangeError)
+})
+
 test('Daylight saving time — offset()', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // just before GAP: standard time UTC-3 → offset = -180
   expect(qrono('2018-11-03 23:59:59.999').offset()).toBe(-180)
-  // inside GAP (interpretAsDst=true → DST): UTC-2 → offset = -120
+  // inside GAP (disambiguation='later' → DST): UTC-2 → offset = -120
   expect(qrono('2018-11-04 00:30:00.000').offset()).toBe(-120)
-  // inside OVERLAP (interpretAsDst=true → DST): UTC-2 → offset = -120
+  // inside OVERLAP (disambiguation='later' → DST): UTC-2 → offset = -120
   expect(qrono('2019-02-16 23:30:00.000').offset()).toBe(-120)
   // after OVERLAP: standard time UTC-3 → offset = -180
   expect(qrono('2019-02-17 00:00:00.000').offset()).toBe(-180)
 
-  qrono.context({ interpretAsDst: false })
-  // inside GAP (interpretAsDst=false → standard): UTC-3 → offset = -180
+  qrono.context({ disambiguation: 'earlier' })
+  // inside GAP (disambiguation='earlier' → standard): UTC-3 → offset = -180
   expect(qrono('2018-11-04 00:30:00.000').offset()).toBe(-180)
-  // inside OVERLAP (interpretAsDst=false → standard): UTC-3 → offset = -180
+  // inside OVERLAP (disambiguation='earlier' → standard): UTC-3 → offset = -180
   expect(qrono('2019-02-16 23:30:00.000').offset()).toBe(-180)
 })
 
@@ -392,7 +467,7 @@ test('Daylight saving time — offset()', () => {
 // ---------------------------------------------------------------------------
 
 test('Daylight saving time — startOfDay on GAP day', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // startOfDay on GAP day: local 00:00 does not exist, so it is forwarded to DST side
   const startGap = qrono('2018-11-04 12:00:00.000').startOfDay()
@@ -404,7 +479,7 @@ test('Daylight saving time — startOfDay on GAP day', () => {
 })
 
 test('Daylight saving time — startOfDay on OVERLAP day', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // startOfDay on OVERLAP day: 00:00 is unambiguous, so it behaves normally
   const startOverlap = qrono('2019-02-16 12:00:00.000').startOfDay()
@@ -416,7 +491,7 @@ test('Daylight saving time — startOfDay on OVERLAP day', () => {
 })
 
 test('Daylight saving time — startOfHour in GAP', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // startOfHour at 00:30 inside GAP: local 00:00 is forwarded to 01:00 DST
   const startHourGap = qrono('2018-11-04 00:30:00.000').startOfHour()
@@ -424,13 +499,13 @@ test('Daylight saving time — startOfHour in GAP', () => {
 })
 
 test('Daylight saving time — startOfHour in OVERLAP', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // startOfHour at 23:30 on DST side of OVERLAP
   const startHourOverlapDst = qrono('2019-02-16 23:30:00.000').startOfHour()
   expect(startHourOverlapDst.toString()).toBe('2019-02-16T23:00:00.000-02:00')
 
-  qrono.context({ interpretAsDst: false })
+  qrono.context({ disambiguation: 'earlier' })
   // startOfHour at 23:30 on standard side of OVERLAP
   const startHourOverlapStd = qrono('2019-02-16 23:30:00.000').startOfHour()
   expect(startHourOverlapStd.toString()).toBe('2019-02-16T23:00:00.000-03:00')
@@ -441,7 +516,7 @@ test('Daylight saving time — startOfHour in OVERLAP', () => {
 // ---------------------------------------------------------------------------
 
 test('Daylight saving time — plus/minus result lands in GAP', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // +1 day from the day before GAP
   const afterPlus = qrono('2018-11-03 00:00:00.000').plus({ day: 1 })
@@ -459,9 +534,9 @@ test('Daylight saving time — plus/minus result lands in GAP', () => {
   const gapMinusDst = qrono('2018-11-04 01:30:00.000').minus({ hour: 1 })
   expect(gapMinusDst.toString()).toBe('2018-11-03T23:30:00.000-03:00')
 
-  qrono.context({ interpretAsDst: false })
+  qrono.context({ disambiguation: 'earlier' })
 
-  // Arithmetic to GAP is resolved the same way even with interpretAsDst=false
+  // Arithmetic to GAP is resolved the same way even with disambiguation='earlier'
   const afterPlusStd = qrono('2018-11-03 00:00:00.000').plus({ day: 1 })
   expect(afterPlusStd.toString()).toBe('2018-11-04T01:00:00.000-02:00')
 
@@ -476,7 +551,7 @@ test('Daylight saving time — plus/minus result lands in GAP', () => {
 })
 
 test('Daylight saving time — plus/minus result lands in OVERLAP', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // +1 day from the day before OVERLAP
   const afterPlus = qrono('2019-02-15 23:30:00.000').plus({ day: 1 })
@@ -494,8 +569,8 @@ test('Daylight saving time — plus/minus result lands in OVERLAP', () => {
   const overlapMinusDst = qrono('2019-02-17 00:30:00.000').minus({ hour: 1 })
   expect(overlapMinusDst.toString()).toBe('2019-02-16T23:30:00.000-03:00')
 
-  qrono.context({ interpretAsDst: false })
-  // Arithmetic to GAP is resolved the same way even with interpretAsDst=false
+  qrono.context({ disambiguation: 'earlier' })
+  // Arithmetic to OVERLAP is resolved the same way even with disambiguation='earlier'
   const afterPlusStd = qrono('2019-02-15 23:30:00.000').plus({ day: 1 })
   expect(afterPlusStd.toString()).toBe('2019-02-16T23:30:00.000-02:00')
 
@@ -510,7 +585,7 @@ test('Daylight saving time — plus/minus result lands in OVERLAP', () => {
 })
 
 test('Daylight saving time — plus/minus crossing DST boundary (wall clock)', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // +1h just before GAP: crosses the gap, so wall clock advances by 2h
   // 23:30-03:00 + 1h = 00:30 (inside GAP) → forwarded → 01:30-02:00
@@ -528,27 +603,27 @@ test('Daylight saving time — plus/minus crossing DST boundary (wall clock)', (
 // ---------------------------------------------------------------------------
 
 test('Daylight saving time — field setter result lands in GAP', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // Setting hour(0) on GAP day: local 00:00 does not exist → mapped to DST side
   const atGap = qrono('2018-11-04 12:00:00.000').hour(0)
   expect(atGap.toString()).toBe('2018-11-04T01:00:00.000-02:00')
 
-  qrono.context({ interpretAsDst: false })
-  // interpretAsDst=false → mapped to standard side
+  qrono.context({ disambiguation: 'earlier' })
+  // disambiguation='earlier' → mapped to standard side
   const atGapStd = qrono('2018-11-04 12:00:00.000').hour(0)
   expect(atGapStd.toString()).toBe('2018-11-03T23:00:00.000-03:00')
 })
 
 test('Daylight saving time — field setter result lands in OVERLAP', () => {
-  qrono.context({ localtime: true, interpretAsDst: true })
+  qrono.context({ localtime: true, disambiguation: 'later' })
 
   // Setting hour(23).minute(30) on OVERLAP day → DST side (-02:00)
   const atOverlapDst = qrono('2019-02-16 12:00:00.000').hour(23).minute(30)
   expect(atOverlapDst.toString()).toBe('2019-02-16T23:30:00.000-02:00')
 
-  qrono.context({ interpretAsDst: false })
-  // interpretAsDst=false → standard side (-03:00)
+  qrono.context({ disambiguation: 'earlier' })
+  // disambiguation='earlier' → standard side (-03:00)
   const atOverlapStd = qrono('2019-02-16 12:00:00.000').hour(23).minute(30)
   expect(atOverlapStd.toString()).toBe('2019-02-16T23:30:00.000-03:00')
 })

@@ -230,16 +230,16 @@ declare namespace qrono {
   export function localtime(value: boolean): typeof qrono
 
   /**
-   * Returns whether interpretAsDst is enabled.
+   * Returns the current global disambiguation option.
    */
-  export function interpretAsDst(): boolean
+  export function disambiguation(): Disambiguation
 
   /**
-   * Sets whether interpretAsDst is enabled.
-   * @param value - True to enable interpretAsDst.
+   * Sets the global disambiguation option.
+   * @param value - The disambiguation option to set.
    * @returns The qrono object.
    */
-  export function interpretAsDst(value: boolean): typeof qrono
+  export function disambiguation(value: Disambiguation): typeof qrono
 
   /**
    * Returns new qrono instance with UTC context.
@@ -251,9 +251,20 @@ declare namespace qrono {
    */
   export function asLocaltime(): typeof qrono
 
+  /**
+   * The four disambiguation options for resolving ambiguous local times,
+   * mirroring the Temporal API.
+   *
+   * - `'compatible'`: Gap → later (JS native forward-shift). Overlap → earlier (standard-time side).
+   * - `'earlier'`:    Gap or overlap → the earlier (standard-time / pre-transition) instant.
+   * - `'later'`:      Gap or overlap → the later (DST side / post-transition) instant.
+   * - `'reject'`:     Throws `RangeError` if the time falls in a gap or overlap.
+   */
+  export type Disambiguation = 'compatible' | 'earlier' | 'later' | 'reject'
+
   export type Context = {
     localtime?: boolean
-    interpretAsDst?: boolean
+    disambiguation?: Disambiguation
   }
 
   export type TimeFields = {
@@ -322,16 +333,16 @@ declare namespace qrono {
     localtime(yes: boolean): Qrono
 
     /**
-     * Returns whether interpretAsDst is enabled for the Qrono instance.
+     * Returns the current disambiguation option of the Qrono instance.
      */
-    interpretAsDst(): boolean
+    disambiguation(): Disambiguation
 
     /**
-     * Sets whether interpretAsDst is enabled for the Qrono instance.
-     * @param yes - True to enable interpretAsDst, false to disable.
-     * @returns The Qrono instance.
+     * Sets the disambiguation option of the Qrono instance.
+     * @param value - The disambiguation option.
+     * @returns A new Qrono instance with the updated disambiguation.
      */
-    interpretAsDst(yes: boolean): Qrono
+    disambiguation(value: Disambiguation): Qrono
 
     /**
      * Returns whether the Qrono instance is valid.

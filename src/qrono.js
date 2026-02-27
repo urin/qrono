@@ -6,7 +6,6 @@ import {
   isObject,
   isString,
   isValidDate,
-  resolveDstTime,
   hasDatetimeField,
   initialSafeDate,
   daysPerWeek,
@@ -48,7 +47,7 @@ Qrono.date = QronoDate
 // NOTE Must be flat object for shallow cloning.
 const defaultContext = {
   localtime: false,
-  interpretAsDst: true,
+  disambiguation: 'compatible',
 }
 
 for (const key of fields(defaultContext)) {
@@ -107,7 +106,7 @@ function Qrono(...args) {
     // properties
     nativeDate: null,
     localtime: false,
-    interpretAsDst: false,
+    disambiguation: 'compatible',
     // methods
     set,
     parse,
@@ -195,43 +194,7 @@ function getNative(name) {
 function set(values) {
   const args = { ...values }
   args.month = args.month && args.month - 1
-  if (this.localtime) {
-    const dateOnly = !has(values, 'hour', 'minute', 'second', 'millisecond')
-    const interpretAsDst = dateOnly ? true : this.interpretAsDst
-    const baseDate = this.nativeDate ?? new Date(0, 0)
-    const newDate = new Date(initialSafeDate.getTime())
-    const requested = {
-      year: args.year ?? baseDate.getFullYear(),
-      month: args.month ?? baseDate.getMonth(),
-      day: args.day ?? baseDate.getDate(),
-      hour: args.hour ?? (dateOnly ? 0 : baseDate.getHours()),
-      minute: args.minute ?? (dateOnly ? 0 : baseDate.getMinutes()),
-      second: args.second ?? (dateOnly ? 0 : baseDate.getSeconds()),
-      millisecond:
-        args.millisecond ?? (dateOnly ? 0 : baseDate.getMilliseconds()),
-    }
-    newDate.setFullYear(requested.year, requested.month, requested.day)
-    newDate.setHours(
-      requested.hour,
-      requested.minute,
-      requested.second,
-      requested.millisecond
-    )
-    // Detect whether the constructed Date landed in a DST gap (missing time).
-    // In a gap, JavaScript silently shifts the time forward.
-    const isGap =
-      requested.year * 1e8 +
-        requested.month * 1e6 +
-        requested.day * 1e4 +
-        requested.hour * 1e2 +
-        requested.minute <
-      newDate.getFullYear() * 1e8 +
-        newDate.getMonth() * 1e6 +
-        newDate.getDate() * 1e4 +
-        newDate.getHours() * 1e2 +
-        newDate.getMinutes()
-    this.nativeDate = resolveDstTime(interpretAsDst, newDate, isGap)
-  } else {
+  if (!this.localtime) {
     const baseDate = this.nativeDate ?? new Date(0)
     const newDate = new Date(0)
     newDate.setUTCFullYear(
@@ -246,7 +209,71 @@ function set(values) {
       args.millisecond ?? baseDate.getUTCMilliseconds()
     )
     this.nativeDate = newDate
+    return this
   }
+  const dateOnly = !has(values, 'hour', 'minute', 'second', 'millisecond')
+  const disambig = dateOnly ? 'later' : this.disambiguation
+  const baseDate = this.nativeDate ?? new Date(0, 0)
+  const newDate = new Date(initialSafeDate.getTime())
+  const requested = {
+    year: args.year ?? baseDate.getFullYear(),
+    month: args.month ?? baseDate.getMonth(),
+    day: args.day ?? baseDate.getDate(),
+    hour: args.hour ?? (dateOnly ? 0 : baseDate.getHours()),
+    minute: args.minute ?? (dateOnly ? 0 : baseDate.getMinutes()),
+    second: args.second ?? (dateOnly ? 0 : baseDate.getSeconds()),
+    millisecond:
+      args.millisecond ?? (dateOnly ? 0 : baseDate.getMilliseconds()),
+  }
+  newDate.setFullYear(requested.year, requested.month, requested.day)
+  newDate.setHours(
+    requested.hour,
+    requested.minute,
+    requested.second,
+    requested.millisecond
+  )
+  // Compute the offset-delta between the day before and after.
+  const numeric = newDate.getTime()
+  const nextDay = new Date(numeric)
+  nextDay.setDate(newDate.getDate() + 1)
+  const prevDay = new Date(numeric)
+  prevDay.setDate(newDate.getDate() - 1)
+  const adjust = nextDay.getTimezoneOffset() - prevDay.getTimezoneOffset()
+  // No DST transition nearby — nothing to resolve.
+  if (disambig === 'compatible' || adjust === 0) {
+    this.nativeDate = newDate
+    return this
+  }
+  // Detect whether the constructed Date landed in a DST gap (missing time).
+  // In a gap, JavaScript silently shifts the time forward.
+  const isGap =
+    requested.year * 1e8 +
+      requested.month * 1e6 +
+      requested.day * 1e4 +
+      requested.hour * 1e2 +
+      requested.minute <
+    newDate.getFullYear() * 1e8 +
+      newDate.getMonth() * 1e6 +
+      newDate.getDate() * 1e4 +
+      newDate.getHours() * 1e2 +
+      newDate.getMinutes()
+  // Compute the standard-time candidate.
+  // Verify the candidate actually preserves the original local fields.
+  // If it doesn't, the time isn't truly in an overlap.
+  const adjustedUTC = new Date(
+    new Date(numeric).setUTCMinutes(newDate.getUTCMinutes() + adjust)
+  )
+  const isOverlap =
+    adjustedUTC.getHours() === newDate.getHours() &&
+    adjustedUTC.getMinutes() === newDate.getMinutes()
+  if (!isGap && !isOverlap) {
+    this.nativeDate = newDate
+    return this
+  }
+  if (disambig === 'reject') {
+    throw new RangeError(`Requested local time ${requested} is ambiguous.`)
+  }
+  this.nativeDate = disambig === 'later' ? newDate : adjustedUTC
   return this
 }
 
@@ -338,7 +365,7 @@ Qrono.prototype.context = function (context) {
     ? this.clone(context)
     : {
         localtime: this[internal].localtime,
-        interpretAsDst: this[internal].interpretAsDst,
+        disambiguation: this[internal].disambiguation,
       }
 }
 
@@ -356,10 +383,10 @@ Qrono.prototype.localtime = function (arg) {
   return given(arg) ? this.clone({ localtime: arg }) : this[internal].localtime
 }
 
-Qrono.prototype.interpretAsDst = function (arg) {
+Qrono.prototype.disambiguation = function (arg) {
   return given(arg)
-    ? this.clone({ interpretAsDst: arg })
-    : this[internal].interpretAsDst
+    ? this.clone({ disambiguation: arg })
+    : this[internal].disambiguation
 }
 
 Qrono.prototype.valid = function () {
@@ -517,7 +544,7 @@ Qrono.prototype.minutesInDay = function () {
   if (!this[internal].localtime) {
     return minutesPerDay
   }
-  const startOfDay = this.context({ interpretAsDst: true }).startOfDay()
+  const startOfDay = this.context({ disambiguation: 'later' }).startOfDay()
   const nextDay = startOfDay.plus({ day: 1 }).startOfDay()
   if (startOfDay.day() === nextDay.day()) {
     return minutesPerDay
@@ -564,7 +591,7 @@ Qrono.prototype.startOfMonth = function () {
 
 Qrono.prototype.startOfDay = function () {
   const timestamp = this.clone(
-    { interpretAsDst: true },
+    { disambiguation: 'later' },
     { hour: 0, minute: 0, second: 0, millisecond: 0 }
   ).numeric()
   return this.clone(timestamp)
@@ -781,7 +808,7 @@ for (const method of [
 for (const method of ['minutesInDay', 'hasDstInYear', 'isDstTransitionDay']) {
   QronoDate.prototype[method] = function () {
     return qrono(
-      { interpretAsDst: true },
+      { disambiguation: 'later' },
       this[internalDate].datetime.toArray().slice(0, 3)
     )[method]()
   }
