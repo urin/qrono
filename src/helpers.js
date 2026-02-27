@@ -28,14 +28,6 @@ export const millisecondsPerHour = secondsPerHour * millisecondsPerSecond
 export const millisecondsPerDay = secondsPerDay * millisecondsPerSecond
 export const millisecondsPerWeek = secondsPerWeek * millisecondsPerSecond
 
-export const monday = 1
-export const tuesday = 2
-export const wednesday = 3
-export const thursday = 4
-export const friday = 5
-export const saturday = 6
-export const sunday = 7
-
 export function has(object, ...keys) {
   return keys.flat().some(object.hasOwnProperty, object)
 }

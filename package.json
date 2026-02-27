@@ -34,6 +34,8 @@
     "lint:fix": "biome lint --write ./src ./tests",
     "format": "biome format --write .",
     "format:check": "biome format .",
+    "check": "biome check ./src ./tests",
+    "check:fix": "biome check ./src ./tests --write",
     "build": "vite build --minify",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -13,13 +13,6 @@ import {
   minutesPerHour,
   millisecondsPerMinute,
   millisecondsPerDay,
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday,
 } from './helpers.js'
 
 // -----------------------------------------------------------------------------
@@ -28,16 +21,6 @@ import {
 const qrono = Qrono
 
 export { qrono }
-
-export {
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday,
-} from './helpers'
 
 // -----------------------------------------------------------------------------
 // Static
@@ -83,6 +66,14 @@ Qrono.asLocaltime = function () {
   return this
 }
 
+const monday = 1
+const tuesday = 2
+const wednesday = 3
+const thursday = 4
+const friday = 5
+const saturday = 6
+const sunday = 7
+
 Object.assign(Qrono, {
   monday,
   tuesday,
@@ -96,7 +87,7 @@ Object.assign(Qrono, {
 // -----------------------------------------------------------------------------
 // Constructor
 // -----------------------------------------------------------------------------
-const internal = Symbol('Qrono.internal')
+const internal = Symbol()
 
 function Qrono(...args) {
   if (!new.target) {
@@ -146,8 +137,9 @@ function Qrono(...args) {
   } else if (Number.isFinite(first) && !Number.isFinite(second)) {
     self.nativeDate = new Date(first)
   } else if (Number.isFinite(first) || Array.isArray(first)) {
-    const values = args.flat().filter(v => Number.isSafeInteger(v))
-    if (values.length !== args.flat().length) {
+    const flat = args.flat()
+    const values = flat.filter(v => Number.isSafeInteger(v))
+    if (values.length !== flat.length) {
       throw RangeError('Should be safe integers')
     }
     if (values.length > 7) {
@@ -330,24 +322,26 @@ function parse(str) {
 // -----------------------------------------------------------------------------
 // Public methods
 // -----------------------------------------------------------------------------
+const p = (v, n) => String(v).padStart(n, '0')
+
 // Basic
 Qrono.prototype.toString = function () {
   if (this[internal].localtime) {
     const t = this[internal].nativeDate
     const offset = -t.getTimezoneOffset()
     const offsetAbs = Math.abs(offset)
-    return `${String(t.getFullYear()).padStart(4, '0')}-${String(
-      t.getMonth() + 1
-    ).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}T${String(
-      t.getHours()
-    ).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}:${String(
-      t.getSeconds()
-    ).padStart(2, '0')}.${String(t.getMilliseconds()).padStart(3, '0')}${
-      (offset >= 0 ? '+' : '-') +
-      String(Math.trunc(offsetAbs / minutesPerHour)).padStart(2, '0') +
-      ':' +
-      String(offsetAbs % minutesPerHour).padStart(2, '0')
-    }`
+    return (
+      `${p(t.getFullYear(), 4)}-` +
+      `${p(t.getMonth() + 1, 2)}-` +
+      `${p(t.getDate(), 2)}T` +
+      `${p(t.getHours(), 2)}:` +
+      `${p(t.getMinutes(), 2)}:` +
+      `${p(t.getSeconds(), 2)}.` +
+      `${p(t.getMilliseconds(), 3)}` +
+      `${offset >= 0 ? '+' : '-'}` +
+      `${p(Math.trunc(offsetAbs / minutesPerHour), 2)}:` +
+      `${p(offsetAbs % minutesPerHour, 2)}`
+    )
   }
   return this[internal].nativeDate.toISOString()
 }
@@ -436,46 +430,20 @@ Qrono.prototype.asLocaltime = function () {
 }
 
 // Accessor
-Qrono.prototype.year = function (value) {
-  return given(value)
-    ? this.clone({ year: value })
-    : this[internal].getNative('FullYear')
-}
-
-Qrono.prototype.month = function (value) {
-  return given(value)
-    ? this.clone({ month: value })
-    : this[internal].getNative('Month') + 1
-}
-
-Qrono.prototype.day = function (value) {
-  return given(value)
-    ? this.clone({ day: value })
-    : this[internal].getNative('Date')
-}
-
-Qrono.prototype.hour = function (value) {
-  return given(value)
-    ? this.clone({ hour: value })
-    : this[internal].getNative('Hours')
-}
-
-Qrono.prototype.minute = function (value) {
-  return given(value)
-    ? this.clone({ minute: value })
-    : this[internal].getNative('Minutes')
-}
-
-Qrono.prototype.second = function (value) {
-  return given(value)
-    ? this.clone({ second: value })
-    : this[internal].getNative('Seconds')
-}
-
-Qrono.prototype.millisecond = function (value) {
-  return given(value)
-    ? this.clone({ millisecond: value })
-    : this[internal].getNative('Milliseconds')
+for (const [field, native, offset] of [
+  ['year', 'FullYear', 0],
+  ['month', 'Month', 1],
+  ['day', 'Date', 0],
+  ['hour', 'Hours', 0],
+  ['minute', 'Minutes', 0],
+  ['second', 'Seconds', 0],
+  ['millisecond', 'Milliseconds', 0],
+]) {
+  Qrono.prototype[field] = function (value) {
+    return given(value)
+      ? this.clone({ [field]: value })
+      : this[internal].getNative(native) + offset
+  }
 }
 
 // Getter
@@ -574,19 +542,16 @@ Qrono.prototype.weeksInYear = function () {
   return 52
 }
 
-Qrono.prototype.startOfYear = function () {
-  return this.clone({
-    month: 1,
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  })
-}
-
-Qrono.prototype.startOfMonth = function () {
-  return this.clone({ day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
+for (const [name, cloneArg] of [
+  ['Year', { month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 }],
+  ['Month', { day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 }],
+  ['Hour', { minute: 0, second: 0, millisecond: 0 }],
+  ['Minute', { second: 0, millisecond: 0 }],
+  ['Second', { millisecond: 0 }],
+]) {
+  Qrono.prototype[`startOf${name}`] = function () {
+    return this.clone(cloneArg)
+  }
 }
 
 Qrono.prototype.startOfDay = function () {
@@ -595,18 +560,6 @@ Qrono.prototype.startOfDay = function () {
     { hour: 0, minute: 0, second: 0, millisecond: 0 }
   ).numeric()
   return this.clone(timestamp)
-}
-
-Qrono.prototype.startOfHour = function () {
-  return this.clone({ minute: 0, second: 0, millisecond: 0 })
-}
-
-Qrono.prototype.startOfMinute = function () {
-  return this.clone({ second: 0, millisecond: 0 })
-}
-
-Qrono.prototype.startOfSecond = function () {
-  return this.clone({ millisecond: 0 })
 }
 
 Qrono.prototype.isSame = function (another) {
@@ -653,8 +606,9 @@ function plus(sign, ...args) {
     }
     timeFields = arg0
   } else if (Number.isFinite(arg0) || Array.isArray(arg0)) {
-    const values = args.flat().filter(v => Number.isSafeInteger(v))
-    if (values.length !== args.flat().length) {
+    const flat = args.flat()
+    const values = flat.filter(v => Number.isSafeInteger(v))
+    if (values.length !== flat.length) {
       throw RangeError('Should be safe integers')
     }
     if (values.length > 7) {
@@ -708,7 +662,7 @@ function plus(sign, ...args) {
 // -----------------------------------------------------------------------------
 // QronoDate Class
 // -----------------------------------------------------------------------------
-const internalDate = Symbol('QronoDate.internal')
+const internalDate = Symbol()
 
 function QronoDate(...args) {
   if (!new.target) {
