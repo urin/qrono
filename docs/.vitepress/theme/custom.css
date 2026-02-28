@@ -1,22 +1,30 @@
 .VPHome .VPHero .name,
 .VPHome .VPHero .text,
 .VPHome .VPHero .tagline {
-  max-width: 100% !important;
-  width: 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
 }
 
 .VPDoc .container > .content {
-  padding-inline: 0 !important;
+    padding-inline: 0 !important;
 }
 
 .VPDoc .content-container {
-  margin-inline: 0 !important;
+    margin-inline: 0 !important;
 }
 
 .VPDoc .container .aside {
-  padding-left: 0;
+    padding-left: 0;
 }
 
 .VPDoc.has-aside .content-container {
-  max-width: calc(688px + 3 * 32px) !important;
+    max-width: calc(688px + 3 * 32px) !important;
+}
+
+html.sidebar-hidden .VPDoc .content-container {
+    max-width: 100% !important;
+}
+
+.VPNavBar:not(.home) {
+    background-color: var(--vp-nav-bg-color) !important;
 }
