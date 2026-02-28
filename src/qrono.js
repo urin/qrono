@@ -33,16 +33,6 @@ const defaultContext = {
   disambiguation: 'compatible',
 }
 
-for (const key of fields(defaultContext)) {
-  Qrono[key] = function (arg) {
-    if (given(arg)) {
-      defaultContext[key] = arg
-      return this
-    }
-    return defaultContext[key]
-  }
-}
-
 Qrono.context = function (context) {
   if (given(context)) {
     for (const key of fields(defaultContext)) {
@@ -54,16 +44,6 @@ Qrono.context = function (context) {
     return this
   }
   return { ...defaultContext }
-}
-
-Qrono.asUtc = function () {
-  defaultContext.localtime = false
-  return this
-}
-
-Qrono.asLocaltime = function () {
-  defaultContext.localtime = true
-  return this
 }
 
 const monday = 1
@@ -111,9 +91,8 @@ function Qrono(...args) {
   self.context(defaultContext)
   if (args[0] instanceof Qrono) {
     const source = args.shift()
-    for (const key of fields(self)) {
-      self[key] = source[key]()
-    }
+    self.nativeDate = source.nativeDate()
+    self.context(source.context())
   }
   if (isObject(args[0]) && !hasDatetimeField(args[0])) {
     self.context(args.shift())
@@ -373,25 +352,11 @@ Qrono.prototype.offset = function () {
     : 0
 }
 
-Qrono.prototype.localtime = function (arg) {
-  return given(arg) ? this.clone({ localtime: arg }) : this[internal].localtime
-}
-
-Qrono.prototype.disambiguation = function (arg) {
-  return given(arg)
-    ? this.clone({ disambiguation: arg })
-    : this[internal].disambiguation
-}
-
 Qrono.prototype.valid = function () {
   return this[internal].valid()
 }
 
 // Transform
-Qrono.prototype.numeric = function () {
-  return this[internal].nativeDate.getTime()
-}
-
 Qrono.prototype.toObject = function () {
   return {
     year: this.year(),
@@ -418,15 +383,6 @@ Qrono.prototype.toArray = function () {
 
 Qrono.prototype.toDate = function (...args) {
   return new QronoDate(this.clone(...args))
-}
-
-// Context
-Qrono.prototype.asUtc = function () {
-  return this.clone({ localtime: false })
-}
-
-Qrono.prototype.asLocaltime = function () {
-  return this.clone({ localtime: true })
 }
 
 // Accessor
@@ -558,7 +514,7 @@ Qrono.prototype.startOfDay = function () {
   const timestamp = this.clone(
     { disambiguation: 'later' },
     { hour: 0, minute: 0, second: 0, millisecond: 0 }
-  ).numeric()
+  ).valueOf()
   return this.clone(timestamp)
 }
 
@@ -594,7 +550,7 @@ function plus(sign, ...args) {
   const arg0 = args[0]
   const arg1 = args[1]
   if (Number.isFinite(arg0) && !Number.isFinite(arg1)) {
-    return this.clone(this.numeric() + arg0)
+    return this.clone(this.valueOf() + arg0)
   }
   let timeFields = null
   if (isObject(arg0)) {
@@ -710,10 +666,6 @@ QronoDate.prototype.toDatetime = function () {
   return qrono(this[internalDate].datetime.toArray())
 }
 
-QronoDate.prototype.numeric = function () {
-  return this[internalDate].datetime.numeric() / millisecondsPerDay
-}
-
 QronoDate.prototype.toObject = function () {
   return {
     year: this.year(),
@@ -734,9 +686,6 @@ QronoDate.prototype.startOfMonth = function () {
   return new QronoDate(this[internalDate].datetime.startOfMonth())
 }
 
-QronoDate.prototype.startOfDay = function () {
-  return this[internalDate].datetime.clone()
-}
 for (const field of ['year', 'month', 'day']) {
   QronoDate.prototype[field] = function (value) {
     if (given(value)) {

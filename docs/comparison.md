@@ -126,7 +126,7 @@ Europe/London DST is used here as an example.
 ```ts
 const input = '2019-03-31T01:30:00'
 
-qrono.asLocaltime() // defaults localtime
+qrono.context({ localtime: true }) // defaults localtime
 qrono(input)                                // Qrono    2019-03-31T02:30:00.000+01:00
 qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-03-31T00:30:00.000+00:00
 qrono({ disambiguation: 'later' }, input)   // Qrono    2019-03-31T02:30:00.000+01:00
@@ -141,7 +141,7 @@ parseISO(input)                             // date-fns 2019-03-31T02:30:00.000+
 ```ts
 const input = '2019-10-27T01:30:00'
 
-qrono.asLocaltime() // defaults localtime
+qrono.context({ localtime: true }) // defaults localtime
 qrono(input)                                // Qrono    2019-10-27T01:30:00.000+00:00
 qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-10-27T01:30:00.000+00:00
 qrono({ disambiguation: 'later' }, input)   // Qrono    2019-10-27T01:30:00.000+01:00
@@ -204,7 +204,7 @@ Qrono exposes several DST introspection methods. Luxon covers `isInDST` only. Da
 <template #a>
 
 ```ts
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 
 // Whether DST is currently active
 qrono('2024-07-15').isInDst()
@@ -259,10 +259,10 @@ qrono({ localtime: true }, '2024-01-15 12:00')
 qrono('2024-01-15 12:00')
 
 // Switch an instance to local time
-qrono('2024-01-15 12:00').asLocaltime()
+qrono('2024-01-15 12:00').context({ localtime: true })
 
 // Switch an instance to UTC
-qrono({ localtime: true }, '2024-01-15 12:00').asUtc()
+qrono({ localtime: true }, '2024-01-15 12:00').context({ localtime: false })
 
 // Note: arbitrary TZID is NOT supported
 ```
@@ -388,7 +388,7 @@ const dt = qrono('2024-01-15 12:34:56.789')
 dt.nativeDate()
 
 // Millisecond timestamp
-dt.numeric() // or dt.valueOf()
+dt.valueOf()
 
 // Object
 dt.toObject()

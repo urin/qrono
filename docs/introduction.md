@@ -9,7 +9,7 @@ import { qrono } from 'qrono'
 // UTC-first
 const now = qrono().toString() // '2027-01-23T12:34:56:789Z'
 // DST overlap (occurs twice) of Europe/London
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 const t = '2019-10-27T01:30:00'
 qrono(t) // 01:30 +00:00 Same as JavaScript's `Date`
 qrono({ disambiguation: 'earlier' }, t) // 01:30 +00:00
@@ -127,7 +127,7 @@ Additionally, a `Date` object created from a duplicated time during daylight sav
 **Qrono** addresses these issues by providing a more principled approach to handling such transitions. Ambiguous local times — those that fall in a DST gap (spring-forward) or overlap (fall-back) — are resolved through the `disambiguation` option, which mirrors the [Temporal API](https://tc39.es/proposal-temporal/docs/):
 
 ```javascript
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 // Gap: 2019-03-31T01:30 does not exist in Europe/London
 qrono('2019-03-31T01:30')                                // → 02:30+01:00 (compatible, DST side)
 qrono({ disambiguation: 'earlier' }, '2019-03-31T01:30') // → 00:30+00:00 (standard side)
@@ -228,17 +228,16 @@ time.second(0)     // => returns new Qrono instance (immutable)
 qrono('2022-12-31 15:23:11.321').toString() // => "2022-12-31T15:23:11.321Z"
 
 // set default to local time
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 qrono('2022-12-31 15:23:11.321').toString()     // => "2022-12-31T15:23:11.321-04:00"
-qrono('2022-12-31 15:23:11.321').asUtc().hour() // => 11 as UTC
+qrono('2022-12-31 15:23:11.321').context({ localtime: false }).hour() // => 11 as UTC
 qrono('2022-12-31 15:23:11.321').hour()         // => 15 as local time
 ```
 
 ### Conversion
 
 ```javascript
-qrono('2000-01-01').numeric() // => 946,684,800,000 milliseconds from UNIX epoch
-  === +qrono('2000-01-01')    // => true
++qrono('2000-01-01')          // => 946,684,800,000 milliseconds from UNIX epoch
 
 const time = qrono('2000-01-02 03:04:05.006')
 time.toObject()   // => { year: 2000, month: 1, day: 2, hour: 3, minute: 4, second: 5, millisecond: 6 }
@@ -289,7 +288,7 @@ time.weekOfYear()    // => 52
 time.yearOfWeek()    // => 1999
 
 // Daylight saving time stuff that is meaningful in case of local time
-const localtime = time.asLocaltime()
+const localtime = time.context({ localtime: true })
 localtime.hasDstInYear()
 localtime.isInDst()
 localtime.isDstTransitionDay()
@@ -305,5 +304,5 @@ Methods of `QronoDate` are almost compatible with those of `Qrono`.
 ```javascript
 qrono.date('2000-01-02').toString()       // => "2000-01-02"
 qrono('2000-01-02 23:04:05.006').toDate() // => QronoDate instance 2000-01-02
-qrono.date('2000-01-02').numeric()        // => 10958 days from UNIX epoch
++qrono.date('2000-01-02')                 // => 10958 days from UNIX epoch
 ```

@@ -218,40 +218,6 @@ declare namespace qrono {
   export function context(context: Context): typeof qrono
 
   /**
-   * Returns whether the global context is localtime.
-   */
-  export function localtime(): boolean
-
-  /**
-   * Sets whether localtime is enabled.
-   * @param value - True to set the global context localtime.
-   * @returns The qrono object.
-   */
-  export function localtime(value: boolean): typeof qrono
-
-  /**
-   * Returns the current global disambiguation option.
-   */
-  export function disambiguation(): Disambiguation
-
-  /**
-   * Sets the global disambiguation option.
-   * @param value - The disambiguation option to set.
-   * @returns The qrono object.
-   */
-  export function disambiguation(value: Disambiguation): typeof qrono
-
-  /**
-   * Returns new qrono instance with UTC context.
-   */
-  export function asUtc(): typeof qrono
-
-  /**
-   * Returns new qrono instance with localtime context.
-   */
-  export function asLocaltime(): typeof qrono
-
-  /**
    * The four disambiguation options for resolving ambiguous local times,
    * mirroring the Temporal API.
    *
@@ -321,38 +287,9 @@ declare namespace qrono {
     offset(): number
 
     /**
-     * Returns whether localtime is enabled for the Qrono instance.
-     */
-    localtime(): boolean
-
-    /**
-     * Sets whether localtime is enabled for the Qrono instance.
-     * @param yes - True to enable localtime, false to disable.
-     * @returns The Qrono instance.
-     */
-    localtime(yes: boolean): Qrono
-
-    /**
-     * Returns the current disambiguation option of the Qrono instance.
-     */
-    disambiguation(): Disambiguation
-
-    /**
-     * Sets the disambiguation option of the Qrono instance.
-     * @param value - The disambiguation option.
-     * @returns A new Qrono instance with the updated disambiguation.
-     */
-    disambiguation(value: Disambiguation): Qrono
-
-    /**
      * Returns whether the Qrono instance is valid.
      */
     valid(): boolean
-
-    /**
-     * Returns the numeric value of the Qrono instance.
-     */
-    numeric(): number
 
     /**
      * Returns the object representation of the Qrono instance.
@@ -376,18 +313,6 @@ declare namespace qrono {
      * Returns the QronoDate instance of the Qrono instance.
      */
     toDate(): QronoDate
-
-    /**
-     * Sets the context to UTC.
-     * @returns The Qrono instance.
-     */
-    asUtc(): Qrono
-
-    /**
-     * Sets the context to localtime.
-     * @returns The Qrono instance.
-     */
-    asLocaltime(): Qrono
 
     /**
      * Returns the year of the Qrono instance.
@@ -682,11 +607,6 @@ declare namespace qrono {
     valid(): boolean
 
     /**
-     * Returns the numeric value of the QronoDate instance.
-     */
-    numeric(): number
-
-    /**
      * Returns the object representation of the QronoDate instance.
      */
     toObject(): {
@@ -805,11 +725,6 @@ declare namespace qrono {
      * Returns a new QronoDate instance representing the start of the month.
      */
     startOfMonth(): QronoDate
-
-    /**
-     * Returns a new QronoDate instance representing the start of the day.
-     */
-    startOfDay(): Qrono
 
     /**
      * Returns a new QronoDate instance representing the end of the year.

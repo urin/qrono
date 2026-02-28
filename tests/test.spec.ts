@@ -37,10 +37,8 @@ function dateText(date?) {
 // ---------------------------------------------------------------------------
 
 test('Static', () => {
-  expect(qrono.localtime(true).localtime()).toBe(true)
-  expect(qrono.localtime(false).localtime()).toBe(false)
-  expect(qrono.asUtc().localtime()).toBe(false)
-  expect(qrono.asLocaltime().localtime()).toBe(true)
+  expect(qrono.context({ localtime: true }).context().localtime).toBe(true)
+  expect(qrono.context({ localtime: false }).context().localtime).toBe(false)
   expect(qrono.monday).toBe(1)
   expect(qrono.tuesday).toBe(2)
   expect(qrono.wednesday).toBe(3)
@@ -55,7 +53,7 @@ test('toString', () => {
 })
 
 test('Construction', () => {
-  expect(qrono().numeric()).toBe(Date.now())
+  expect(qrono().valueOf()).toBe(Date.now())
   expect(+qrono()).toBe(Date.now())
   expect(qrono(new Date()).toString()).toBe(dateText())
   expect(qrono(qrono(2020, 10)).toString()).toBe(dateText(Date.UTC(2020, 9)))
@@ -99,15 +97,21 @@ test('Accessor', () => {
   ).toEqual({ localtime: true, disambiguation: 'later' })
   expect(qrono().nativeDate().toISOString()).toBe(dateText())
   expect(qrono().offset()).toBe(0)
-  expect(qrono().localtime(true).localtime()).toBe(true)
-  expect(qrono().disambiguation('later').disambiguation()).toBe('later')
-  expect(qrono().disambiguation('earlier').disambiguation()).toBe('earlier')
-  expect(qrono().disambiguation('compatible').disambiguation()).toBe(
-    'compatible'
-  )
-  expect(qrono().disambiguation('reject').disambiguation()).toBe('reject')
+  expect(qrono().context({ localtime: true }).context().localtime).toBe(true)
+  expect(
+    qrono().context({ disambiguation: 'later' }).context().disambiguation
+  ).toBe('later')
+  expect(
+    qrono().context({ disambiguation: 'earlier' }).context().disambiguation
+  ).toBe('earlier')
+  expect(
+    qrono().context({ disambiguation: 'compatible' }).context().disambiguation
+  ).toBe('compatible')
+  expect(
+    qrono().context({ disambiguation: 'reject' }).context().disambiguation
+  ).toBe('reject')
   expect(qrono().valid()).toBe(true)
-  expect(qrono().numeric()).toBe(qrono().valueOf())
+  expect(+qrono()).toBe(qrono().valueOf())
   const value = {
     year: 2021,
     month: 9,
@@ -120,8 +124,14 @@ test('Accessor', () => {
   expect(qrono(value).toObject()).toEqual(value)
   expect(qrono(value).toArray()).toEqual([2021, 9, 30, 12, 34, 56, 789])
   expect(qrono().toDate()).toEqual(qrono.date())
-  expect(qrono().localtime(true).asUtc().localtime()).toBe(false)
-  expect(qrono().localtime(false).asLocaltime().localtime()).toBe(true)
+  expect(
+    qrono().context({ localtime: true }).context({ localtime: false }).context()
+      .localtime
+  ).toBe(false)
+  expect(
+    qrono().context({ localtime: false }).context({ localtime: true }).context()
+      .localtime
+  ).toBe(true)
 })
 
 // ---------------------------------------------------------------------------
@@ -636,14 +646,14 @@ test('QronoDate basic', () => {
   const millisecondsPerDay = 24 * 60 * 60 * 1000
   const todayNumeric = Math.trunc(Date.now() / millisecondsPerDay)
   const todayString = dateText(Date.now()).substring(0, 10)
-  expect(qrono.date().numeric()).toBe(todayNumeric)
+  expect(qrono.date().valueOf()).toBe(todayNumeric)
   expect(+qrono.date()).toBe(todayNumeric)
   expect(qrono.date(todayNumeric).toString()).toBe(todayString)
   expect(qrono.date(new Date()).toString()).toBe(todayString)
   expect(qrono.date(qrono(2020, 10)).toString()).toBe(
     dateText(Date.UTC(2020, 9)).substring(0, 10)
   )
-  qrono.asLocaltime()
+  qrono.context({ localtime: true })
   expect(qrono.date(2000, 1, 1).toDatetime().toString()).toBe(
     '2000-01-01T00:00:00.000-02:00'
   )
@@ -658,7 +668,7 @@ test('QronoDate basic', () => {
   expect(dateObj).not.toHaveProperty('hour')
 
   const date = qrono.date('2021-09-30')
-  expect(date.startOfDay().isSame(qrono('2021-09-30'))).toBe(true)
+  expect(date.toDatetime().isSame(qrono('2021-09-30'))).toBe(true)
 
   expect(qrono.date(2021, 12, 31).plus({ day: 1 }).toString()).toBe(
     '2022-01-01'
@@ -688,7 +698,7 @@ test('QronoDate — plus/minus across DST transition', () => {
 })
 
 test('QronoDate — toDatetime on DST transition days', () => {
-  qrono.asLocaltime()
+  qrono.context({ localtime: true })
 
   // GAP day: toDatetime produces 00:00, which does not exist → forwarded to DST side
   const gapDay = qrono.date('2018-11-04').toDatetime()

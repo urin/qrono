@@ -1,38 +1,38 @@
 var rt = Object.defineProperty;
-var K = Object.getOwnPropertySymbols;
+var Q = Object.getOwnPropertySymbols;
 var st = Object.prototype.hasOwnProperty, at = Object.prototype.propertyIsEnumerable;
-var V = (t, e, n) => e in t ? rt(t, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : t[e] = n, k = (t, e) => {
+var G = (t, e, n) => e in t ? rt(t, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : t[e] = n, $ = (t, e) => {
   for (var n in e || (e = {}))
-    st.call(e, n) && V(t, n, e[n]);
-  if (K)
-    for (var n of K(e))
-      at.call(e, n) && V(t, n, e[n]);
+    st.call(e, n) && G(t, n, e[n]);
+  if (Q)
+    for (var n of Q(e))
+      at.call(e, n) && G(t, n, e[n]);
   return t;
 };
-const ut = new Date(1915, 0, 1, 12, 0, 0, 0), T = 7, _ = 24, v = 60, N = v * _, J = 60, ct = J * v, ft = ct * _, X = 1e3, ht = J * X, U = ft * X;
-function D(t, ...e) {
+const ut = new Date(1915, 0, 1, 12, 0, 0, 0), b = 7, K = 24, v = 60, N = v * K, V = 60, ct = V * v, ft = ct * K, _ = 1e3, ht = V * _, J = ft * _;
+function p(t, ...e) {
   return e.flat().some(t.hasOwnProperty, t);
 }
-function F(t) {
+function X(t) {
   return Object.entries(t).filter(([, e]) => !lt(e)).map(([e]) => e);
 }
-function w(t) {
+function Y(t) {
   return t !== void 0;
 }
 function lt(t) {
   return t instanceof Function;
 }
-function mt(t) {
+function yt(t) {
   return typeof t == "string" || t instanceof String;
 }
-function S(t) {
+function T(t) {
   return t !== null && typeof t == "object" && t.constructor === Object;
 }
 function tt(t) {
   return !Number.isNaN(t.getTime());
 }
-function Y(t) {
-  return D(t, [
+function S(t) {
+  return p(t, [
     "year",
     "month",
     "day",
@@ -42,41 +42,31 @@ function Y(t) {
     "millisecond"
   ]);
 }
-const C = o;
+const k = o;
 o.date = a;
-const d = {
+const M = {
   localtime: !1,
   disambiguation: "compatible"
 };
-for (const t of F(d))
-  o[t] = function(e) {
-    return w(e) ? (d[t] = e, this) : d[t];
-  };
 o.context = function(t) {
-  if (w(t)) {
-    for (const e of F(d))
-      D(t, e) && (d[e] = t[e]);
+  if (Y(t)) {
+    for (const e of X(M))
+      p(t, e) && (M[e] = t[e]);
     return this;
   }
-  return k({}, d);
+  return $({}, M);
 };
-o.asUtc = function() {
-  return d.localtime = !1, this;
-};
-o.asLocaltime = function() {
-  return d.localtime = !0, this;
-};
-const yt = 1, dt = 2, et = 3, M = 4, pt = 5, Dt = 6, gt = 7;
+const dt = 1, mt = 2, et = 3, w = 4, pt = 5, Dt = 6, gt = 7;
 Object.assign(o, {
-  monday: yt,
-  tuesday: dt,
+  monday: dt,
+  tuesday: mt,
   wednesday: et,
-  thursday: M,
+  thursday: w,
   friday: pt,
   saturday: Dt,
   sunday: gt
 });
-const c = /* @__PURE__ */ Symbol();
+const f = /* @__PURE__ */ Symbol();
 function o(...t) {
   var s;
   if (!new.target)
@@ -88,26 +78,25 @@ function o(...t) {
     disambiguation: "compatible",
     // methods
     set: Mt,
-    parse: vt,
+    parse: Tt,
     valid: Ot,
     context: wt,
     getNative: bt
   };
-  if (this[c] = e, e.context(d), t[0] instanceof o) {
-    const r = t.shift();
-    for (const i of F(e))
-      e[i] = r[i]();
+  if (this[f] = e, e.context(M), t[0] instanceof o) {
+    const i = t.shift();
+    e.nativeDate = i.nativeDate(), e.context(i.context());
   }
-  S(t[0]) && !Y(t[0]) && e.context(t.shift());
+  T(t[0]) && !S(t[0]) && e.context(t.shift());
   const n = t[0], u = t[1];
   if (n == null)
     (s = e.nativeDate) != null || (e.nativeDate = /* @__PURE__ */ new Date());
   else if (n instanceof Date)
     e.nativeDate = new Date(n.getTime());
-  else if (mt(n))
+  else if (yt(n))
     e.parse(n);
-  else if (S(n)) {
-    if (!Y(n))
+  else if (T(n)) {
+    if (!S(n))
       throw RangeError(
         "Missing time field (year, minute, day, hour, minute, second or millisecond)"
       );
@@ -115,19 +104,19 @@ function o(...t) {
   } else if (Number.isFinite(n) && !Number.isFinite(u))
     e.nativeDate = new Date(n);
   else if (Number.isFinite(n) || Array.isArray(n)) {
-    const r = t.flat(), i = r.filter((m) => Number.isSafeInteger(m));
-    if (i.length !== r.length)
+    const i = t.flat(), r = i.filter((l) => Number.isSafeInteger(l));
+    if (r.length !== i.length)
       throw RangeError("Should be safe integers");
-    if (i.length > 7)
+    if (r.length > 7)
       throw RangeError("Too many numbers");
     e.set({
-      year: i[0],
-      month: i[1],
-      day: i[2],
-      hour: i[3],
-      minute: i[4],
-      second: i[5],
-      millisecond: i[6]
+      year: r[0],
+      month: r[1],
+      day: r[2],
+      hour: r[3],
+      minute: r[4],
+      second: r[5],
+      millisecond: r[6]
     });
   } else
     throw TypeError(`Invalid argument ${t}`);
@@ -138,8 +127,8 @@ function Ot() {
 }
 function wt(t) {
   if (t) {
-    for (const e of F(d))
-      D(t, e) && (this[e] = t[e]);
+    for (const e of X(M))
+      p(t, e) && (this[e] = t[e]);
     return this;
   }
 }
@@ -147,120 +136,111 @@ function bt(t) {
   return this.nativeDate[`get${this.localtime ? "" : "UTC"}${t}`]();
 }
 function Mt(t) {
-  var A, H, I, E, R, P, W, j, x, L, B, z, q, Z, Q, G;
-  const e = k({}, t);
+  var C, A, H, I, U, E, R, P, x, W, j, B, L, z, q, Z;
+  const e = $({}, t);
   if (e.month = e.month && e.month - 1, !this.localtime) {
-    const O = (A = this.nativeDate) != null ? A : /* @__PURE__ */ new Date(0), $ = /* @__PURE__ */ new Date(0);
-    return $.setUTCFullYear(
-      (H = e.year) != null ? H : O.getUTCFullYear(),
-      (I = e.month) != null ? I : O.getUTCMonth(),
-      (E = e.day) != null ? E : O.getUTCDate()
-    ), $.setUTCHours(
-      (R = e.hour) != null ? R : O.getUTCHours(),
-      (P = e.minute) != null ? P : O.getUTCMinutes(),
-      (W = e.second) != null ? W : O.getUTCSeconds(),
-      (j = e.millisecond) != null ? j : O.getUTCMilliseconds()
-    ), this.nativeDate = $, this;
+    const g = (C = this.nativeDate) != null ? C : /* @__PURE__ */ new Date(0), F = /* @__PURE__ */ new Date(0);
+    return F.setUTCFullYear(
+      (A = e.year) != null ? A : g.getUTCFullYear(),
+      (H = e.month) != null ? H : g.getUTCMonth(),
+      (I = e.day) != null ? I : g.getUTCDate()
+    ), F.setUTCHours(
+      (U = e.hour) != null ? U : g.getUTCHours(),
+      (E = e.minute) != null ? E : g.getUTCMinutes(),
+      (R = e.second) != null ? R : g.getUTCSeconds(),
+      (P = e.millisecond) != null ? P : g.getUTCMilliseconds()
+    ), this.nativeDate = F, this;
   }
-  const n = !D(t, "hour", "minute", "second", "millisecond"), u = n ? "later" : this.disambiguation, s = (x = this.nativeDate) != null ? x : new Date(0, 0), r = new Date(ut.getTime()), i = {
-    year: (L = e.year) != null ? L : s.getFullYear(),
-    month: (B = e.month) != null ? B : s.getMonth(),
-    day: (z = e.day) != null ? z : s.getDate(),
-    hour: (q = e.hour) != null ? q : n ? 0 : s.getHours(),
-    minute: (Z = e.minute) != null ? Z : n ? 0 : s.getMinutes(),
-    second: (Q = e.second) != null ? Q : n ? 0 : s.getSeconds(),
-    millisecond: (G = e.millisecond) != null ? G : n ? 0 : s.getMilliseconds()
+  const n = !p(t, "hour", "minute", "second", "millisecond"), u = n ? "later" : this.disambiguation, s = (x = this.nativeDate) != null ? x : new Date(0, 0), i = new Date(ut.getTime()), r = {
+    year: (W = e.year) != null ? W : s.getFullYear(),
+    month: (j = e.month) != null ? j : s.getMonth(),
+    day: (B = e.day) != null ? B : s.getDate(),
+    hour: (L = e.hour) != null ? L : n ? 0 : s.getHours(),
+    minute: (z = e.minute) != null ? z : n ? 0 : s.getMinutes(),
+    second: (q = e.second) != null ? q : n ? 0 : s.getSeconds(),
+    millisecond: (Z = e.millisecond) != null ? Z : n ? 0 : s.getMilliseconds()
   };
-  r.setFullYear(i.year, i.month, i.day), r.setHours(
-    i.hour,
-    i.minute,
-    i.second,
-    i.millisecond
+  i.setFullYear(r.year, r.month, r.day), i.setHours(
+    r.hour,
+    r.minute,
+    r.second,
+    r.millisecond
   );
-  const m = r.getTime(), y = new Date(m);
-  y.setDate(r.getDate() + 1);
-  const h = new Date(m);
-  h.setDate(r.getDate() - 1);
-  const f = y.getTimezoneOffset() - h.getTimezoneOffset();
-  if (u === "compatible" || f === 0)
-    return this.nativeDate = r, this;
-  const g = i.year * 1e8 + i.month * 1e6 + i.day * 1e4 + i.hour * 100 + i.minute < r.getFullYear() * 1e8 + r.getMonth() * 1e6 + r.getDate() * 1e4 + r.getHours() * 100 + r.getMinutes(), b = new Date(
-    new Date(m).setUTCMinutes(r.getUTCMinutes() + f)
-  ), it = b.getHours() === r.getHours() && b.getMinutes() === r.getMinutes();
-  if (!g && !it)
-    return this.nativeDate = r, this;
+  const l = i.getTime(), d = new Date(l);
+  d.setDate(i.getDate() + 1);
+  const h = new Date(l);
+  h.setDate(i.getDate() - 1);
+  const c = d.getTimezoneOffset() - h.getTimezoneOffset();
+  if (u === "compatible" || c === 0)
+    return this.nativeDate = i, this;
+  const D = r.year * 1e8 + r.month * 1e6 + r.day * 1e4 + r.hour * 100 + r.minute < i.getFullYear() * 1e8 + i.getMonth() * 1e6 + i.getDate() * 1e4 + i.getHours() * 100 + i.getMinutes(), O = new Date(
+    new Date(l).setUTCMinutes(i.getUTCMinutes() + c)
+  ), it = O.getHours() === i.getHours() && O.getMinutes() === i.getMinutes();
+  if (!D && !it)
+    return this.nativeDate = i, this;
   if (u === "reject")
-    throw new RangeError(`Requested local time ${i} is ambiguous.`);
-  return this.nativeDate = u === "later" ? r : b, this;
+    throw new RangeError(`Requested local time ${r} is ambiguous.`);
+  return this.nativeDate = u === "later" ? i : O, this;
 }
-const Tt = new RegExp(
+const vt = new RegExp(
   // yyyy[[-|/]MM[[-|/]DD]]
   "^(\\d{4})(?:[-/]?([0-2]?\\d)(?:[-/]?([0-3]?\\d))?)?(?:[T\\s]([0-2]?\\d)(?::([0-5]?\\d)?(?::([0-6]?\\d)?(?:[.:](\\d{1,3})?\\d*)?)?)?)?(Z|[-+]\\d{2}:?\\d{2})?$"
 );
-function vt(t) {
+function Tt(t) {
   var h;
-  const e = t.trim().toUpperCase(), n = e.match(Tt);
+  const e = t.trim().toUpperCase(), n = e.match(vt);
   if (!n)
     throw RangeError(
       `Failed to parse '${t}'. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`
     );
-  const u = n[4] !== void 0, [s, r, i, m] = [
+  const u = n[4] !== void 0, [s, i, r, l] = [
     +n[1],
     +n[2] || 1,
     +n[3] || 1,
     n[8]
-  ], y = new Date(e);
-  if (!tt(y))
+  ], d = new Date(e);
+  if (!tt(d))
     throw RangeError(
       `Failed to parse '${t}' by Date. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`
     );
-  return m ? this.nativeDate = y : u ? this.set({
+  return l ? this.nativeDate = d : u ? this.set({
     year: s,
-    month: r,
-    day: i,
+    month: i,
+    day: r,
     hour: +n[4] || 0,
     minute: +n[5] || 0,
     second: +n[6] || 0,
     millisecond: +((h = n[7]) == null ? void 0 : h.padStart(3, "0")) || 0
-  }) : this.set({ year: s, month: r, day: i }), this;
+  }) : this.set({ year: s, month: i, day: r }), this;
 }
-const p = (t, e) => String(t).padStart(e, "0");
+const m = (t, e) => String(t).padStart(e, "0");
 o.prototype.toString = function() {
-  if (this[c].localtime) {
-    const t = this[c].nativeDate, e = -t.getTimezoneOffset(), n = Math.abs(e);
-    return `${p(t.getFullYear(), 4)}-${p(t.getMonth() + 1, 2)}-${p(t.getDate(), 2)}T${p(t.getHours(), 2)}:${p(t.getMinutes(), 2)}:${p(t.getSeconds(), 2)}.${p(t.getMilliseconds(), 3)}${e >= 0 ? "+" : "-"}${p(Math.trunc(n / v), 2)}:${p(n % v, 2)}`;
+  if (this[f].localtime) {
+    const t = this[f].nativeDate, e = -t.getTimezoneOffset(), n = Math.abs(e);
+    return `${m(t.getFullYear(), 4)}-${m(t.getMonth() + 1, 2)}-${m(t.getDate(), 2)}T${m(t.getHours(), 2)}:${m(t.getMinutes(), 2)}:${m(t.getSeconds(), 2)}.${m(t.getMilliseconds(), 3)}${e >= 0 ? "+" : "-"}${m(Math.trunc(n / v), 2)}:${m(n % v, 2)}`;
   }
-  return this[c].nativeDate.toISOString();
+  return this[f].nativeDate.toISOString();
 };
 o.prototype.valueOf = function() {
-  return this[c].nativeDate.valueOf();
+  return this[f].nativeDate.valueOf();
 };
 o.prototype.clone = function(...t) {
   return new o(this, ...t);
 };
 o.prototype.context = function(t) {
-  return w(t) ? this.clone(t) : {
-    localtime: this[c].localtime,
-    disambiguation: this[c].disambiguation
+  return Y(t) ? this.clone(t) : {
+    localtime: this[f].localtime,
+    disambiguation: this[f].disambiguation
   };
 };
 o.prototype.nativeDate = function() {
-  return new Date(this[c].nativeDate.getTime());
+  return new Date(this[f].nativeDate.getTime());
 };
 o.prototype.offset = function() {
-  return this[c].localtime ? -this[c].nativeDate.getTimezoneOffset() : 0;
-};
-o.prototype.localtime = function(t) {
-  return w(t) ? this.clone({ localtime: t }) : this[c].localtime;
-};
-o.prototype.disambiguation = function(t) {
-  return w(t) ? this.clone({ disambiguation: t }) : this[c].disambiguation;
+  return this[f].localtime ? -this[f].nativeDate.getTimezoneOffset() : 0;
 };
 o.prototype.valid = function() {
-  return this[c].valid();
-};
-o.prototype.numeric = function() {
-  return this[c].nativeDate.getTime();
+  return this[f].valid();
 };
 o.prototype.toObject = function() {
   return {
@@ -287,12 +267,6 @@ o.prototype.toArray = function() {
 o.prototype.toDate = function(...t) {
   return new a(this.clone(...t));
 };
-o.prototype.asUtc = function() {
-  return this.clone({ localtime: !1 });
-};
-o.prototype.asLocaltime = function() {
-  return this.clone({ localtime: !0 });
-};
 for (const [t, e, n] of [
   ["year", "FullYear", 0],
   ["month", "Month", 1],
@@ -303,37 +277,37 @@ for (const [t, e, n] of [
   ["millisecond", "Milliseconds", 0]
 ])
   o.prototype[t] = function(u) {
-    return w(u) ? this.clone({ [t]: u }) : this[c].getNative(e) + n;
+    return Y(u) ? this.clone({ [t]: u }) : this[f].getNative(e) + n;
   };
 o.prototype.dayOfWeek = function() {
-  return 1 + (this[c].getNative("Day") - 1 + T) % T;
+  return 1 + (this[f].getNative("Day") - 1 + b) % b;
 };
 o.prototype.dayOfYear = function() {
   const t = this.toDate();
   return 1 + t - t.startOfYear();
 };
 o.prototype.weekOfYear = function() {
-  const t = this.toDate(), e = t.day(t.day() - t.dayOfWeek() + M), n = e.startOfYear(), u = n.dayOfWeek() === M ? n : n.day(
-    1 + (M - n.dayOfWeek() + T) % T
+  const t = this.toDate(), e = t.day(t.day() - t.dayOfWeek() + w), n = e.startOfYear(), u = n.dayOfWeek() === w ? n : n.day(
+    1 + (w - n.dayOfWeek() + b) % b
   );
-  return 1 + Math.ceil((e - u) / T);
+  return 1 + Math.ceil((e - u) / b);
 };
 o.prototype.yearOfWeek = function() {
   const t = this.toDate();
-  return t.day(t.day() - t.dayOfWeek() + M).year();
+  return t.day(t.day() - t.dayOfWeek() + w).year();
 };
 o.prototype.isLeapYear = function() {
   const t = this.year();
   return t % 4 === 0 && (t % 100 !== 0 || t % 400 === 0);
 };
 o.prototype.hasDstInYear = function() {
-  if (!this[c].localtime)
+  if (!this[f].localtime)
     return !1;
   const t = this.offset();
   return [3, 6, 9, 12].map((e) => this.month(e).offset()).some((e) => e !== t);
 };
 o.prototype.isInDst = function() {
-  if (!this[c].localtime)
+  if (!this[f].localtime)
     return !1;
   const t = Array.from(
     { length: 12 },
@@ -342,10 +316,10 @@ o.prototype.isInDst = function() {
   return e !== n && this.offset() === n;
 };
 o.prototype.isDstTransitionDay = function() {
-  return this[c].localtime ? this.minutesInDay() !== N : !1;
+  return this[f].localtime ? this.minutesInDay() !== N : !1;
 };
 o.prototype.minutesInDay = function() {
-  if (!this[c].localtime)
+  if (!this[f].localtime)
     return N;
   const t = this.context({ disambiguation: "later" }).startOfDay(), e = t.plus({ day: 1 }).startOfDay();
   return t.day() === e.day() ? N : (e - t) / ht;
@@ -359,7 +333,7 @@ o.prototype.daysInYear = function() {
 };
 o.prototype.weeksInYear = function() {
   const t = this.toDate({ month: 12, day: 31 }), e = t.minus({ year: 1 });
-  return t.dayOfWeek() === M || e.dayOfWeek() === et ? 53 : 52;
+  return t.dayOfWeek() === w || e.dayOfWeek() === et ? 53 : 52;
 };
 for (const [t, e] of [
   ["Year", { month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 }],
@@ -375,7 +349,7 @@ o.prototype.startOfDay = function() {
   const t = this.clone(
     { disambiguation: "later" },
     { hour: 0, minute: 0, second: 0, millisecond: 0 }
-  ).numeric();
+  ).valueOf();
   return this.clone(t);
 };
 o.prototype.isSame = function(t) {
@@ -403,81 +377,78 @@ o.prototype.minus = function(...t) {
   return nt.call(this, -1, ...t);
 };
 function nt(t, ...e) {
-  var m, y;
+  var l, d;
   const n = e[0], u = e[1];
   if (Number.isFinite(n) && !Number.isFinite(u))
-    return this.clone(this.numeric() + n);
+    return this.clone(this.valueOf() + n);
   let s = null;
-  if (S(n)) {
-    if (!Y(n))
+  if (T(n)) {
+    if (!S(n))
       throw RangeError(
         "Missing time field (year, minute, day, hour, minute, second or millisecond)"
       );
     s = n;
   } else if (Number.isFinite(n) || Array.isArray(n)) {
-    const h = e.flat(), f = h.filter((g) => Number.isSafeInteger(g));
-    if (f.length !== h.length)
+    const h = e.flat(), c = h.filter((D) => Number.isSafeInteger(D));
+    if (c.length !== h.length)
       throw RangeError("Should be safe integers");
-    if (f.length > 7)
+    if (c.length > 7)
       throw RangeError("Too many numbers");
     s = {
-      year: f[0],
-      month: f[1],
-      day: f[2],
-      hour: f[3],
-      minute: f[4],
-      second: f[5],
-      millisecond: f[6]
+      year: c[0],
+      month: c[1],
+      day: c[2],
+      hour: c[3],
+      minute: c[4],
+      second: c[5],
+      millisecond: c[6]
     };
   } else
     throw TypeError();
-  const r = this.nativeDate(), i = this[c].localtime ? "" : "UTC";
-  if (D(s, "year") || D(s, "month")) {
-    const h = this.year() + t * ((m = s.year) != null ? m : 0), f = this.month() + t * ((y = s.month) != null ? y : 0), g = new Date(r.getTime());
-    g[`set${i}FullYear`](h, f, 0);
-    const b = g[`get${i}Date`]();
-    b < this.day() ? r[`set${i}FullYear`](h, g[`get${i}Month`](), b) : r[`set${i}FullYear`](h, f - 1);
+  const i = this.nativeDate(), r = this[f].localtime ? "" : "UTC";
+  if (p(s, "year") || p(s, "month")) {
+    const h = this.year() + t * ((l = s.year) != null ? l : 0), c = this.month() + t * ((d = s.month) != null ? d : 0), D = new Date(i.getTime());
+    D[`set${r}FullYear`](h, c, 0);
+    const O = D[`get${r}Date`]();
+    O < this.day() ? i[`set${r}FullYear`](h, D[`get${r}Month`](), O) : i[`set${r}FullYear`](h, c - 1);
   }
-  D(s, "day") && r[`set${i}Date`](r[`get${i}Date`]() + t * s.day);
-  for (const [h, f] of [
+  p(s, "day") && i[`set${r}Date`](i[`get${r}Date`]() + t * s.day);
+  for (const [h, c] of [
     ["hour", "Hours"],
     ["minute", "Minutes"],
     ["second", "Seconds"],
     ["millisecond", "Milliseconds"]
   ])
-    !D(s, h) || s[h] == null || r[`setUTC${f}`](
-      r[`getUTC${f}`]() + t * s[h]
+    !p(s, h) || s[h] == null || i[`setUTC${c}`](
+      i[`getUTC${c}`]() + t * s[h]
     );
-  return this.clone(r);
+  return this.clone(i);
 }
-const l = /* @__PURE__ */ Symbol();
+const y = /* @__PURE__ */ Symbol();
 function a(...t) {
   if (!new.target)
     return new a(...t);
   const e = { datetime: null };
-  this[l] = e;
+  this[y] = e;
   let n = null;
   t[0] instanceof a ? n = t.shift().toDatetime() : t[0] instanceof o && (n = t.shift());
   const u = t[0], s = t[1];
-  return Number.isFinite(u) && !Number.isFinite(s) && (t[0] = Math.floor(u) * U), n ? n = n.clone(...t) : n = C(...t), e.datetime = n.startOfDay(), this;
+  return Number.isFinite(u) && !Number.isFinite(s) && (t[0] = Math.floor(u) * J), n ? n = n.clone(...t) : n = k(...t), e.datetime = n.startOfDay(), this;
 }
 a.prototype.toString = function() {
-  return this[l].datetime.toString().substring(0, 10);
+  return this[y].datetime.toString().substring(0, 10);
 };
 a.prototype.valueOf = function() {
-  return this[l].datetime / U;
+  return this[y].datetime / J;
 };
 a.prototype.valid = function() {
-  return this[l].datetime.valid();
+  return this[y].datetime.valid();
 };
 a.prototype.clone = function(...t) {
   return new a(this, ...t);
 };
 a.prototype.toDatetime = function() {
-  return C(this[l].datetime.toArray());
-};
-a.prototype.numeric = function() {
-  return this[l].datetime.numeric() / U;
+  return k(this[y].datetime.toArray());
 };
 a.prototype.toObject = function() {
   return {
@@ -490,17 +461,14 @@ a.prototype.toArray = function() {
   return [this.year(), this.month(), this.day()];
 };
 a.prototype.startOfYear = function() {
-  return new a(this[l].datetime.startOfYear());
+  return new a(this[y].datetime.startOfYear());
 };
 a.prototype.startOfMonth = function() {
-  return new a(this[l].datetime.startOfMonth());
-};
-a.prototype.startOfDay = function() {
-  return this[l].datetime.clone();
+  return new a(this[y].datetime.startOfMonth());
 };
 for (const t of ["year", "month", "day"])
   a.prototype[t] = function(e) {
-    return w(e) ? new a(this[l].datetime[t](e)) : this[l].datetime[t]();
+    return Y(e) ? new a(this[y].datetime[t](e)) : this[y].datetime[t]();
   };
 for (const t of [
   "dayOfWeek",
@@ -513,13 +481,13 @@ for (const t of [
   "weeksInYear"
 ])
   a.prototype[t] = function() {
-    return this[l].datetime[t]();
+    return this[y].datetime[t]();
   };
 for (const t of ["minutesInDay", "hasDstInYear", "isDstTransitionDay"])
   a.prototype[t] = function() {
-    return C(
+    return k(
       { disambiguation: "later" },
-      this[l].datetime.toArray().slice(0, 3)
+      this[y].datetime.toArray().slice(0, 3)
     )[t]();
   };
 a.prototype.endOfYear = function() {
@@ -553,34 +521,34 @@ a.prototype.minus = function(...t) {
   return ot.call(this, -1, ...t);
 };
 function ot(t, ...e) {
-  var i, m, y;
-  const n = e[0], u = e[1], s = this[l].datetime;
+  var r, l, d;
+  const n = e[0], u = e[1], s = this[y].datetime;
   if (Number.isFinite(n) && !Number.isFinite(u))
     return s.plus({ day: t * n }).toDate();
-  let r = null;
-  if (S(n) && Y(n))
-    r = {
-      year: t * ((i = n.year) != null ? i : 0),
-      month: t * ((m = n.month) != null ? m : 0),
-      day: t * ((y = n.day) != null ? y : 0)
+  let i = null;
+  if (T(n) && S(n))
+    i = {
+      year: t * ((r = n.year) != null ? r : 0),
+      month: t * ((l = n.month) != null ? l : 0),
+      day: t * ((d = n.day) != null ? d : 0)
     };
   else if (Number.isFinite(n)) {
     if (e.length > 3)
       throw RangeError("Too many arguments");
-    r = { year: t * n, month: t * u, day: t * arg2 };
+    i = { year: t * n, month: t * u, day: t * arg2 };
   } else if (Array.isArray(n)) {
     if (n.length > 3)
       throw RangeError("Too many elements");
-    r = {
+    i = {
       year: t * n[0],
       month: t * n[1],
       day: t * n[2]
     };
   } else
     throw TypeError();
-  return s.plus(r).toDate();
+  return s.plus(i).toDate();
 }
 export {
-  C as qrono
+  k as qrono
 };
 //# sourceMappingURL=qrono.js.map

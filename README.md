@@ -14,7 +14,7 @@ import { qrono } from 'qrono'
 // UTC-first
 const now = qrono().toString() // '2027-01-23T12:34:56:789Z'
 // DST overlap (occurs twice) of Europe/London
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 const t = '2019-10-27T01:30:00'
 qrono(t) // 01:30 +00:00 Same as JavaScript's `Date`
 qrono({ disambiguation: 'earlier' }, t) // 01:30 +00:00
@@ -172,7 +172,6 @@ Visit [official website<sup> ↗</sup>](https://qronojs.dev/) for complete docum
   - [qrono.date(...args)](https://qronojs.dev/api/#qrono-date) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>7 overloads</sup>
 - Conversion
   - [.toString()](https://qronojs.dev/api/#tostring) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
-  - [.numeric()](https://qronojs.dev/api/#numeric) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
   - [.valueOf()](https://qronojs.dev/api/#valueof) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
   - [.toArray()](https://qronojs.dev/api/#toarray) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
   - [.toObject()](https://qronojs.dev/api/#toobject) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
@@ -198,14 +197,7 @@ Visit [official website<sup> ↗</sup>](https://qronojs.dev/) for complete docum
   - [.offset()](https://qronojs.dev/api/#offset) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
 - Context
   - [qrono.context()](https://qronojs.dev/api/#default-context) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>2 overloads</sup>
-  - [qrono.asUtc()](https://qronojs.dev/api/#default-asutc) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
-  - [qrono.asLocaltime()](https://qronojs.dev/api/#default-aslocaltime) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub>
-  - [qrono.localtime()](https://qronojs.dev/api/#default-localtime) <sub><img src="https://img.shields.io/badge/static-lightsteelblue" height="14"></sub> <sup>2 overloads</sup>
   - [.context()](https://qronojs.dev/api/#context) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
-  - [.localtime()](https://qronojs.dev/api/#localtime) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>2 overloads</sup>
-  - [.disambiguation()](https://qronojs.dev/api/#disambiguation) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
-  - [.asUtc()](https://qronojs.dev/api/#asutc) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
-  - [.asLocaltime()](https://qronojs.dev/api/#aslocaltime) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
 - Calculation
   - [.plus(duration)](https://qronojs.dev/api/#plus) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>4 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>4 overloads</sup>
   - [.minus(duration)](https://qronojs.dev/api/#minus) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sup>4 overloads</sup> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub> <sup>4 overloads</sup>
@@ -220,7 +212,7 @@ Visit [official website<sup> ↗</sup>](https://qronojs.dev/) for complete docum
 - Time Unit Boundary
   - [.startOfYear()](https://qronojs.dev/api/#startofyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
   - [.startOfMonth()](https://qronojs.dev/api/#startofmonth) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
-  - [.startOfDay()](https://qronojs.dev/api/#startofday) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.startOfDay()](https://qronojs.dev/api/#startofday) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
   - [.startOfHour()](https://qronojs.dev/api/#startofhour) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
   - [.startOfMinute()](https://qronojs.dev/api/#startofminute) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
   - [.startOfSecond()](https://qronojs.dev/api/#startofsecond) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub>
@@ -278,17 +270,16 @@ time.second(0) // => returns new Qrono instance
 // UTC as default
 qrono('2022-12-31 15:23:11.321').toString() // => "2022-12-31T15:23:11.321Z"
 // set default to local time
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 qrono('2022-12-31 15:23:11.321').toString()     // => "2022-12-31T15:23:11.321-04:00"
-qrono('2022-12-31 15:23:11.321').asUtc().hour() // => 11 as UTC
+qrono('2022-12-31 15:23:11.321').context({ localtime: false }).hour() // => 11 as UTC
 qrono('2022-12-31 15:23:11.321').hour()         // => 15 as local time
 ```
 
 ### Conversion
 
 ```js
-qrono('2000-01-01').numeric() // => 946,684,800,000 milliseconds from UNIX epoch
-  === +qrono('2000-01-01')    // => true
++qrono('2000-01-01')          // => 946,684,800,000 milliseconds from UNIX epoch
 const time = qrono('2000-01-02 03:04:05.006')
 time.toObject()   // => { year: 2000, month: 1, day: 2, hour: 3, minute: 4, second: 5, millisecond: 6 }
 time.toArray()    // => [2000, 1, 2, 3, 4, 5, 6]
@@ -334,7 +325,7 @@ time.weeksInYear()   // => 52
 time.weekOfYear()    // => 52
 time.yearOfWeek()    // => 1999
 // Daylight saving time stuff that is meaningful in case of local time
-const localtime = time.asLocaltime()
+const localtime = time.context({ localtime: true })
 localtime.hasDstInYear()
 localtime.isInDst()
 localtime.isDstTransitionDay()
@@ -350,7 +341,7 @@ Methods of `QronoDate` are almost compatible with those of `Qrono`.
 ```js
 qrono.date('2000-01-02').toString()       // => "2000-01-02"
 qrono('2000-01-02 23:04:05.006').toDate() // => QronoDate instance 2000-01-02
-qrono.date('2000-01-02').numeric()        // => 10958 days from UNIX epoch
++qrono.date('2000-01-02')                 // => 10958 days from UNIX epoch
 ```
 
 ## License 🌏

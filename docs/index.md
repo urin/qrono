@@ -81,7 +81,7 @@ import { qrono } from 'qrono'
 // UTC-first
 const now = qrono().toString() // '2027-01-23T12:34:56:789Z'
 // DST overlap (occurs twice) of Europe/London
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 const t = '2019-10-27T01:30:00'
 qrono(t) // 01:30 +00:00 Same as JavaScript's `Date`
 qrono({ disambiguation: 'earlier' }, t) // 01:30 +00:00

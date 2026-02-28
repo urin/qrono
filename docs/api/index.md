@@ -1,15 +1,14 @@
-# API Reference
+﻿# API Reference
 
 Complete API reference for Qrono.
 
-The library provides two classes: `Qrono`, which represents a point in time, and `QronoDate`, which represents a calendar date. `QronoDate` is not affected by time zones.
+The library provides two classes: `Qrono`, which represents a point in time, and `QronoDate`, which represents a calendar date.
 
 - [Factory](#factory)
   - [qrono(...args)](#qrono) <Badge type="info" text="static" /> <small>14 overloads</small>
   - [qrono.date(...args)](#qrono-date) <Badge type="info" text="static" /> <small>7 overloads</small>
 - [Conversion](#conversion)
   - [.toString()](#tostring) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
-  - [.numeric()](#numeric) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
   - [.valueOf()](#valueof) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
   - [.toArray()](#toarray) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
   - [.toObject()](#toobject) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
@@ -35,15 +34,7 @@ The library provides two classes: `Qrono`, which represents a point in time, and
   - [.offset()](#offset) <Badge type="tip" text="Qrono" />
 - [Context](#context-methods)
   - [qrono.context()](#default-context) <Badge type="info" text="static" /> <small>2 overloads</small>
-  - [qrono.asUtc()](#default-asutc) <Badge type="info" text="static" />
-  - [qrono.asLocaltime()](#default-aslocaltime) <Badge type="info" text="static" />
-  - [qrono.localtime()](#default-localtime) <Badge type="info" text="static" /> <small>2 overloads</small>
   - [.context()](#context) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
-  - [.localtime()](#localtime) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
-  - [.disambiguation()](#disambiguation) <Badge type="tip" text="Qrono" /> <small>2 overloads</small>
-  - [qrono.disambiguation()](#default-disambiguation) <Badge type="info" text="static" /> <small>2 overloads</small>
-  - [.asUtc()](#asutc) <Badge type="tip" text="Qrono" />
-  - [.asLocaltime()](#aslocaltime) <Badge type="tip" text="Qrono" />
 - [Calculation](#calculation)
   - [.plus(duration)](#plus) <Badge type="tip" text="Qrono" /> <small>4 overloads</small> <Badge type="warning" text="QronoDate" /> <small>4 overloads</small>
   - [.minus(duration)](#minus) <Badge type="tip" text="Qrono" /> <small>4 overloads</small> <Badge type="warning" text="QronoDate" /> <small>4 overloads</small>
@@ -58,7 +49,7 @@ The library provides two classes: `Qrono`, which represents a point in time, and
 - [Time Unit Boundary](#boundary)
   - [.startOfYear()](#startofyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
   - [.startOfMonth()](#startofmonth) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
-  - [.startOfDay()](#startofday) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.startOfDay()](#startofday) <Badge type="tip" text="Qrono" />
   - [.startOfHour()](#startofhour) <Badge type="tip" text="Qrono" />
   - [.startOfMinute()](#startofminute) <Badge type="tip" text="Qrono" />
   - [.startOfSecond()](#startofsecond) <Badge type="tip" text="Qrono" />
@@ -99,7 +90,7 @@ qrono(new Date())
 // From timestamp (milliseconds)
 qrono(1704067200000)
 
-// From ISO string
+// From string
 //
 // Conforms to ISO 8601 format except for a few exceptions.
 // If no time zone is specified, parsing is performed
@@ -156,20 +147,15 @@ time.toString()  // "2024-06-15T14:30:00.000Z"
 qrono.date('2024-06-15').toString()  // "2024-06-15"
 ```
 
-### numeric() {#numeric}
-
-Get the Unix timestamp in milliseconds.
-
-```javascript
-time.numeric()  // 1718458200000
-```
-
 ### valueOf() {#valueof}
 
-Same as `numeric()`. Allows using `+time` syntax.
+Get the numeric value of the instance.  
+For `Qrono`, the unit is milliseconds since UNIX epoch.  
+For `QronoDate`, the unit is days since UNIX epoch.
 
 ```javascript
 +time  // 1718458200000
++qrono.date('1970-01-02')  // 1
 ```
 
 ### toArray() {#toarray}
@@ -222,6 +208,8 @@ qrono.date('2024-06-15').toDatetime().toString()
 ## Constants {#constants}
 
 ### Day of Week {#day-constants}
+
+These definitions follow ISO 8601, where Monday is 1 and Sunday is 7.
 
 ```javascript
 qrono.monday    // 1
@@ -297,8 +285,8 @@ This is the opposite sign convention of JavaScript's `Date.prototype.getTimezone
 :::
 
 ```javascript
-qrono().asUtc().offset()       // 0
-qrono().asLocaltime().offset() // e.g., 540 (JST)
+qrono().context({ localtime: false }).offset() // 0
+qrono().context({ localtime: true }).offset()  // e.g., 540 (JST)
 ```
 
 ## Context {#context-methods}
@@ -316,39 +304,10 @@ qrono.context({ localtime: true, disambiguation: 'earlier' })
 - `disambiguation` - `'compatible' | 'earlier' | 'later' | 'reject'` - How to resolve ambiguous local times at DST transitions (default: `'compatible'`)
   | Option                     | Gap (spring-forward)    | Overlap (fall-back)     |
   |----------------------------|-------------------------|-------------------------|
-  | `'compatible'` *(default)* | Later (DST side)        | Earlier (standard side) |
-  | `'earlier'`                | Earlier (standard side) | Earlier (standard side) |
-  | `'later'`                  | Later (DST side)        | Later (DST side)        |
+  | `'compatible'` *(default)* | Later (DST side)        | Earlier (DST side)      |
+  | `'earlier'`                | Earlier (standard side) | Earlier (DST side)      |
+  | `'later'`                  | Later (DST side)        | Later (standard side)   |
   | `'reject'`                 | Throws `RangeError`     | Throws `RangeError`     |
-
-### qrono.asUtc() {#default-asutc}
-
-Sets the default context to UTC mode and returns the qrono function for chaining.
-
-```javascript
-qrono.asUtc()
-const utcTime = qrono('2024-01-15')
-utcTime.localtime()  // false
-```
-
-### qrono.asLocaltime() {#default-aslocaltime}
-
-Sets the default context to local time mode and returns the qrono function for chaining.
-
-```javascript
-qrono.asLocaltime()
-const localTime = qrono('2024-01-15')
-localTime.localtime()  // true
-```
-
-### qrono.localtime(value) {#default-localtime}
-
-Sets and returns the qrono default localtime setting.
-
-```javascript
-qrono.localtime(true)
-qrono.localtime()  // true
-```
 
 ### context() {#context}
 
@@ -360,58 +319,6 @@ time.context()  // { localtime: false, disambiguation: 'compatible' }
 
 // Set context (returns new instance)
 time.context({ localtime: true })
-```
-
-### localtime() {#localtime}
-
-Get or set localtime mode.
-
-```javascript
-time.localtime()      // Get: true or false
-time.localtime(true)  // Set: returns new instance
-```
-
-### disambiguation() {#disambiguation}
-
-Get or set the DST disambiguation strategy. Controls how local times that fall in a DST gap (spring-forward) or overlap (fall-back) are resolved.
-
-```javascript
-time.disambiguation()            // Get: 'compatible' | 'earlier' | 'later' | 'reject'
-time.disambiguation('earlier')   // Set: returns new instance
-```
-
-| Value | Gap (spring-forward) | Overlap (fall-back) |
-|---|---|---|
-| `'compatible'` *(default)* | Later (DST side, JS native) | Earlier (standard-time side) |
-| `'earlier'` | Earlier (standard-time side) | Earlier (standard-time side) |
-| `'later'` | Later (DST side) | Later (DST side) |
-| `'reject'` | Throws `RangeError` | Throws `RangeError` |
-
-### qrono.disambiguation(value) {#default-disambiguation}
-
-Sets and returns the qrono default disambiguation setting.
-
-```javascript
-qrono.disambiguation('later')
-qrono.disambiguation()  // 'later'
-```
-
-### asUtc() {#asutc}
-
-Convert to UTC mode.
-
-```javascript
-const utc = time.asUtc()
-utc.localtime()  // false
-```
-
-### asLocaltime() {#aslocaltime}
-
-Convert to local time mode.
-
-```javascript
-const local = time.asLocaltime()
-local.localtime()  // true
 ```
 
 ## Calculation {#calculation}
@@ -674,7 +581,7 @@ qrono('2024-01-01').weeksInYear()  // 52
 Check if the year has daylight saving time transitions.
 
 ```javascript
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 
 qrono(1950, 1, 1).hasDstInYear()  // true
 qrono(2024, 1, 1).hasDstInYear()  // false (in Japan)
@@ -685,7 +592,7 @@ qrono(2024, 1, 1).hasDstInYear()  // false (in Japan)
 Check if the current time is in daylight saving time.
 
 ```javascript
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 
 qrono('1950-09-10 00:59:59').isInDst()  // true
 ```
@@ -695,7 +602,7 @@ qrono('1950-09-10 00:59:59').isInDst()  // true
 Check if the current day has a DST transition.
 
 ```javascript
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 
 qrono('1950-05-07').isDstTransitionDay()  // true
 ```
@@ -705,9 +612,11 @@ qrono('1950-05-07').isDstTransitionDay()  // true
 Get the number of minutes in the current day (accounts for DST).
 
 ```javascript
-qrono.asLocaltime()
+qrono.context({ localtime: true })
 
 qrono('1950-05-06').minutesInDay()  // 1440
 qrono('1950-05-07').minutesInDay()  // 1380 (DST spring forward)
 qrono('1950-09-10').minutesInDay()  // 1500 (DST fall back)
 ```
+
+
