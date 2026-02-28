@@ -28,6 +28,8 @@ const titles = ['Qrono', 'Day.js', 'Luxon', 'date-fns']
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
   background: var(--vp-c-bg-soft);
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -48,16 +50,23 @@ const titles = ['Qrono', 'Day.js', 'Luxon', 'date-fns']
   background: var(--vp-c-divider);
 }
 
+.content {
+  flex: 1;
+}
+
 .content :deep([class*='language-'] ) {
+  height: 100%;
   margin: 0;
 }
 
 .content :deep([class*='language-'] pre) {
+  height: 100%;
   padding: 4px 12px;
 }
 
 .content :deep([class*='language-'] pre code) {
-  padding: 0;
+  height: 100%;
+  padding: 0 0 1em;
 }
 
 .content :deep([class*='language-'] button.copy),
