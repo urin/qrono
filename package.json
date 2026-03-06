@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
   "license": "MIT",
   "keywords": [
@@ -28,12 +28,10 @@
   "jsdeliver": "dist/qrono.min.js",
   "types": "types/qrono.d.ts",
   "scripts": {
-    "prepare": "husky && npm run format && npm run lint && npm run build",
+    "prepare": "husky && npm run check:fix && npm run build",
     "postpublish": "jsr publish --no-provenance",
     "lint": "biome lint ./src ./tests",
-    "lint:fix": "biome lint --write ./src ./tests",
     "format": "biome format --write .",
-    "format:check": "biome format .",
     "check": "biome check ./src ./tests",
     "check:fix": "biome check ./src ./tests --write",
     "build": "vite build --minify",
