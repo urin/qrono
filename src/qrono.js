@@ -146,15 +146,12 @@ function valid() {
   return isValidDate(this.nativeDate)
 }
 
-function context(context) {
-  if (!context) {
-    return
+function context(arg) {
+  if (!arg) {
+    return { localtime: this.localtime, disambiguation: this.disambiguation }
   }
-  for (const key of fields(defaultContext)) {
-    if (has(context, key)) {
-      this[key] = context[key]
-    }
-  }
+  if ('localtime' in arg) this.localtime = arg.localtime
+  if ('disambiguation' in arg) this.disambiguation = arg.disambiguation
   return this
 }
 
