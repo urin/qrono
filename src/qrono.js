@@ -1,4 +1,4 @@
-/* @ts-self-types="../types/qrono.d.ts" */
+﻿/* @ts-self-types="../types/qrono.d.ts" */
 import {
   has,
   given,
@@ -432,7 +432,7 @@ Qrono.prototype.isLeapYear = function () {
   return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
 }
 
-Qrono.prototype.hasDstInYear = function () {
+Qrono.prototype.hasOffsetChangeInYear = function () {
   if (!this[internal].localtime) {
     return false
   }
@@ -455,7 +455,7 @@ Qrono.prototype.isInDst = function () {
   return false
 }
 
-Qrono.prototype.isDstTransitionDay = function () {
+Qrono.prototype.hasOffsetChangeInDay = function () {
   if (!this[internal].localtime) {
     return false
   }
@@ -710,7 +710,11 @@ for (const method of [
     return this[internalDate].datetime[method]()
   }
 }
-for (const method of ['minutesInDay', 'hasDstInYear', 'isDstTransitionDay']) {
+for (const method of [
+  'minutesInDay',
+  'hasOffsetChangeInYear',
+  'hasOffsetChangeInDay',
+]) {
   QronoDate.prototype[method] = function () {
     return qrono(
       { disambiguation: 'later' },

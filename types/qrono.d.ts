@@ -1,4 +1,4 @@
-export { qrono }
+﻿export { qrono }
 
 /**
  * Creates a new Qrono instance.
@@ -426,7 +426,7 @@ declare namespace qrono {
     /**
      * Returns whether the Qrono instance has daylight saving time in the year.
      */
-    hasDstInYear(): boolean
+    hasOffsetChangeInYear(): boolean
 
     /**
      * Returns whether the Qrono instance is in daylight saving time.
@@ -436,7 +436,7 @@ declare namespace qrono {
     /**
      * Returns whether the Qrono instance is on a daylight saving time transition day.
      */
-    isDstTransitionDay(): boolean
+    hasOffsetChangeInDay(): boolean
 
     /**
      * Returns the number of minutes in the day of the Qrono instance.
@@ -689,12 +689,12 @@ declare namespace qrono {
     /**
      * Returns whether the QronoDate instance has daylight saving time in the year.
      */
-    hasDstInYear(): boolean
+    hasOffsetChangeInYear(): boolean
 
     /**
      * Returns whether the QronoDate instance is on a daylight saving time transition day.
      */
-    isDstTransitionDay(): boolean
+    hasOffsetChangeInDay(): boolean
 
     /**
      * Returns the number of minutes in the day of the QronoDate instance.

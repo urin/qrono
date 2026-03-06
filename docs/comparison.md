@@ -1,4 +1,4 @@
-# API Comparison
+﻿# API Comparison
 
 This section compares Qrono's API against three popular JavaScript date libraries — [Day.js](https://day.js.org/), [Luxon](https://moment.github.io/luxon/), and [date-fns](https://date-fns.org/) — across common use cases. Use it as a quick reference to understand how each library approaches the same task and to evaluate which best fits your needs.
 
@@ -210,10 +210,10 @@ qrono.context({ localtime: true })
 qrono('2024-07-15').isInDst()
 
 // Whether the year has DST at all
-qrono('2024-07-15').hasDstInYear()
+qrono('2024-07-15').hasOffsetChangeInYear()
 
 // Whether the day is a DST transition day
-qrono('2024-03-10').isDstTransitionDay()
+qrono('2024-03-10').hasOffsetChangeInDay()
 
 // Minutes in the day considering DST
 qrono('2024-03-10').minutesInDay()
@@ -1406,3 +1406,5 @@ differenceInHours(b, a) // 1566
 
 </template>
 </FourCompare>
+
+

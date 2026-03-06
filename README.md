@@ -1,4 +1,4 @@
-# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) — Small. Complete. Deterministic. JavaScript date-time.
+﻿# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) — Small. Complete. Deterministic. JavaScript date-time.
 
 _**4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**. Designed for **single-timezone** applications._
 
@@ -118,7 +118,7 @@ Considering these factors, **Qrono** is deliberately designed to forgo support f
 
 ### About Daylight Saving Time
 
-Qrono is the only JavaScript date-time library with dedicated APIs for DST handling (`hasDstInYear()`, `isInDst()`, `isDstTransitionDay()`, `minutesInDay()`).
+Qrono is the only JavaScript date-time library with dedicated APIs for DST handling (`hasOffsetChangeInYear()`, `isInDst()`, `hasOffsetChangeInDay()`, `minutesInDay()`).
 
 JavaScript's `Date` object can behave in non-intuitive ways when handling daylight saving time transitions.
 
@@ -228,9 +228,9 @@ Visit [official website<sup> ↗</sup>](https://qronojs.dev/) for complete docum
   - [.daysInYear()](https://qronojs.dev/api/#daysinyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
   - [.weeksInYear()](https://qronojs.dev/api/#weeksinyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
 - Daylight Saving Time
-  - [.hasDstInYear()](https://qronojs.dev/api/#hasdstinyear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.hasOffsetChangeInYear()](https://qronojs.dev/api/#hasOffsetChangeInYear) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
   - [.isInDst()](https://qronojs.dev/api/#isindst) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
-  - [.isDstTransitionDay()](https://qronojs.dev/api/#isdsttransitionday) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
+  - [.hasOffsetChangeInDay()](https://qronojs.dev/api/#hasOffsetChangeInDay) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
   - [.minutesInDay()](https://qronojs.dev/api/#minutesinday) <sub><img src="https://img.shields.io/badge/Qrono-cornflowerblue" height="14"></sub> <sub><img src="https://img.shields.io/badge/QronoDate-darkseagreen" height="14"></sub>
 
 ### Construction
@@ -326,9 +326,9 @@ time.weekOfYear()    // => 52
 time.yearOfWeek()    // => 1999
 // Daylight saving time stuff that is meaningful in case of local time
 const localtime = time.context({ localtime: true })
-localtime.hasDstInYear()
+localtime.hasOffsetChangeInYear()
 localtime.isInDst()
-localtime.isDstTransitionDay()
+localtime.hasOffsetChangeInDay()
 localtime.minutesInDay()
 ```
 
@@ -366,3 +366,5 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 
 [image-size]: https://img.badgesize.io/https://unpkg.com/qrono/dist/qrono.min.js?compression=gzip&color=blue
 [url-size]: https://unpkg.com/qrono/dist/qrono.min.js
+
+

@@ -1,4 +1,4 @@
-# Introduction
+﻿# Introduction
 
 Qrono is a **4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**.  
 Designed for _single-timezone_ applications.
@@ -105,7 +105,7 @@ Considering these factors, **Qrono** is deliberately designed to forgo support f
 
 ### Handling Daylight Saving Time
 
-Qrono is the only JavaScript date-time library with dedicated APIs for DST handling ([`hasDstInYear()`](./api/#hasdstinyear), [`isInDst()`](./api/#isindst), [`isDstTransitionDay()`](./api/#isdsttransitionday), [`minutesInDay()`](./api/#minutesinday)).
+Qrono is the only JavaScript date-time library with dedicated APIs for DST handling ([`hasOffsetChangeInYear()`](./api/#hasOffsetChangeInYear), [`isInDst()`](./api/#isindst), [`hasOffsetChangeInDay()`](./api/#hasOffsetChangeInDay), [`minutesInDay()`](./api/#minutesinday)).
 
 JavaScript's `Date` object can behave in non-intuitive ways when handling daylight saving time transitions.
 
@@ -289,9 +289,9 @@ time.yearOfWeek()    // => 1999
 
 // Daylight saving time stuff that is meaningful in case of local time
 const localtime = time.context({ localtime: true })
-localtime.hasDstInYear()
+localtime.hasOffsetChangeInYear()
 localtime.isInDst()
-localtime.isDstTransitionDay()
+localtime.hasOffsetChangeInDay()
 localtime.minutesInDay()
 ```
 
@@ -306,3 +306,5 @@ qrono.date('2000-01-02').toString()       // => "2000-01-02"
 qrono('2000-01-02 23:04:05.006').toDate() // => QronoDate instance 2000-01-02
 +qrono.date('2000-01-02')                 // => 10958 days from UNIX epoch
 ```
+
+

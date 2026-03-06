@@ -65,9 +65,9 @@ The library provides two classes: `Qrono`, which represents a point in time, and
   - [.daysInYear()](#daysinyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
   - [.weeksInYear()](#weeksinyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
 - [Daylight Saving Time](#dst)
-  - [.hasDstInYear()](#hasdstinyear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.hasOffsetChangeInYear()](#hasOffsetChangeInYear) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
   - [.isInDst()](#isindst) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
-  - [.isDstTransitionDay()](#isdsttransitionday) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
+  - [.hasOffsetChangeInDay()](#hasOffsetChangeInDay) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
   - [.minutesInDay()](#minutesinday) <Badge type="tip" text="Qrono" /> <Badge type="warning" text="QronoDate" />
 
 ## Factory {#factory}
@@ -576,15 +576,15 @@ qrono('2024-01-01').weeksInYear()  // 52
 
 ## Daylight Saving Time {#dst}
 
-### hasDstInYear() {#hasdstinyear}
+### hasOffsetChangeInYear() {#hasOffsetChangeInYear}
 
 Check if the year has daylight saving time transitions.
 
 ```javascript
 qrono.context({ localtime: true })
 
-qrono(1950, 1, 1).hasDstInYear()  // true
-qrono(2024, 1, 1).hasDstInYear()  // false (in Japan)
+qrono(1950, 1, 1).hasOffsetChangeInYear()  // true
+qrono(2024, 1, 1).hasOffsetChangeInYear()  // false (in Japan)
 ```
 
 ### isInDst() {#isindst}
@@ -597,14 +597,14 @@ qrono.context({ localtime: true })
 qrono('1950-09-10 00:59:59').isInDst()  // true
 ```
 
-### isDstTransitionDay() {#isdsttransitionday}
+### hasOffsetChangeInDay() {#hasOffsetChangeInDay}
 
 Check if the current day has a DST transition.
 
 ```javascript
 qrono.context({ localtime: true })
 
-qrono('1950-05-07').isDstTransitionDay()  // true
+qrono('1950-05-07').hasOffsetChangeInDay()  // true
 ```
 
 ### minutesInDay() {#minutesinday}
@@ -618,5 +618,7 @@ qrono('1950-05-06').minutesInDay()  // 1440
 qrono('1950-05-07').minutesInDay()  // 1380 (DST spring forward)
 qrono('1950-09-10').minutesInDay()  // 1500 (DST fall back)
 ```
+
+
 
 

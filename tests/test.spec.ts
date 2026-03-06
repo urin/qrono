@@ -1,4 +1,4 @@
-import { test, expect, beforeEach, afterEach } from 'vitest'
+﻿import { test, expect, beforeEach, afterEach } from 'vitest'
 import { qrono } from '../src/qrono.js'
 import MockDate from 'mockdate'
 
@@ -250,11 +250,11 @@ test('Calculation and comparison', () => {
 //   GAP     = spring forward: 2018-11-04 local 00:00–00:59 does not exist
 //   OVERLAP = fall back:      2019-02-16 local 23:00–23:59 occurs twice
 
-test('Daylight saving time — hasDstInYear / isInDst', () => {
+test('Daylight saving time — hasOffsetChangeInYear / isInDst', () => {
   qrono.context({ localtime: true, disambiguation: 'later' })
 
-  expect(qrono(2018, 1).hasDstInYear()).toBe(true)
-  expect(qrono(2020, 1).hasDstInYear()).toBe(false) // DST was abolished in 2020
+  expect(qrono(2018, 1).hasOffsetChangeInYear()).toBe(true)
+  expect(qrono(2020, 1).hasOffsetChangeInYear()).toBe(false) // DST was abolished in 2020
 
   // isInDst around GAP
   expect(qrono('2018-11-03 23:59:59.999').isInDst()).toBe(false) // just before: standard time
@@ -265,24 +265,24 @@ test('Daylight saving time — hasDstInYear / isInDst', () => {
   expect(qrono('2019-02-17 00:00:00.000').isInDst()).toBe(false) // next day: standard time
 })
 
-test('Daylight saving time — isDstTransitionDay', () => {
+test('Daylight saving time — hasOffsetChangeInDay', () => {
   qrono.context({ localtime: true, disambiguation: 'earlier' })
 
   // GAP day
-  expect(qrono('2018-11-03 23:59:59.999').isDstTransitionDay()).toBe(false) // day before
-  expect(qrono('2018-11-04 01:00:00.000').isDstTransitionDay()).toBe(true) // GAP day
-  expect(qrono('2018-11-05 00:00:00.000').isDstTransitionDay()).toBe(false) // day after
+  expect(qrono('2018-11-03 23:59:59.999').hasOffsetChangeInDay()).toBe(false) // day before
+  expect(qrono('2018-11-04 01:00:00.000').hasOffsetChangeInDay()).toBe(true) // GAP day
+  expect(qrono('2018-11-05 00:00:00.000').hasOffsetChangeInDay()).toBe(false) // day after
 
   // OVERLAP day
-  expect(qrono('2019-02-15 23:59:59.999').isDstTransitionDay()).toBe(false) // day before
-  expect(qrono('2019-02-16 23:59:59.999').isDstTransitionDay()).toBe(true) // OVERLAP day
-  expect(qrono('2019-02-17 00:00:00.000').isDstTransitionDay()).toBe(false) // day after
+  expect(qrono('2019-02-15 23:59:59.999').hasOffsetChangeInDay()).toBe(false) // day before
+  expect(qrono('2019-02-16 23:59:59.999').hasOffsetChangeInDay()).toBe(true) // OVERLAP day
+  expect(qrono('2019-02-17 00:00:00.000').hasOffsetChangeInDay()).toBe(false) // day after
 
   // QronoDate behaves the same
-  expect(qrono.date('2018-11-03').isDstTransitionDay()).toBe(false)
-  expect(qrono.date('2018-11-04').isDstTransitionDay()).toBe(true)
-  expect(qrono.date('2019-02-15').isDstTransitionDay()).toBe(false)
-  expect(qrono.date('2019-02-16').isDstTransitionDay()).toBe(true)
+  expect(qrono.date('2018-11-03').hasOffsetChangeInDay()).toBe(false)
+  expect(qrono.date('2018-11-04').hasOffsetChangeInDay()).toBe(true)
+  expect(qrono.date('2019-02-15').hasOffsetChangeInDay()).toBe(false)
+  expect(qrono.date('2019-02-16').hasOffsetChangeInDay()).toBe(true)
 })
 
 test('Daylight saving time — minutesInDay', () => {
@@ -677,8 +677,8 @@ test('QronoDate basic', () => {
     '2021-11-30'
   )
 
-  expect(qrono.date('2018-01-01').hasDstInYear()).toBe(true)
-  expect(qrono.date('2020-01-01').hasDstInYear()).toBe(false)
+  expect(qrono.date('2018-01-01').hasOffsetChangeInYear()).toBe(true)
+  expect(qrono.date('2020-01-01').hasOffsetChangeInYear()).toBe(false)
 })
 
 test('QronoDate — plus/minus across DST transition', () => {
