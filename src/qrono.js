@@ -443,15 +443,16 @@ Qrono.prototype.hasDstInYear = function () {
 }
 
 Qrono.prototype.isInDst = function () {
-  if (!this[internal].localtime) {
-    return false
+  if (!this[internal].localtime) return false
+  const offset = this.offset()
+  let past = false,
+    future = false
+  for (let i = 1; i <= 5; i += 2) {
+    if (this.month(-i).offset() < offset) past = true
+    if (this.month(i).offset() < offset) future = true
+    if (past && future) return true
   }
-  const offsets = Array.from({ length: 12 }, (_, index) =>
-    this.month(index + 1).offset()
-  )
-  const minOffset = Math.min(...offsets)
-  const maxOffset = Math.max(...offsets)
-  return minOffset !== maxOffset && this.offset() === maxOffset
+  return false
 }
 
 Qrono.prototype.isDstTransitionDay = function () {
