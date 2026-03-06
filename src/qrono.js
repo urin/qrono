@@ -181,7 +181,7 @@ function set(values) {
   }
   const dateOnly = !has(values, 'hour', 'minute', 'second', 'millisecond')
   const disambig = dateOnly ? 'later' : this.disambiguation
-  const baseDate = this.nativeDate ?? new Date(0, 0)
+  const baseDate = this.nativeDate ?? new Date(0, 0) // 1900-01-01T00:00:00.000Z
   const newDate = new Date(initialSafeDate.getTime())
   const requested = {
     year: args.year ?? baseDate.getFullYear(),
@@ -298,7 +298,7 @@ function parse(str) {
 // -----------------------------------------------------------------------------
 // Public methods
 // -----------------------------------------------------------------------------
-const p = (v, n) => String(v).padStart(n, '0')
+const pad0 = (v, n) => String(v).padStart(n, '0')
 
 // Basic
 Qrono.prototype.toString = function () {
@@ -307,16 +307,16 @@ Qrono.prototype.toString = function () {
     const offset = -t.getTimezoneOffset()
     const offsetAbs = Math.abs(offset)
     return (
-      `${p(t.getFullYear(), 4)}-` +
-      `${p(t.getMonth() + 1, 2)}-` +
-      `${p(t.getDate(), 2)}T` +
-      `${p(t.getHours(), 2)}:` +
-      `${p(t.getMinutes(), 2)}:` +
-      `${p(t.getSeconds(), 2)}.` +
-      `${p(t.getMilliseconds(), 3)}` +
+      `${pad0(t.getFullYear(), 4)}-` +
+      `${pad0(t.getMonth() + 1, 2)}-` +
+      `${pad0(t.getDate(), 2)}T` +
+      `${pad0(t.getHours(), 2)}:` +
+      `${pad0(t.getMinutes(), 2)}:` +
+      `${pad0(t.getSeconds(), 2)}.` +
+      `${pad0(t.getMilliseconds(), 3)}` +
       `${offset >= 0 ? '+' : '-'}` +
-      `${p(Math.trunc(offsetAbs / minutesPerHour), 2)}:` +
-      `${p(offsetAbs % minutesPerHour, 2)}`
+      `${pad0(Math.trunc(offsetAbs / minutesPerHour), 2)}:` +
+      `${pad0(offsetAbs % minutesPerHour, 2)}`
     )
   }
   return this[internal].nativeDate.toISOString()
@@ -383,7 +383,7 @@ Qrono.prototype.toDate = function (...args) {
 }
 
 // Accessor
-for (const [field, native, offset] of [
+for (const [field, native, base] of [
   ['year', 'FullYear', 0],
   ['month', 'Month', 1],
   ['day', 'Date', 0],
@@ -395,7 +395,7 @@ for (const [field, native, offset] of [
   Qrono.prototype[field] = function (value) {
     return given(value)
       ? this.clone({ [field]: value })
-      : this[internal].getNative(native) + offset
+      : this[internal].getNative(native) + base
   }
 }
 
@@ -516,24 +516,30 @@ Qrono.prototype.startOfDay = function () {
   return this.clone(timestamp)
 }
 
-Qrono.prototype.isSame = function (another) {
-  return +this === +another
+function implementComparison(prototype) {
+  Object.assign(prototype, {
+    isSame(another) {
+      return +this === +another
+    },
+    isBefore(another) {
+      return this < another
+    },
+    isAfter(another) {
+      return this > another
+    },
+    isSameOrBefore(another) {
+      return this <= another
+    },
+    isSameOrAfter(another) {
+      return this >= another
+    },
+    isBetween(a, b) {
+      return (a <= this && this <= b) || (b <= this && this <= a)
+    },
+  })
 }
-Qrono.prototype.isBefore = function (another) {
-  return this < another
-}
-Qrono.prototype.isAfter = function (another) {
-  return this > another
-}
-Qrono.prototype.isSameOrBefore = function (another) {
-  return this <= another
-}
-Qrono.prototype.isSameOrAfter = function (another) {
-  return this >= another
-}
-Qrono.prototype.isBetween = function (a, b) {
-  return (a <= this && this <= b) || (b <= this && this <= a)
-}
+
+implementComparison(Qrono.prototype)
 
 // Calculation
 Qrono.prototype.plus = function (...args) {
@@ -676,12 +682,10 @@ QronoDate.prototype.toArray = function () {
   return [this.year(), this.month(), this.day()]
 }
 
-QronoDate.prototype.startOfYear = function () {
-  return new QronoDate(this[internalDate].datetime.startOfYear())
-}
-
-QronoDate.prototype.startOfMonth = function () {
-  return new QronoDate(this[internalDate].datetime.startOfMonth())
+for (const name of ['Year', 'Month']) {
+  QronoDate.prototype[`startOf${name}`] = function () {
+    return new QronoDate(this[internalDate].datetime[`startOf${name}`]())
+  }
 }
 
 for (const field of ['year', 'month', 'day']) {
@@ -723,24 +727,7 @@ QronoDate.prototype.endOfMonth = function () {
   return this.clone({ day: this.daysInMonth() })
 }
 
-QronoDate.prototype.isSame = function (another) {
-  return +this === +another
-}
-QronoDate.prototype.isBefore = function (another) {
-  return this < another
-}
-QronoDate.prototype.isAfter = function (another) {
-  return this > another
-}
-QronoDate.prototype.isSameOrBefore = function (another) {
-  return this <= another
-}
-QronoDate.prototype.isSameOrAfter = function (another) {
-  return this >= another
-}
-QronoDate.prototype.isBetween = function (a, b) {
-  return (a <= this && this <= b) || (b <= this && this <= a)
-}
+implementComparison(QronoDate.prototype)
 
 QronoDate.prototype.plus = function (...args) {
   return plusDate.call(this, 1, ...args)
