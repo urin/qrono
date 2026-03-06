@@ -13,5 +13,5 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'nav-bar-content-before': () => h(ComparisonSidebarToggle),
     })
-  }
+  },
 }

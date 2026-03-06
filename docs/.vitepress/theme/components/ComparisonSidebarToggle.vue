@@ -1,22 +1,22 @@
 <script setup>
-import { useRoute } from "vitepress";
-import { ref, watch, computed } from "vue";
+import { useRoute } from 'vitepress'
+import { ref, watch, computed } from 'vue'
 
-const route = useRoute();
-const hidden = ref(false);
+const route = useRoute()
+const hidden = ref(false)
 
 watch(
   () => route.path,
   () => {
-    hidden.value = false;
-  },
-);
+    hidden.value = false
+  }
+)
 
-const isComparison = computed(() => route.path.includes("/comparison"));
+const isComparison = computed(() => route.path.includes('/comparison'))
 
 function toggle() {
-  hidden.value = !hidden.value;
-  document.documentElement.classList.toggle("sidebar-hidden", hidden.value);
+  hidden.value = !hidden.value
+  document.documentElement.classList.toggle('sidebar-hidden', hidden.value)
 }
 </script>
 
