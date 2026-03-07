@@ -1,4 +1,4 @@
-﻿# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) — Small. Complete. Deterministic. JavaScript date-time.
+# <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) — Small. Complete. Deterministic. JavaScript date-time.
 
 _**4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**. Designed for **single-timezone** applications._
 

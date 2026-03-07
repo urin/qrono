@@ -1,4 +1,4 @@
-﻿# Introduction
+# Introduction
 
 Qrono is a **4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**.  
 Designed for _single-timezone_ applications.

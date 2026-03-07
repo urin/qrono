@@ -1,4 +1,4 @@
-﻿# API Reference
+# API Reference
 
 Complete API reference for Qrono.
 

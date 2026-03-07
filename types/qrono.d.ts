@@ -1,4 +1,4 @@
-﻿export { qrono }
+export { qrono }
 
 /**
  * Creates a new Qrono instance.

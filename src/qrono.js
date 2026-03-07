@@ -1,4 +1,4 @@
-﻿/* @ts-self-types="../types/qrono.d.ts" */
+/* @ts-self-types="../types/qrono.d.ts" */
 import {
   has,
   given,

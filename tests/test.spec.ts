@@ -1,4 +1,4 @@
-﻿import { test, expect, beforeEach, afterEach } from 'vitest'
+import { test, expect, beforeEach, afterEach } from 'vitest'
 import { qrono } from '../src/qrono.js'
 import MockDate from 'mockdate'
 
