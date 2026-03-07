@@ -1,6 +1,6 @@
-﻿# API Comparison
+# API Comparison
 
-This section compares Qrono's API against three popular JavaScript date libraries — [Day.js](https://day.js.org/), [Luxon](https://moment.github.io/luxon/), and [date-fns](https://date-fns.org/) — across common use cases. Use it as a quick reference to understand how each library approaches the same task and to evaluate which best fits your needs.
+This section compares Qrono's API against six popular date/time APIs and libraries — [TC39 Temporal](https://tc39.es/proposal-temporal/docs/), [Day.js](https://day.js.org/), [Moment.js](https://momentjs.com/), [Luxon](https://moment.github.io/luxon/), and [date-fns](https://date-fns.org/) — across common use cases. Use it as a quick reference to understand how each library approaches the same task and to evaluate which best fits your needs.
 
 ## Instance creation
 
@@ -42,6 +42,41 @@ qrono(another)
 <template #b>
 
 ```ts
+// Temporal has multiple strongly-typed entry points.
+
+// Current time (zoned datetime)
+Temporal.Now.zonedDateTimeISO('UTC')
+
+// ISO string with timezone/offset
+Temporal.ZonedDateTime.from('2024-01-15T12:34:56+00:00[UTC]')
+
+// Date object
+Temporal.Instant.fromEpochMilliseconds(new Date().getTime())
+
+// Millisecond timestamp
+Temporal.Instant.fromEpochMilliseconds(1705286096000)
+
+// Date-only
+Temporal.PlainDate.from('2024-01-15')
+
+// Object
+Temporal.PlainDateTime.from({
+  year: 2024,
+  month: 1,
+  day: 15,
+  hour: 12,
+  minute: 34,
+  second: 56,
+})
+
+// Clone another instance
+Temporal.ZonedDateTime.from(another.toString())
+```
+
+</template>
+<template #c>
+
+```ts
 // Current time
 dayjs()
 
@@ -65,7 +100,33 @@ dayjs(another)
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+// Current time
+moment()
+
+// String
+moment('2024-01-15 12:34:56')
+
+// Date object
+moment(new Date())
+
+// Millisecond timestamp
+moment(1705286096000)
+
+// Array
+moment([2024, 0, 15, 12, 34, 56, 0])
+
+// Object
+moment({ year: 2024, month: 0, day: 15 })
+
+// Clone another instance
+moment(another)
+```
+
+</template>
+<template #e>
 
 ```ts
 // Current time
@@ -92,7 +153,7 @@ DateTime.fromFormat('2024-01-15', 'yyyy-MM-dd')
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import { parseISO, parse } from 'date-fns'
@@ -110,11 +171,12 @@ parse('2024-01-15', 'yyyy-MM-dd', new Date())
 ## DST gap/overlap handling
 
 When a local time string falls in a DST gap or overlap, each library must resolve the ambiguity differently.
-Day.js and date-fns default to the DST-active (later) offset, just like JavaScript's `Date`.
+Temporal and Day.js default to the DST-active (later) offset in overlap cases, like JavaScript's `Date`.
 Luxon defaults to the standard (earlier) offset in overlap cases.
 Qrono defaults to `'compatible'` — gap times are forwarded to the later (DST) side, overlap times use the earlier (standard-time) side — and uniquely exposes all four resolution strategies via its `disambiguation` option, mirroring the [Temporal API](https://tc39.es/proposal-temporal/docs/).
 
 Europe/London DST is used here as an example.
+For Temporal, `timeZone` must be explicit in this example so `disambiguation` is resolved deterministically for Europe/London.
 
 - Spring forward (Gap)  
   2019-03-31 01:00 → 2019-03-31 02:00  (+00:00 → +01:00)
@@ -127,13 +189,30 @@ Europe/London DST is used here as an example.
 const input = '2019-03-31T01:30:00'
 
 qrono.context({ localtime: true }) // defaults localtime
-qrono(input)                                // Qrono    2019-03-31T02:30:00.000+01:00
-qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-03-31T00:30:00.000+00:00
-qrono({ disambiguation: 'later' }, input)   // Qrono    2019-03-31T02:30:00.000+01:00
+qrono(input)                                // Qrono    2019-03-31T02:30+01:00
+qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-03-31T00:30+00:00
+qrono({ disambiguation: 'later' }, input)   // Qrono    2019-03-31T02:30+01:00
 qrono({ disambiguation: 'reject' }, input)  // Qrono    throws RangeError
-dayjs(input)                                // Day.js   2019-03-31T02:30:00.000+01:00
-DateTime.fromISO(input)                     // Luxon    2019-03-31T02:30:00.000+01:00
-parseISO(input)                             // date-fns 2019-03-31T02:30:00.000+01:00
+dayjs(input)                                // Day.js   2019-03-31T02:30+01:00
+moment.tz(input, 'Europe/London')           // Moment   2019-03-31T02:30+01:00
+DateTime.fromISO(input)                     // Luxon    2019-03-31T02:30+01:00
+parseISO(input)                             // date-fns 2019-03-31T02:30+01:00
+Temporal.ZonedDateTime.from({               // Temporal (compatible) 2019-03-31T02:30+01:00
+  year: 2019, month: 3, day: 31, hour: 1, minute: 30,
+  timeZone: 'Europe/London',
+})
+Temporal.ZonedDateTime.from(                // Temporal (earlier)    2019-03-31T00:30+00:00
+  { year: 2019, month: 3, day: 31, hour: 1, minute: 30, timeZone: 'Europe/London' },
+  { disambiguation: 'earlier' },
+)
+Temporal.ZonedDateTime.from(                // Temporal (later)      2019-03-31T02:30+01:00
+  { year: 2019, month: 3, day: 31, hour: 1, minute: 30, timeZone: 'Europe/London' },
+  { disambiguation: 'later' },
+)
+Temporal.ZonedDateTime.from(                // Temporal (reject)     throws RangeError
+  { year: 2019, month: 3, day: 31, hour: 1, minute: 30, timeZone: 'Europe/London' },
+  { disambiguation: 'reject' },
+)
 ```
 
 ### Overlap (duplicated local time)
@@ -142,18 +221,35 @@ parseISO(input)                             // date-fns 2019-03-31T02:30:00.000+
 const input = '2019-10-27T01:30:00'
 
 qrono.context({ localtime: true }) // defaults localtime
-qrono(input)                                // Qrono    2019-10-27T01:30:00.000+00:00
-qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-10-27T01:30:00.000+00:00
-qrono({ disambiguation: 'later' }, input)   // Qrono    2019-10-27T01:30:00.000+01:00
+qrono(input)                                // Qrono    2019-10-27T01:30+00:00
+qrono({ disambiguation: 'earlier' }, input) // Qrono    2019-10-27T01:30+00:00
+qrono({ disambiguation: 'later' }, input)   // Qrono    2019-10-27T01:30+01:00
 qrono({ disambiguation: 'reject' }, input)  // Qrono    throws RangeError
-dayjs(input)                                // Day.js   2019-10-27T01:30:00.000+01:00
-DateTime.fromISO(input)                     // Luxon    2019-10-27T01:30:00.000+00:00
-parseISO(input)                             // date-fns 2019-10-27T01:30:00.000+01:00
+dayjs(input)                                // Day.js   2019-10-27T01:30+01:00
+moment.tz(input, 'Europe/London')           // Moment   2019-10-27T01:30+01:00
+DateTime.fromISO(input)                     // Luxon    2019-10-27T01:30+00:00
+parseISO(input)                             // date-fns 2019-10-27T01:30+01:00
+Temporal.ZonedDateTime.from({               // Temporal (compatible) 2019-10-27T01:30+01:00
+  year: 2019, month: 10, day: 27, hour: 1, minute: 30,
+  timeZone: 'Europe/London',
+})
+Temporal.ZonedDateTime.from(                // Temporal (earlier)    2019-10-27T01:30+00:00
+  { year: 2019, month: 10, day: 27, hour: 1, minute: 30, timeZone: 'Europe/London' },
+  { disambiguation: 'earlier' },
+)
+Temporal.ZonedDateTime.from(                // Temporal (later)      2019-10-27T01:30+01:00
+  { year: 2019, month: 10, day: 27, hour: 1, minute: 30, timeZone: 'Europe/London' },
+  { disambiguation: 'later' },
+)
+Temporal.ZonedDateTime.from(                // Temporal (reject)     throws RangeError
+  { year: 2019, month: 10, day: 27, hour: 1, minute: 30, timeZone: 'Europe/London' },
+  { disambiguation: 'reject' },
+)
 ```
 
 ## Date-only instance
 
-Qrono provides a dedicated `QronoDate` type for calendar dates with no time component. The other libraries have no equivalent — date-only values are represented as a datetime at midnight, which can be affected by timezone handling.
+Qrono provides a dedicated `QronoDate` type for calendar dates with no time component. Temporal also has a dedicated `PlainDate` type. Other libraries represent date-only values as a datetime at midnight, which can be affected by timezone handling.
 
 <FourCompare>
 <template #a>
@@ -176,7 +272,19 @@ qrono.date({ year: 2024, month: 1, day: 15 })
 <template #b>
 
 ```ts
-// Not available
+// Current date
+Temporal.Now.plainDateISO()
+
+// String
+Temporal.PlainDate.from('2024-01-15')
+
+// Date object
+Temporal.PlainDate.from(
+  new Date().toISOString().slice(0, 10),
+)
+
+// Object
+Temporal.PlainDate.from({ year: 2024, month: 1, day: 15 })
 ```
 
 </template>
@@ -194,11 +302,25 @@ qrono.date({ year: 2024, month: 1, day: 15 })
 ```
 
 </template>
+<template #e>
+
+```ts
+// Not available
+```
+
+</template>
+<template #f>
+
+```ts
+// Not available
+```
+
+</template>
 </FourCompare>
 
 ## DST information
 
-Qrono exposes several DST introspection methods. Luxon covers `isInDST` only. Day.js and date-fns provide no DST introspection.
+Only Qrono and Luxon provide dedicated DST methods (`isInDst` / `isInDST`) directly.
 
 <FourCompare>
 <template #a>
@@ -230,8 +352,7 @@ qrono('2024-03-10').minutesInDay()
 <template #c>
 
 ```ts
-// Whether DST is currently active
-DateTime.local().isInDST
+// Not available
 ```
 
 </template>
@@ -242,11 +363,26 @@ DateTime.local().isInDST
 ```
 
 </template>
+<template #e>
+
+```ts
+// Whether DST is currently active
+DateTime.local().isInDST
+```
+
+</template>
+<template #f>
+
+```ts
+// Not available
+```
+
+</template>
 </FourCompare>
 
 ## Timezone
 
-Qrono supports UTC and the runtime's local timezone only; arbitrary IANA timezone IDs are __NOT__ supported. Day.js supports them via a plugin; Luxon supports them natively; date-fns handles timezone conversion through the companion `date-fns-tz` package.
+Qrono supports UTC and the runtime's local timezone only; arbitrary IANA timezone IDs are __NOT__ supported. Temporal and Luxon support named timezones natively; Day.js and Moment.js support them via plugins; date-fns handles timezone conversion through the companion `date-fns-tz` package.
 
 <FourCompare>
 <template #a>
@@ -271,6 +407,29 @@ qrono({ localtime: true }, '2024-01-15 12:00').context({ localtime: false })
 <template #b>
 
 ```ts
+// UTC
+Temporal.ZonedDateTime.from('2024-01-15T12:00:00+00:00[UTC]')
+
+// Arbitrary timezone
+Temporal.ZonedDateTime.from({
+  year: 2024,
+  month: 1,
+  day: 15,
+  hour: 12,
+  minute: 0,
+  timeZone: 'America/New_York',
+})
+
+// Convert timezone (same instant)
+Temporal.ZonedDateTime
+  .from('2024-01-15T12:00:00+00:00[UTC]')
+  .withTimeZone('America/New_York')
+```
+
+</template>
+<template #c>
+
+```ts
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -288,7 +447,23 @@ dayjs('2024-01-15 12:00').tz('America/New_York')
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+import moment from 'moment-timezone'
+
+// UTC
+moment.utc('2024-01-15 12:00')
+
+// Arbitrary timezone
+moment.tz('2024-01-15 12:00', 'America/New_York')
+
+// Convert timezone
+moment('2024-01-15 12:00').tz('America/New_York')
+```
+
+</template>
+<template #e>
 
 ```ts
 // UTC
@@ -306,7 +481,7 @@ DateTime.now().setZone('America/New_York')
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import { fromZonedTime, toZonedTime } from 'date-fns-tz'
@@ -323,7 +498,7 @@ toZonedTime(new Date(), 'America/New_York')
 
 ## Timezone offset
 
-All libraries return the UTC offset in minutes (positive = east of UTC), except date-fns-tz which returns milliseconds and requires an explicit IANA timezone ID. Luxon additionally exposes the offset as a short name string (e.g. `'JST'`). Note that the native `Date.prototype.getTimezoneOffset()` uses the opposite sign convention (positive = west of UTC).
+All libraries can expose UTC offset information, but units and APIs differ. Qrono/Day.js/Moment.js/Luxon use minutes; Temporal uses nanoseconds and offset strings; date-fns-tz returns milliseconds and requires an explicit IANA timezone ID. Note that the native `Date.prototype.getTimezoneOffset()` uses the opposite sign convention (positive = west of UTC).
 
 <FourCompare>
 <template #a>
@@ -338,6 +513,25 @@ qrono({ localtime: true }).offset()
 <template #b>
 
 ```ts
+const zdt = Temporal.Now.zonedDateTimeISO('Asia/Tokyo')
+
+// Offset in nanoseconds
+zdt.offsetNanoseconds
+// e.g. JST => 32400000000000
+
+// Offset as string
+zdt.offset
+// e.g. '+09:00'
+
+// Offset in minutes, positive = east of UTC
+zdt.offsetNanoseconds / (60 * 1_000_000_000)
+// e.g. JST => 540
+```
+
+</template>
+<template #c>
+
+```ts
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
@@ -348,7 +542,20 @@ dayjs().utcOffset()
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+// Offset in minutes, positive = east of UTC
+moment().utcOffset()
+// e.g. JST => 540
+
+// Offset as string
+moment().format('Z')
+// e.g. '+09:00'
+```
+
+</template>
+<template #e>
 
 ```ts
 // Offset in minutes
@@ -361,7 +568,7 @@ DateTime.local().offsetNameShort
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import { getTimezoneOffset } from 'date-fns-tz'
@@ -409,6 +616,30 @@ dt.toString()
 <template #b>
 
 ```ts
+const zdt = Temporal.ZonedDateTime.from(
+  '2024-01-15T12:34:56.789+00:00[UTC]',
+)
+
+// Native Date
+new Date(zdt.epochMilliseconds)
+
+// Millisecond timestamp
+zdt.epochMilliseconds
+
+// Object
+zdt.getISOFields()
+
+// ISO 8601 string
+zdt.toString()
+
+// Date-only
+zdt.toPlainDate()
+```
+
+</template>
+<template #c>
+
+```ts
 const dt = dayjs('2024-01-15T12:34:56.789')
 
 // Native Date
@@ -433,7 +664,32 @@ dt.format('YYYY-MM-DD HH:mm:ss')
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const dt = moment('2024-01-15T12:34:56.789')
+
+// Native Date
+dt.toDate()
+
+// Millisecond timestamp
+dt.valueOf()
+
+// Object
+dt.toObject()
+
+// Array
+dt.toArray()
+
+// ISO 8601 string
+dt.toISOString()
+
+// Custom format string
+dt.format('YYYY-MM-DD HH:mm:ss')
+```
+
+</template>
+<template #e>
 
 ```ts
 const dt = DateTime.fromISO('2024-01-15T12:34:56.789')
@@ -456,7 +712,7 @@ dt.toFormat('yyyy-MM-dd HH:mm:ss')
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import { format } from 'date-fns'
@@ -473,7 +729,7 @@ format(d, 'yyyy-MM-dd HH:mm:ss')
 
 ## Arithmetic
 
-Qrono's `plus`/`minus` accept spread arguments, object, array, or a raw millisecond number. Day.js uses a `(value, unit)` pair; Luxon uses an object with plural unit keys; date-fns provides individual functions per unit (`addMonths`, `addDays`, …). For differences, Qrono and date-fns return a plain number; Day.js and Luxon can return a Duration object (see [Duration](#duration)).
+Qrono's `plus`/`minus` accept spread arguments, object, array, or a raw millisecond number. Temporal and Luxon use object-based duration units; Day.js and Moment.js use `(value, unit)`; date-fns provides individual functions per unit (`addMonths`, `addDays`, …). For differences, Qrono and date-fns typically return plain numbers; Temporal/Luxon/Moment.js can produce Duration-like objects (see [Duration](#duration)).
 
 <FourCompare>
 <template #a>
@@ -500,6 +756,29 @@ dt.valueOf() - qrono('2024-01-01').valueOf()
 <template #b>
 
 ```ts
+const dt = Temporal.ZonedDateTime.from(
+  '2024-01-15T12:00:00+00:00[UTC]',
+)
+
+// Addition
+dt.add({ months: 1, days: 10 })
+dt.add({ hours: 1 })
+
+// Subtraction
+dt.subtract({ days: 7 })
+dt.subtract({ hours: 1 })
+
+// Difference
+Temporal.ZonedDateTime
+  .from('2024-01-01T00:00:00+00:00[UTC]')
+  .until(dt, { largestUnit: 'day' })
+  .days
+```
+
+</template>
+<template #c>
+
+```ts
 const dt = dayjs('2024-01-15 12:00:00')
 
 // Addition
@@ -515,7 +794,25 @@ dt.diff(dayjs('2024-01-01'), 'day')
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const dt = moment('2024-01-15 12:00:00')
+
+// Addition
+dt.add(1, 'month').add(10, 'day')
+dt.add(1, 'hour')
+
+// Subtraction
+dt.subtract(7, 'day')
+dt.subtract(1, 'hour')
+
+// Difference
+dt.diff(moment('2024-01-01'), 'day')
+```
+
+</template>
+<template #e>
 
 ```ts
 const dt = DateTime.fromISO('2024-01-15T12:00:00')
@@ -533,7 +830,7 @@ dt.diff(DateTime.fromISO('2024-01-01'), 'days').days
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import {
@@ -564,7 +861,7 @@ differenceInDays(d, new Date('2024-01-01'))
 
 ## Comparing
 
-Qrono and Day.js (with plugins) provide all six comparison methods as named methods. Luxon relies on native comparison operators (`<`, `>`, `<=`, `>=`) for ordering and `Interval.contains()` for range checks. date-fns provides `isBefore`, `isAfter`, and `isEqual` as functions, and falls back to native operators for the rest.
+Qrono, Day.js (with plugins), and Moment.js provide all six comparison methods as named methods. Temporal uses `compare()`/`equals()` static and instance APIs. Luxon relies on native comparison operators (`<`, `>`, `<=`, `>=`) for ordering and `Interval.contains()` for range checks. date-fns provides `isBefore`, `isAfter`, and `isEqual` as functions, and falls back to native operators for the rest.
 
 <FourCompare>
 <template #a>
@@ -583,6 +880,25 @@ a.isBetween(qrono('2024-01-01'), qrono('2024-12-31')) // true
 
 </template>
 <template #b>
+
+```ts
+const a = Temporal.Instant.from('2024-01-15T00:00:00Z')
+const b = Temporal.Instant.from('2024-06-01T00:00:00Z')
+
+Temporal.Instant.compare(a, b) < 0  // true  (isBefore)
+Temporal.Instant.compare(a, b) > 0  // false (isAfter)
+a.equals(b)                         // false
+Temporal.Instant.compare(a, b) <= 0 // true  (isSameOrBefore)
+Temporal.Instant.compare(a, b) >= 0 // false (isSameOrAfter)
+
+const start = Temporal.Instant.from('2024-01-01T00:00:00Z')
+const end = Temporal.Instant.from('2024-12-31T23:59:59Z')
+Temporal.Instant.compare(a, start) >= 0
+  && Temporal.Instant.compare(a, end) <= 0 // true (isBetween)
+```
+
+</template>
+<template #c>
 
 ```ts
 import dayjs from 'dayjs'
@@ -605,7 +921,22 @@ a.isBetween(dayjs('2024-01-01'), dayjs('2024-12-31')) // true  (plugin)
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const a = moment('2024-01-15')
+const b = moment('2024-06-01')
+
+a.isBefore(b)       // true
+a.isAfter(b)        // false
+a.isSame(b)         // false
+a.isSameOrBefore(b) // true
+a.isSameOrAfter(b)  // false
+a.isBetween(moment('2024-01-01'), moment('2024-12-31')) // true
+```
+
+</template>
+<template #e>
 
 ```ts
 import { DateTime, Interval } from 'luxon'
@@ -625,7 +956,7 @@ Interval.fromDateTimes(
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import {
@@ -654,7 +985,7 @@ isWithinInterval(a, {
 
 ## Start/End boundaries
 
-Day.js, Luxon, and date-fns use a generic `startOf(unit)` / `endOf(unit)` style down to the hour level. Qrono uses dedicated methods per granularity (`startOfYear()`, `startOfMonth()`, …) but does not provide `endOf` on `Qrono` instances; `endOfYear()` and `endOfMonth()` are available on `QronoDate` only.
+Day.js, Moment.js, Luxon, and date-fns use a generic `startOf(unit)` / `endOf(unit)` style down to the hour level. Qrono uses dedicated methods per granularity (`startOfYear()`, `startOfMonth()`, …) but does not provide `endOf` on `Qrono` instances; `endOfYear()` and `endOfMonth()` are available on `QronoDate` only. Temporal composes equivalent behavior via immutable field updates.
 
 <FourCompare>
 <template #a>
@@ -679,6 +1010,24 @@ qrono.date('2024-06-15').endOfMonth()
 <template #b>
 
 ```ts
+const zdt = Temporal.ZonedDateTime.from(
+  '2024-06-15T12:34:56+00:00[UTC]',
+)
+
+zdt.with({ month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
+zdt.with({ day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
+zdt.startOfDay()
+zdt.with({ minute: 0, second: 0, millisecond: 0 })
+zdt.with({ second: 0, millisecond: 0 })
+zdt.with({ millisecond: 0 })
+
+// Generic endOf is not available as a built-in
+```
+
+</template>
+<template #c>
+
+```ts
 const dt = dayjs('2024-06-15 12:34:56')
 
 dt.startOf('year')   // 2024-01-01 00:00:00
@@ -695,7 +1044,26 @@ dt.endOf('hour')     // 2024-06-15 12:59:59
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const dt = moment('2024-06-15 12:34:56')
+
+dt.startOf('year')   // 2024-01-01 00:00:00
+dt.startOf('month')  // 2024-06-01 00:00:00
+dt.startOf('day')    // 2024-06-15 00:00:00
+dt.startOf('hour')   // 2024-06-15 12:00:00
+dt.startOf('minute') // 2024-06-15 12:34:00
+dt.startOf('second') // 2024-06-15 12:34:56
+
+dt.endOf('year')     // 2024-12-31 23:59:59
+dt.endOf('month')    // 2024-06-30 23:59:59
+dt.endOf('day')      // 2024-06-15 23:59:59
+dt.endOf('hour')     // 2024-06-15 12:59:59
+```
+
+</template>
+<template #e>
 
 ```ts
 const dt = DateTime.fromISO('2024-06-15T12:34:56')
@@ -714,7 +1082,7 @@ dt.endOf('hour')     // 2024-06-15 12:59:59
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import {
@@ -750,7 +1118,7 @@ endOfHour(d)     // 2024-06-15 12:59:59
 
 ## Day and Week
 
-All libraries support day-of-year, ISO week number, and ISO week year. `daysInYear` is available in Qrono and Luxon but not in Day.js or date-fns directly. `weeksInYear` is available in Qrono and date-fns but not in Luxon. Day.js requires plugins for this entire group. Note that Luxon exposes day-of-year as the `ordinal` property.
+All compared APIs can retrieve day-of-year and ISO week/year with different method/property names. Day.js may require plugins. `daysInYear` and `weeksInYear` availability differs by library (Temporal and Qrono expose both directly).
 
 <FourCompare>
 <template #a>
@@ -782,6 +1150,26 @@ qrono.date('2024-06-15').weeksInYear()
 <template #b>
 
 ```ts
+const dt = Temporal.PlainDate.from('2024-06-15')
+
+// Day of year
+dt.dayOfYear // e.g. 167
+
+// ISO week of year
+dt.weekOfYear // e.g. 24
+dt.yearOfWeek // e.g. 2024
+
+// Total days in the year
+dt.daysInYear // 366
+
+// Total ISO weeks in the year
+dt.weeksInYear // e.g. 52
+```
+
+</template>
+<template #c>
+
+```ts
 import dayjs from 'dayjs'
 import dayOfYear from 'dayjs/plugin/dayOfYear'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -810,7 +1198,27 @@ dt.isLeapYear() ? 366 : 365
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const dt = moment('2024-06-15 12:00:00')
+
+// Day of year
+dt.dayOfYear() // e.g. 167
+
+// ISO week of year
+dt.isoWeek() // e.g. 24
+dt.isoWeekYear() // e.g. 2024
+
+// Total days in the year
+dt.isLeapYear() ? 366 : 365
+
+// Total ISO weeks in the year
+dt.isoWeeksInYear() // e.g. 52
+```
+
+</template>
+<template #e>
 
 ```ts
 const dt = DateTime.fromISO('2024-06-15T12:00:00')
@@ -830,7 +1238,7 @@ dt.daysInYear // 366
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import {
@@ -863,7 +1271,7 @@ getISOWeeksInYear(d) // e.g. 52
 
 ## Get / Set
 
-Qrono and Day.js use the same method name for both get (no argument) and set (with argument). Luxon uses read-only property accessors for get and `set({ … })` for set. date-fns provides individual `getX` / `setX` functions. Note that Day.js and date-fns months are **0-indexed** while Qrono and Luxon use **1-indexed** months.
+Qrono and Day.js use the same method name for both get (no argument) and set (with argument). Moment.js is similar and mutable. Temporal and Luxon use read-only property accessors for get and object-based immutable updates (`with` / `set`). date-fns provides individual `getX` / `setX` functions. Note that Day.js/Moment.js/date-fns months are **0-indexed** while Qrono/Temporal/Luxon use **1-indexed** months.
 
 <FourCompare>
 <template #a>
@@ -895,6 +1303,28 @@ dt.millisecond(0)
 <template #b>
 
 ```ts
+const dt = Temporal.PlainDateTime.from('2024-06-15T12:34:56.789')
+
+// Get (property accessors)
+dt.year        // 2024
+dt.month       // 6
+dt.day         // 15
+dt.hour        // 12
+dt.minute      // 34
+dt.second      // 56
+dt.millisecond // 789
+dt.dayOfWeek   // 6 (1=Mon ... 7=Sun)
+
+// Set (returns new instance)
+dt.with({ year: 2025 })
+dt.with({ month: 1, day: 1 })
+dt.with({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+```
+
+</template>
+<template #c>
+
+```ts
 const dt = dayjs('2024-06-15 12:34:56.789')
 
 // Get
@@ -915,7 +1345,33 @@ dt.set('date', 1)
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const dt = moment('2024-06-15 12:34:56.789')
+
+// Get
+dt.year()        // 2024
+dt.month()       // 5 (0-indexed)
+dt.date()        // 15
+dt.hour()        // 12
+dt.minute()      // 34
+dt.second()      // 56
+dt.millisecond() // 789
+dt.day()         // 6 (0=Sun ... 6=Sat)
+
+// Set (mutable)
+dt.year(2025)
+dt.month(0)
+dt.date(1)
+dt.hour(0)
+dt.minute(0)
+dt.second(0)
+dt.millisecond(0)
+```
+
+</template>
+<template #e>
 
 ```ts
 const dt = DateTime.fromISO('2024-06-15T12:34:56.789')
@@ -936,7 +1392,7 @@ dt.set({ month: 1, day: 1 })
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import {
@@ -971,7 +1427,7 @@ setHours(d, 0)
 
 ## Validation
 
-All libraries expose a validity check. Qrono and Day.js use a `valid()` / `isValid()` method; Luxon uses an `isValid` property and additionally provides `invalidReason` and `invalidExplanation`; date-fns's `isValid()` is a standalone function.
+Validity handling differs by API. Qrono/Day.js/Moment.js expose `valid()` / `isValid()` methods, Luxon uses `isValid` properties with reasons, date-fns has standalone `isValid()`, and Temporal throws `RangeError` for invalid values.
 
 <FourCompare>
 <template #a>
@@ -990,13 +1446,37 @@ qrono.date('invalid').valid()    // false
 <template #b>
 
 ```ts
+// Temporal throws on invalid input.
+
+Temporal.PlainDate.from('2024-01-15') // valid
+
+try {
+  Temporal.PlainDate.from('invalid')
+} catch (e) {
+  e instanceof RangeError // true
+}
+```
+
+</template>
+<template #c>
+
+```ts
 dayjs('2024-01-15').isValid()  // true
 dayjs('invalid').isValid()     // false
 dayjs(NaN).isValid()           // false
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+moment('2024-01-15').isValid() // true
+moment('invalid').isValid()    // false
+moment(NaN).isValid()          // false
+```
+
+</template>
+<template #e>
 
 ```ts
 DateTime.fromISO('2024-01-15').isValid  // true
@@ -1009,7 +1489,7 @@ DateTime.fromISO('invalid').invalidExplanation
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import { isValid, parseISO } from 'date-fns'
@@ -1025,8 +1505,8 @@ isValid(NaN)                    // false
 
 ## Formatting
 
-Day.js uses `YYYY`-style tokens (Moment.js compatible); Luxon and date-fns use `yyyy`-style tokens (Unicode CLDR).
-Qrono has **NO** built-in format method and delegates to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
+Day.js and Moment.js use `YYYY`-style tokens; Luxon and date-fns use `yyyy`-style tokens (Unicode CLDR).
+Qrono and Temporal have **NO** built-in custom token formatter and delegate to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
 
 <FourCompare>
 <template #a>
@@ -1050,6 +1530,26 @@ new Intl.DateTimeFormat('en-US', {
 <template #b>
 
 ```ts
+const zdt = Temporal.ZonedDateTime.from(
+  '2024-06-15T12:34:56+00:00[UTC]',
+)
+
+// ISO 8601 (built-in)
+zdt.toString() // '2024-06-15T12:34:56+00:00[UTC]'
+
+// Custom format via Intl.DateTimeFormat
+new Intl.DateTimeFormat('en-US', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', second: '2-digit',
+  hour12: false,
+  timeZone: 'UTC',
+}).format(new Date(zdt.epochMilliseconds))
+```
+
+</template>
+<template #c>
+
+```ts
 const dt = dayjs('2024-06-15 12:34:56')
 
 // ISO 8601
@@ -1064,7 +1564,24 @@ dt.format('ddd, MMM D YYYY')
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const dt = moment('2024-06-15 12:34:56')
+
+// ISO 8601
+dt.toISOString() // '2024-06-15T12:34:56.000Z'
+
+// Custom format (Moment.js tokens)
+dt.format('YYYY-MM-DD HH:mm:ss')
+// '2024-06-15 12:34:56'
+
+dt.format('ddd, MMM D YYYY')
+// 'Sat, Jun 15 2024'
+```
+
+</template>
+<template #e>
 
 ```ts
 const dt = DateTime.fromISO('2024-06-15T12:34:56')
@@ -1081,7 +1598,7 @@ dt.toFormat('EEE, MMM d yyyy')
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import { format } from 'date-fns'
@@ -1102,7 +1619,7 @@ format(d, 'EEE, MMM d yyyy')
 
 ## Locale / i18n
 
-Qrono and Luxon rely on the runtime's `Intl` API with no locale files to import. Day.js requires importing locale files and the `localizedFormat` plugin. date-fns requires importing locale objects per call site, which allows fine-grained tree-shaking.
+Qrono, Temporal, and Luxon rely on the runtime's `Intl` API with no locale files to import. Day.js and Moment.js use locale packs. date-fns requires importing locale objects per call site, which allows fine-grained tree-shaking.
 
 <FourCompare>
 <template #a>
@@ -1131,6 +1648,22 @@ new Intl.DateTimeFormat('ja-JP', { dateStyle: 'full' }).format(d)
 <template #b>
 
 ```ts
+// Temporal delegates locale handling to Intl APIs.
+
+const zdt = Temporal.ZonedDateTime.from(
+  '2024-06-15T12:34:56+00:00[UTC]',
+)
+const d = new Date(zdt.epochMilliseconds)
+
+new Intl.DateTimeFormat('fr-FR', { month: 'long', timeZone: 'UTC' }).format(d)
+new Intl.DateTimeFormat('de-DE', { weekday: 'long', timeZone: 'UTC' }).format(d)
+new Intl.DateTimeFormat('ja-JP', { dateStyle: 'full', timeZone: 'UTC' }).format(d)
+```
+
+</template>
+<template #c>
+
+```ts
 import dayjs from 'dayjs'
 import 'dayjs/locale/fr'
 import 'dayjs/locale/de'
@@ -1155,7 +1688,27 @@ dt.locale('ja').format('LL') // '2024年6月15日'
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+import 'moment/locale/fr'
+import 'moment/locale/de'
+import 'moment/locale/ja'
+
+const dt = moment('2024-06-15 12:34:56')
+
+// Localized month name
+dt.clone().locale('fr').format('MMMM') // 'juin'
+
+// Localized weekday
+dt.clone().locale('de').format('dddd') // 'Samstag'
+
+// Localized date format
+dt.clone().locale('ja').format('LL') // '2024年6月15日'
+```
+
+</template>
+<template #e>
 
 ```ts
 // Luxon uses the runtime's Intl API natively.
@@ -1177,7 +1730,7 @@ dt.setLocale('ja').toLocaleString(DateTime.DATE_FULL)
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import { format } from 'date-fns'
@@ -1203,7 +1756,7 @@ format(d, 'PPP', { locale: ja })  // '2024年6月15日'
 
 ## Relative time
 
-Luxon supports relative time natively via `toRelative()` / `toRelativeCalendar()`. Day.js supports it via the `relativeTime` plugin. date-fns provides `formatDistanceToNow` and `formatDistance` as standalone functions. Qrono has no built-in; `Intl.RelativeTimeFormat` can be used directly with `valueOf()`.
+Luxon supports relative time natively via `toRelative()` / `toRelativeCalendar()`. Moment.js supports it natively (`fromNow`/`from`/`to`). Day.js supports it via the `relativeTime` plugin. date-fns provides `formatDistanceToNow` and `formatDistance` as standalone functions. Qrono and Temporal have no built-in; `Intl.RelativeTimeFormat` can be used directly.
 
 <FourCompare>
 <template #a>
@@ -1227,6 +1780,21 @@ rtfJa.format(days, 'day') // '5日前'
 <template #b>
 
 ```ts
+// Not available as a built-in.
+// Use Intl.RelativeTimeFormat with Temporal differences.
+
+const base = Temporal.PlainDate.from('2024-01-15')
+const target = Temporal.PlainDate.from('2024-01-10')
+const days = target.until(base, { largestUnit: 'day' }).days
+
+const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+rtf.format(-days, 'day') // '5 days ago'
+```
+
+</template>
+<template #c>
+
+```ts
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/ja'
@@ -1248,7 +1816,25 @@ dt.fromNow() // '1年前'
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const dt = moment('2024-01-10')
+
+// Relative to now
+dt.fromNow()          // 'a year ago'
+dt.toNow()            // 'in a year'
+
+// Relative to another date
+dt.from(moment('2024-01-15')) // '5 days ago'
+dt.to(moment('2024-01-15'))   // 'in 5 days'
+
+// With locale
+dt.locale('ja').fromNow() // '1年前'
+```
+
+</template>
+<template #e>
 
 ```ts
 // Luxon uses Intl.RelativeTimeFormat natively.
@@ -1268,7 +1854,7 @@ dt.setLocale('ja').toRelative() // '1年前'
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import {
@@ -1302,7 +1888,7 @@ formatDistanceToNow(d, { addSuffix: true, locale: ja })
 
 ## Duration
 
-Qrono intentionally has no Duration type. Differences between `Qrono` instances are plain milliseconds; differences between `QronoDate` instances are plain integers (days).
+Qrono intentionally has no Duration type. Differences between `Qrono` instances are plain milliseconds; differences between `QronoDate` instances are plain integers (days). Temporal, Moment.js, Day.js, and Luxon provide Duration types/APIs.
 
 <FourCompare>
 <template #a>
@@ -1330,6 +1916,29 @@ const days = db.valueOf() - da.valueOf() // 65
 <template #b>
 
 ```ts
+const a = Temporal.ZonedDateTime.from('2024-01-15T12:00:00+00:00[UTC]')
+const b = Temporal.ZonedDateTime.from('2024-03-20T18:30:00+00:00[UTC]')
+
+// Difference as Temporal.Duration
+const dur = a.until(b, {
+  largestUnit: 'month',
+  smallestUnit: 'minute',
+})
+
+// Duration fields
+dur.months
+dur.days
+dur.hours
+dur.minutes
+
+// ISO 8601 duration string
+dur.toString() // e.g. 'P2M5DT6H30M'
+```
+
+</template>
+<template #c>
+
+```ts
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 dayjs.extend(duration)
@@ -1352,7 +1961,28 @@ diff.humanize() // 'in 2 months'
 ```
 
 </template>
-<template #c>
+<template #d>
+
+```ts
+const a = moment('2024-01-15 12:00:00')
+const b = moment('2024-03-20 18:30:00')
+
+// Create a duration
+const dur = moment.duration({ months: 2, days: 5 })
+
+dur.months()
+dur.days()
+dur.asMilliseconds()
+
+// Difference as duration
+const diff = moment.duration(b.diff(a))
+diff.months()
+diff.days()
+diff.humanize()
+```
+
+</template>
+<template #e>
 
 ```ts
 import { Duration, DateTime } from 'luxon'
@@ -1376,7 +2006,7 @@ diff.toHuman() // '2 months, 5 days'
 ```
 
 </template>
-<template #d>
+<template #f>
 
 ```ts
 import {
@@ -1406,5 +2036,3 @@ differenceInHours(b, a) // 1566
 
 </template>
 </FourCompare>
-
-

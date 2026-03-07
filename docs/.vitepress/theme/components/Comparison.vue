@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const titles = ['Qrono', 'Day.js', 'Luxon', 'date-fns']
+const titles = ['Qrono', 'Temporal', 'Day.js', 'Moment.js', 'Luxon', 'date-fns']
 </script>
 
 <template>
@@ -9,7 +9,7 @@ const titles = ['Qrono', 'Day.js', 'Luxon', 'date-fns']
         <span class="title">{{ title }}</span>
       </div>
       <div class="content">
-        <slot :name="['a', 'b', 'c', 'd'][index]" />
+        <slot :name="['a', 'b', 'c', 'd', 'e', 'f'][index]" />
       </div>
     </div>
   </div>
@@ -80,3 +80,4 @@ const titles = ['Qrono', 'Day.js', 'Luxon', 'date-fns']
   }
 }
 </style>
+
