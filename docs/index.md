@@ -100,4 +100,7 @@ date.endOfMonth()  // 2024-06-30
 ## Learn More
 
 - [Introduction](/introduction) - Design philosophy and getting started
+- [Concepts](/introduction#design-philosophy) - The principles behind the API
+- [DST Handling](/introduction#handling-daylight-saving-time) - Why ambiguous times are explicit
+- [Comparison](/comparison) - How Qrono differs from other libraries
 - [API Reference](/api/) - Complete API documentation
