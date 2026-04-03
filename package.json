@@ -1,6 +1,6 @@
 {
   "name": "qrono",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
   "license": "MIT",
   "keywords": [
@@ -24,6 +24,13 @@
   ],
   "module": "dist/qrono.js",
   "main": "dist/qrono.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/qrono.js",
+      "require": "./dist/qrono.cjs",
+      "default": "./dist/qrono.js"
+    }
+  },
   "unpkg": "dist/qrono.min.js",
   "jsdeliver": "dist/qrono.min.js",
   "types": "types/qrono.d.ts",
@@ -34,7 +41,7 @@
     "format": "biome format --write .",
     "check": "biome check ./src ./tests",
     "check:fix": "biome check ./src ./tests --write",
-    "build": "vite build --minify",
+    "build": "vite build --config vite.lib.config.js && vite build --config vite.iife.config.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
@@ -46,14 +53,14 @@
     "@biomejs/biome": "^2.4.4",
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
-    "@vitest/ui": "^4.0.18",
+    "@vitest/ui": "^4.1.2",
     "husky": "^9.1.7",
     "jsr": "^0.14.3",
     "lint-staged": "^16.2.7",
     "mockdate": "^3.0.5",
-    "vite": "^7.3.1",
+    "vite": "^8.0.3",
     "vitepress": "^1.6.4",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.2"
   },
   "lint-staged": {
     "src/**/*.{js,mjs,cjs,ts,tsx,jsx}": [

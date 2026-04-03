@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "qrono": ["types/qrono.d.ts"]
+      "qrono": ["./types/qrono.d.ts"]
     },
     "typeRoots": ["./types", "./node_modules/@types"]
   },

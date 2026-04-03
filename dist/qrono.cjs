@@ -1,2 +1,641 @@
-"use strict";var st=Object.defineProperty;var Q=Object.getOwnPropertySymbols;var rt=Object.prototype.hasOwnProperty,at=Object.prototype.propertyIsEnumerable;var G=(t,e,n)=>e in t?st(t,e,{enumerable:!0,configurable:!0,writable:!0,value:n}):t[e]=n,C=(t,e)=>{for(var n in e||(e={}))rt.call(e,n)&&G(t,n,e[n]);if(Q)for(var n of Q(e))at.call(e,n)&&G(t,n,e[n]);return t};Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const ut=new Date(1915,0,1,12,0,0,0),w=7,K=24,M=60,I=M*K,V=60,ct=V*M,ft=ct*K,J=1e3,lt=V*J,X=ft*J;function g(t,...e){return e.flat().some(t.hasOwnProperty,t)}function ht(t){return Object.entries(t).filter(([,e])=>!dt(e)).map(([e])=>e)}function Y(t){return t!==void 0}function dt(t){return t instanceof Function}function mt(t){return typeof t=="string"||t instanceof String}function T(t){return t!==null&&typeof t=="object"&&t.constructor===Object}function _(t){return!Number.isNaN(t.getTime())}function S(t){return g(t,["year","month","day","hour","minute","second","millisecond"])}const $=s;s.date=u;const v={localtime:!1,disambiguation:"compatible"};s.context=function(t){if(Y(t)){for(const e of ht(v))g(t,e)&&(v[e]=t[e]);return this}return C({},v)};const yt=1,pt=2,tt=3,b=4,Dt=5,gt=6,Ot=7;Object.assign(s,{monday:yt,tuesday:pt,wednesday:tt,thursday:b,friday:Dt,saturday:gt,sunday:Ot});const f=Symbol();function s(...t){var r;if(!new.target)return new s(...t);const e={nativeDate:null,localtime:!1,disambiguation:"compatible",set:Mt,parse:St,valid:bt,context:wt,getNative:vt};if(this[f]=e,e.context(v),t[0]instanceof s){const i=t.shift();e.nativeDate=i.nativeDate(),e.context(i.context())}T(t[0])&&!S(t[0])&&e.context(t.shift());const n=t[0],a=t[1];if(n==null)(r=e.nativeDate)!=null||(e.nativeDate=new Date);else if(n instanceof Date)e.nativeDate=new Date(n.getTime());else if(mt(n))e.parse(n);else if(T(n)){if(!S(n))throw RangeError("Missing time field (year, minute, day, hour, minute, second or millisecond)");e.set(n)}else if(Number.isFinite(n)&&!Number.isFinite(a))e.nativeDate=new Date(n);else if(Number.isFinite(n)||Array.isArray(n)){const i=t.flat(),o=i.filter(h=>Number.isSafeInteger(h));if(o.length!==i.length)throw RangeError("Should be safe integers");if(o.length>7)throw RangeError("Too many numbers");e.set({year:o[0],month:o[1],day:o[2],hour:o[3],minute:o[4],second:o[5],millisecond:o[6]})}else throw TypeError(`Invalid argument ${t}`);return this}function bt(){return _(this.nativeDate)}function wt(t){return t?("localtime"in t&&(this.localtime=t.localtime),"disambiguation"in t&&(this.disambiguation=t.disambiguation),this):{localtime:this.localtime,disambiguation:this.disambiguation}}function vt(t){return this.nativeDate[`get${this.localtime?"":"UTC"}${t}`]()}function Mt(t){var N,k,H,U,E,A,P,R,j,W,x,L,q,z,B,Z;const e=C({},t);if(e.month=e.month&&e.month-1,!this.localtime){const D=(N=this.nativeDate)!=null?N:new Date(0),F=new Date(0);return F.setUTCFullYear((k=e.year)!=null?k:D.getUTCFullYear(),(H=e.month)!=null?H:D.getUTCMonth(),(U=e.day)!=null?U:D.getUTCDate()),F.setUTCHours((E=e.hour)!=null?E:D.getUTCHours(),(A=e.minute)!=null?A:D.getUTCMinutes(),(P=e.second)!=null?P:D.getUTCSeconds(),(R=e.millisecond)!=null?R:D.getUTCMilliseconds()),this.nativeDate=F,this}const n=!g(t,"hour","minute","second","millisecond"),a=n?"later":this.disambiguation,r=(j=this.nativeDate)!=null?j:new Date(0,0),i=new Date(ut.getTime()),o={year:(W=e.year)!=null?W:r.getFullYear(),month:(x=e.month)!=null?x:r.getMonth(),day:(L=e.day)!=null?L:r.getDate(),hour:(q=e.hour)!=null?q:n?0:r.getHours(),minute:(z=e.minute)!=null?z:n?0:r.getMinutes(),second:(B=e.second)!=null?B:n?0:r.getSeconds(),millisecond:(Z=e.millisecond)!=null?Z:n?0:r.getMilliseconds()};i.setFullYear(o.year,o.month,o.day),i.setHours(o.hour,o.minute,o.second,o.millisecond);const h=i.getTime(),d=new Date(h);d.setDate(i.getDate()+1);const l=new Date(h);l.setDate(i.getDate()-1);const c=d.getTimezoneOffset()-l.getTimezoneOffset();if(a==="compatible"||c===0)return this.nativeDate=i,this;const p=o.year*1e8+o.month*1e6+o.day*1e4+o.hour*100+o.minute<i.getFullYear()*1e8+i.getMonth()*1e6+i.getDate()*1e4+i.getHours()*100+i.getMinutes(),O=new Date(new Date(h).setUTCMinutes(i.getUTCMinutes()+c)),ot=O.getHours()===i.getHours()&&O.getMinutes()===i.getMinutes();if(!p&&!ot)return this.nativeDate=i,this;if(a==="reject")throw new RangeError(`Requested local time ${o} is ambiguous.`);return this.nativeDate=a==="later"?i:O,this}const Tt=new RegExp("^(\\d{4})(?:[-/]?([0-2]?\\d)(?:[-/]?([0-3]?\\d))?)?(?:[T\\s]([0-2]?\\d)(?::([0-5]?\\d)?(?::([0-6]?\\d)?(?:[.:](\\d{1,3})?\\d*)?)?)?)?(Z|[-+]\\d{2}:?\\d{2})?$");function St(t){var l;const e=t.trim().toUpperCase(),n=e.match(Tt);if(!n)throw RangeError(`Failed to parse '${t}'. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`);const a=n[4]!==void 0,[r,i,o,h]=[+n[1],+n[2]||1,+n[3]||1,n[8]],d=new Date(e);if(!_(d))throw RangeError(`Failed to parse '${t}' by Date. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`);return h?this.nativeDate=d:a?this.set({year:r,month:i,day:o,hour:+n[4]||0,minute:+n[5]||0,second:+n[6]||0,millisecond:+((l=n[7])==null?void 0:l.padStart(3,"0"))||0}):this.set({year:r,month:i,day:o}),this}const y=(t,e)=>String(t).padStart(e,"0");s.prototype.toString=function(){if(this[f].localtime){const t=this[f].nativeDate,e=-t.getTimezoneOffset(),n=Math.abs(e);return`${y(t.getFullYear(),4)}-${y(t.getMonth()+1,2)}-${y(t.getDate(),2)}T${y(t.getHours(),2)}:${y(t.getMinutes(),2)}:${y(t.getSeconds(),2)}.${y(t.getMilliseconds(),3)}${e>=0?"+":"-"}${y(Math.trunc(n/M),2)}:${y(n%M,2)}`}return this[f].nativeDate.toISOString()};s.prototype.valueOf=function(){return this[f].nativeDate.valueOf()};s.prototype.clone=function(...t){return new s(this,...t)};s.prototype.context=function(t){return Y(t)?this.clone(t):{localtime:this[f].localtime,disambiguation:this[f].disambiguation}};s.prototype.nativeDate=function(){return new Date(this[f].nativeDate.getTime())};s.prototype.offset=function(){return this[f].localtime?-this[f].nativeDate.getTimezoneOffset():0};s.prototype.valid=function(){return this[f].valid()};s.prototype.toObject=function(){return{year:this.year(),month:this.month(),day:this.day(),hour:this.hour(),minute:this.minute(),second:this.second(),millisecond:this.millisecond()}};s.prototype.toArray=function(){return[this.year(),this.month(),this.day(),this.hour(),this.minute(),this.second(),this.millisecond()]};s.prototype.toDate=function(...t){return new u(this.clone(...t))};for(const[t,e,n]of[["year","FullYear",0],["month","Month",1],["day","Date",0],["hour","Hours",0],["minute","Minutes",0],["second","Seconds",0],["millisecond","Milliseconds",0]])s.prototype[t]=function(a){return Y(a)?this.clone({[t]:a}):this[f].getNative(e)+n};s.prototype.dayOfWeek=function(){return 1+(this[f].getNative("Day")-1+w)%w};s.prototype.dayOfYear=function(){const t=this.toDate();return 1+t-t.startOfYear()};s.prototype.weekOfYear=function(){const t=this.toDate(),e=t.day(t.day()-t.dayOfWeek()+b),n=e.startOfYear(),a=n.dayOfWeek()===b?n:n.day(1+(b-n.dayOfWeek()+w)%w);return 1+Math.ceil((e-a)/w)};s.prototype.yearOfWeek=function(){const t=this.toDate();return t.day(t.day()-t.dayOfWeek()+b).year()};s.prototype.isLeapYear=function(){const t=this.year();return t%4===0&&(t%100!==0||t%400===0)};s.prototype.hasOffsetChangeInYear=function(){if(!this[f].localtime)return!1;const t=this.offset();return[3,6,9,12].map(e=>this.month(e).offset()).some(e=>e!==t)};s.prototype.isInDst=function(){if(!this[f].localtime)return!1;const t=this.offset();let e=!1,n=!1;for(let a=1;a<=5;a+=2)if(this.month(-a).offset()<t&&(e=!0),this.month(a).offset()<t&&(n=!0),e&&n)return!0;return!1};s.prototype.hasOffsetChangeInDay=function(){return this[f].localtime?this.minutesInDay()!==I:!1};s.prototype.minutesInDay=function(){if(!this[f].localtime)return I;const t=this.context({disambiguation:"later"}).startOfDay(),e=t.plus({day:1}).startOfDay();return t.day()===e.day()?I:(e-t)/lt};s.prototype.daysInMonth=function(){const t=[31,28,31,30,31,30,31,31,30,31,30,31],e=this.month();return t[e-1]+(this.isLeapYear()&&e===2?1:0)};s.prototype.daysInYear=function(){return this.isLeapYear()?366:365};s.prototype.weeksInYear=function(){const t=this.toDate({month:12,day:31}),e=t.minus({year:1});return t.dayOfWeek()===b||e.dayOfWeek()===tt?53:52};for(const[t,e]of[["Year",{month:1,day:1,hour:0,minute:0,second:0,millisecond:0}],["Month",{day:1,hour:0,minute:0,second:0,millisecond:0}],["Hour",{minute:0,second:0,millisecond:0}],["Minute",{second:0,millisecond:0}],["Second",{millisecond:0}]])s.prototype[`startOf${t}`]=function(){return this.clone(e)};s.prototype.startOfDay=function(){const t=this.clone({disambiguation:"later"},{hour:0,minute:0,second:0,millisecond:0}).valueOf();return this.clone(t)};function et(t){Object.assign(t,{isSame(e){return+this==+e},isBefore(e){return this<e},isAfter(e){return this>e},isSameOrBefore(e){return this<=e},isSameOrAfter(e){return this>=e},isBetween(e,n){return e<=this&&this<=n||n<=this&&this<=e}})}et(s.prototype);s.prototype.plus=function(...t){return nt.call(this,1,...t)};s.prototype.minus=function(...t){return nt.call(this,-1,...t)};function nt(t,...e){var h,d;const n=e[0],a=e[1];if(Number.isFinite(n)&&!Number.isFinite(a))return this.clone(this.valueOf()+n);let r=null;if(T(n)){if(!S(n))throw RangeError("Missing time field (year, minute, day, hour, minute, second or millisecond)");r=n}else if(Number.isFinite(n)||Array.isArray(n)){const l=e.flat(),c=l.filter(p=>Number.isSafeInteger(p));if(c.length!==l.length)throw RangeError("Should be safe integers");if(c.length>7)throw RangeError("Too many numbers");r={year:c[0],month:c[1],day:c[2],hour:c[3],minute:c[4],second:c[5],millisecond:c[6]}}else throw TypeError();const i=this.nativeDate(),o=this[f].localtime?"":"UTC";if(g(r,"year")||g(r,"month")){const l=this.year()+t*((h=r.year)!=null?h:0),c=this.month()+t*((d=r.month)!=null?d:0),p=new Date(i.getTime());p[`set${o}FullYear`](l,c,0);const O=p[`get${o}Date`]();O<this.day()?i[`set${o}FullYear`](l,p[`get${o}Month`](),O):i[`set${o}FullYear`](l,c-1)}g(r,"day")&&i[`set${o}Date`](i[`get${o}Date`]()+t*r.day);for(const[l,c]of[["hour","Hours"],["minute","Minutes"],["second","Seconds"],["millisecond","Milliseconds"]])!g(r,l)||r[l]==null||i[`setUTC${c}`](i[`getUTC${c}`]()+t*r[l]);return this.clone(i)}const m=Symbol();function u(...t){if(!new.target)return new u(...t);const e={datetime:null};this[m]=e;let n=null;t[0]instanceof u?n=t.shift().toDatetime():t[0]instanceof s&&(n=t.shift());const a=t[0],r=t[1];return Number.isFinite(a)&&!Number.isFinite(r)&&(t[0]=Math.floor(a)*X),n?n=n.clone(...t):n=$(...t),e.datetime=n.startOfDay(),this}u.prototype.toString=function(){return this[m].datetime.toString().substring(0,10)};u.prototype.valueOf=function(){return this[m].datetime/X};u.prototype.valid=function(){return this[m].datetime.valid()};u.prototype.clone=function(...t){return new u(this,...t)};u.prototype.toDatetime=function(){return $(this[m].datetime.toArray())};u.prototype.toObject=function(){return{year:this.year(),month:this.month(),day:this.day()}};u.prototype.toArray=function(){return[this.year(),this.month(),this.day()]};for(const t of["Year","Month"])u.prototype[`startOf${t}`]=function(){return new u(this[m].datetime[`startOf${t}`]())};for(const t of["year","month","day"])u.prototype[t]=function(e){return Y(e)?new u(this[m].datetime[t](e)):this[m].datetime[t]()};for(const t of["dayOfWeek","dayOfYear","weekOfYear","yearOfWeek","isLeapYear","daysInMonth","daysInYear","weeksInYear"])u.prototype[t]=function(){return this[m].datetime[t]()};for(const t of["minutesInDay","hasOffsetChangeInYear","hasOffsetChangeInDay"])u.prototype[t]=function(){return $({disambiguation:"later"},this[m].datetime.toArray().slice(0,3))[t]()};u.prototype.endOfYear=function(){return this.clone({month:12,day:31})};u.prototype.endOfMonth=function(){return this.clone({day:this.daysInMonth()})};et(u.prototype);u.prototype.plus=function(...t){return it.call(this,1,...t)};u.prototype.minus=function(...t){return it.call(this,-1,...t)};function it(t,...e){var o,h,d;const n=e[0],a=e[1],r=this[m].datetime;if(Number.isFinite(n)&&!Number.isFinite(a))return r.plus({day:t*n}).toDate();let i=null;if(T(n)&&S(n))i={year:t*((o=n.year)!=null?o:0),month:t*((h=n.month)!=null?h:0),day:t*((d=n.day)!=null?d:0)};else if(Number.isFinite(n)){if(e.length>3)throw RangeError("Too many arguments");i={year:t*n,month:t*a,day:t*arg2}}else if(Array.isArray(n)){if(n.length>3)throw RangeError("Too many elements");i={year:t*n[0],month:t*n[1],day:t*n[2]}}else throw TypeError();return r.plus(i).toDate()}exports.qrono=$;
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+//#region src/helpers.js
+/**
+* When creating or updating a local time, both `Date.setFullYear` and `Date.setHours` are used.
+* Noon is used as the initial reference point to avoid the time after `setFullYear`
+* from falling into an ambiguous DST period. Historically, DST transitions in all countries
+* have been scheduled around midnight, and it should be the same in the future.
+* The reason for selecting 1915 as the initial value is as follows.
+* Since DST was first established in 1916, the initial value should be set to a year prior to that.
+* If a year too far in the past is chosen, it may correspond to a period when time zones were not yet
+* precisely defined in some regions, which could result in unexpected timezone offsets.
+*/
+var initialSafeDate = new Date(1915, 0, 1, 12, 0, 0, 0);
+var minutesPerDay = 1440;
+minutesPerDay * 7;
+var secondsPerHour = 3600;
+var secondsPerDay = secondsPerHour * 24;
+var secondsPerWeek = secondsPerDay * 7;
+var millisecondsPerSecond = 1e3;
+var millisecondsPerMinute = 60 * millisecondsPerSecond;
+secondsPerHour * millisecondsPerSecond;
+var millisecondsPerDay = secondsPerDay * millisecondsPerSecond;
+secondsPerWeek * millisecondsPerSecond;
+function has(object, ...keys) {
+	return keys.flat().some(object.hasOwnProperty, object);
+}
+function fields(object) {
+	return Object.entries(object).filter(([, value]) => !isFunction(value)).map(([key]) => key);
+}
+function given(arg) {
+	return arg !== void 0;
+}
+function isFunction(a) {
+	return a instanceof Function;
+}
+function isString(a) {
+	return typeof a === "string" || a instanceof String;
+}
+function isObject(a) {
+	return a !== null && typeof a === "object" && a.constructor === Object;
+}
+function isValidDate(date) {
+	return !Number.isNaN(date.getTime());
+}
+function hasDatetimeField(object) {
+	return has(object, [
+		"year",
+		"month",
+		"day",
+		"hour",
+		"minute",
+		"second",
+		"millisecond"
+	]);
+}
+//#endregion
+//#region src/qrono.js
+var qrono = Qrono;
+Qrono.date = QronoDate;
+var defaultContext = {
+	localtime: false,
+	disambiguation: "compatible"
+};
+Qrono.context = function(context) {
+	if (given(context)) {
+		for (const key of fields(defaultContext)) {
+			if (!has(context, key)) continue;
+			defaultContext[key] = context[key];
+		}
+		return this;
+	}
+	return { ...defaultContext };
+};
+var monday = 1;
+var tuesday = 2;
+var wednesday = 3;
+var thursday = 4;
+Object.assign(Qrono, {
+	monday,
+	tuesday,
+	wednesday,
+	thursday,
+	friday: 5,
+	saturday: 6,
+	sunday: 7
+});
+var internal = Symbol();
+function Qrono(...args) {
+	if (!new.target) return new Qrono(...args);
+	const self = {
+		nativeDate: null,
+		localtime: false,
+		disambiguation: "compatible",
+		set,
+		parse,
+		valid,
+		context,
+		getNative
+	};
+	this[internal] = self;
+	self.context(defaultContext);
+	if (args[0] instanceof Qrono) {
+		const source = args.shift();
+		self.nativeDate = source.nativeDate();
+		self.context(source.context());
+	}
+	if (isObject(args[0]) && !hasDatetimeField(args[0])) self.context(args.shift());
+	const first = args[0];
+	const second = args[1];
+	if (first == null) self.nativeDate ??= /* @__PURE__ */ new Date();
+	else if (first instanceof Date) self.nativeDate = new Date(first.getTime());
+	else if (isString(first)) self.parse(first);
+	else if (isObject(first)) {
+		if (!hasDatetimeField(first)) throw RangeError("Missing time field (year, minute, day, hour, minute, second or millisecond)");
+		self.set(first);
+	} else if (Number.isFinite(first) && !Number.isFinite(second)) self.nativeDate = new Date(first);
+	else if (Number.isFinite(first) || Array.isArray(first)) {
+		const flat = args.flat();
+		const values = flat.filter((v) => Number.isSafeInteger(v));
+		if (values.length !== flat.length) throw RangeError("Should be safe integers");
+		if (values.length > 7) throw RangeError("Too many numbers");
+		self.set({
+			year: values[0],
+			month: values[1],
+			day: values[2],
+			hour: values[3],
+			minute: values[4],
+			second: values[5],
+			millisecond: values[6]
+		});
+	} else throw TypeError(`Invalid argument ${args}`);
+	return this;
+}
+function valid() {
+	return isValidDate(this.nativeDate);
+}
+function context(arg) {
+	if (!arg) return {
+		localtime: this.localtime,
+		disambiguation: this.disambiguation
+	};
+	if ("localtime" in arg) this.localtime = arg.localtime;
+	if ("disambiguation" in arg) this.disambiguation = arg.disambiguation;
+	return this;
+}
+function getNative(name) {
+	return this.nativeDate[`get${this.localtime ? "" : "UTC"}${name}`]();
+}
+function set(values) {
+	const args = { ...values };
+	args.month = args.month && args.month - 1;
+	if (!this.localtime) {
+		const baseDate = this.nativeDate ?? /* @__PURE__ */ new Date(0);
+		const newDate = /* @__PURE__ */ new Date(0);
+		newDate.setUTCFullYear(args.year ?? baseDate.getUTCFullYear(), args.month ?? baseDate.getUTCMonth(), args.day ?? baseDate.getUTCDate());
+		newDate.setUTCHours(args.hour ?? baseDate.getUTCHours(), args.minute ?? baseDate.getUTCMinutes(), args.second ?? baseDate.getUTCSeconds(), args.millisecond ?? baseDate.getUTCMilliseconds());
+		this.nativeDate = newDate;
+		return this;
+	}
+	const dateOnly = !has(values, "hour", "minute", "second", "millisecond");
+	const disambig = dateOnly ? "later" : this.disambiguation;
+	const baseDate = this.nativeDate ?? new Date(0, 0);
+	const newDate = new Date(initialSafeDate.getTime());
+	const requested = {
+		year: args.year ?? baseDate.getFullYear(),
+		month: args.month ?? baseDate.getMonth(),
+		day: args.day ?? baseDate.getDate(),
+		hour: args.hour ?? (dateOnly ? 0 : baseDate.getHours()),
+		minute: args.minute ?? (dateOnly ? 0 : baseDate.getMinutes()),
+		second: args.second ?? (dateOnly ? 0 : baseDate.getSeconds()),
+		millisecond: args.millisecond ?? (dateOnly ? 0 : baseDate.getMilliseconds())
+	};
+	newDate.setFullYear(requested.year, requested.month, requested.day);
+	newDate.setHours(requested.hour, requested.minute, requested.second, requested.millisecond);
+	const numeric = newDate.getTime();
+	const nextDay = new Date(numeric);
+	nextDay.setDate(newDate.getDate() + 1);
+	const prevDay = new Date(numeric);
+	prevDay.setDate(newDate.getDate() - 1);
+	const adjust = nextDay.getTimezoneOffset() - prevDay.getTimezoneOffset();
+	if (disambig === "compatible" || adjust === 0) {
+		this.nativeDate = newDate;
+		return this;
+	}
+	const isGap = requested.year * 1e8 + requested.month * 1e6 + requested.day * 1e4 + requested.hour * 100 + requested.minute < newDate.getFullYear() * 1e8 + newDate.getMonth() * 1e6 + newDate.getDate() * 1e4 + newDate.getHours() * 100 + newDate.getMinutes();
+	const adjustedUTC = new Date(new Date(numeric).setUTCMinutes(newDate.getUTCMinutes() + adjust));
+	const isOverlap = adjustedUTC.getHours() === newDate.getHours() && adjustedUTC.getMinutes() === newDate.getMinutes();
+	if (!isGap && !isOverlap) {
+		this.nativeDate = newDate;
+		return this;
+	}
+	if (disambig === "reject") throw new RangeError(`Requested local time ${requested} is ambiguous.`);
+	this.nativeDate = disambig === "later" ? newDate : adjustedUTC;
+	return this;
+}
+var parsePattern = /* @__PURE__ */ new RegExp("^(\\d{4})(?:[-/]?([0-2]?\\d)(?:[-/]?([0-3]?\\d))?)?(?:[T\\s]([0-2]?\\d)(?::([0-5]?\\d)?(?::([0-6]?\\d)?(?:[.:](\\d{1,3})?\\d*)?)?)?)?(Z|[-+]\\d{2}:?\\d{2})?$");
+function parse(str) {
+	const text = str.trim().toUpperCase();
+	const values = text.match(parsePattern);
+	if (!values) throw RangeError(`Failed to parse '${str}'. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`);
+	const hasTime = values[4] !== void 0;
+	const [year, month, day, offset] = [
+		+values[1],
+		+values[2] || 1,
+		+values[3] || 1,
+		values[8]
+	];
+	const native = new Date(text);
+	if (!isValidDate(native)) throw RangeError(`Failed to parse '${str}' by Date. Should be yyyy[[-|/]MM[[-|/]DD]][(T| )HH:mm[:ss[(.|:)SSS]]][Z|(+|-)hh:mm]`);
+	if (offset) this.nativeDate = native;
+	else if (hasTime) this.set({
+		year,
+		month,
+		day,
+		hour: +values[4] || 0,
+		minute: +values[5] || 0,
+		second: +values[6] || 0,
+		millisecond: +values[7]?.padStart(3, "0") || 0
+	});
+	else this.set({
+		year,
+		month,
+		day
+	});
+	return this;
+}
+var pad0 = (v, n) => String(v).padStart(n, "0");
+Qrono.prototype.toString = function() {
+	if (this[internal].localtime) {
+		const t = this[internal].nativeDate;
+		const offset = -t.getTimezoneOffset();
+		const offsetAbs = Math.abs(offset);
+		return `${pad0(t.getFullYear(), 4)}-${pad0(t.getMonth() + 1, 2)}-${pad0(t.getDate(), 2)}T${pad0(t.getHours(), 2)}:${pad0(t.getMinutes(), 2)}:${pad0(t.getSeconds(), 2)}.${pad0(t.getMilliseconds(), 3)}${offset >= 0 ? "+" : "-"}${pad0(Math.trunc(offsetAbs / 60), 2)}:${pad0(offsetAbs % 60, 2)}`;
+	}
+	return this[internal].nativeDate.toISOString();
+};
+Qrono.prototype.valueOf = function() {
+	return this[internal].nativeDate.valueOf();
+};
+Qrono.prototype.clone = function(...args) {
+	return new Qrono(this, ...args);
+};
+Qrono.prototype.context = function(context) {
+	return given(context) ? this.clone(context) : {
+		localtime: this[internal].localtime,
+		disambiguation: this[internal].disambiguation
+	};
+};
+Qrono.prototype.nativeDate = function() {
+	return new Date(this[internal].nativeDate.getTime());
+};
+Qrono.prototype.offset = function() {
+	return this[internal].localtime ? -this[internal].nativeDate.getTimezoneOffset() : 0;
+};
+Qrono.prototype.valid = function() {
+	return this[internal].valid();
+};
+Qrono.prototype.toObject = function() {
+	return {
+		year: this.year(),
+		month: this.month(),
+		day: this.day(),
+		hour: this.hour(),
+		minute: this.minute(),
+		second: this.second(),
+		millisecond: this.millisecond()
+	};
+};
+Qrono.prototype.toArray = function() {
+	return [
+		this.year(),
+		this.month(),
+		this.day(),
+		this.hour(),
+		this.minute(),
+		this.second(),
+		this.millisecond()
+	];
+};
+Qrono.prototype.toDate = function(...args) {
+	return new QronoDate(this.clone(...args));
+};
+for (const [field, native, base] of [
+	[
+		"year",
+		"FullYear",
+		0
+	],
+	[
+		"month",
+		"Month",
+		1
+	],
+	[
+		"day",
+		"Date",
+		0
+	],
+	[
+		"hour",
+		"Hours",
+		0
+	],
+	[
+		"minute",
+		"Minutes",
+		0
+	],
+	[
+		"second",
+		"Seconds",
+		0
+	],
+	[
+		"millisecond",
+		"Milliseconds",
+		0
+	]
+]) Qrono.prototype[field] = function(value) {
+	return given(value) ? this.clone({ [field]: value }) : this[internal].getNative(native) + base;
+};
+Qrono.prototype.dayOfWeek = function() {
+	return 1 + (this[internal].getNative("Day") - 1 + 7) % 7;
+};
+Qrono.prototype.dayOfYear = function() {
+	const date = this.toDate();
+	return 1 + date - date.startOfYear();
+};
+Qrono.prototype.weekOfYear = function() {
+	const date = this.toDate();
+	const theThursday = date.day(date.day() - date.dayOfWeek() + thursday);
+	const startOfYear = theThursday.startOfYear();
+	const firstThursday = startOfYear.dayOfWeek() === thursday ? startOfYear : startOfYear.day(1 + (thursday - startOfYear.dayOfWeek() + 7) % 7);
+	return 1 + Math.ceil((theThursday - firstThursday) / 7);
+};
+Qrono.prototype.yearOfWeek = function() {
+	const date = this.toDate();
+	return date.day(date.day() - date.dayOfWeek() + thursday).year();
+};
+Qrono.prototype.isLeapYear = function() {
+	const year = this.year();
+	return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+};
+Qrono.prototype.hasOffsetChangeInYear = function() {
+	if (!this[internal].localtime) return false;
+	const currentOffset = this.offset();
+	return [
+		3,
+		6,
+		9,
+		12
+	].map((month) => this.month(month).offset()).some((offset) => offset !== currentOffset);
+};
+Qrono.prototype.isInDst = function() {
+	if (!this[internal].localtime) return false;
+	const offset = this.offset();
+	let past = false, future = false;
+	for (let i = 1; i <= 5; i += 2) {
+		if (this.month(-i).offset() < offset) past = true;
+		if (this.month(i).offset() < offset) future = true;
+		if (past && future) return true;
+	}
+	return false;
+};
+Qrono.prototype.hasOffsetChangeInDay = function() {
+	if (!this[internal].localtime) return false;
+	return this.minutesInDay() !== minutesPerDay;
+};
+Qrono.prototype.minutesInDay = function() {
+	if (!this[internal].localtime) return minutesPerDay;
+	const startOfDay = this.context({ disambiguation: "later" }).startOfDay();
+	const nextDay = startOfDay.plus({ day: 1 }).startOfDay();
+	if (startOfDay.day() === nextDay.day()) return minutesPerDay;
+	return (nextDay - startOfDay) / millisecondsPerMinute;
+};
+Qrono.prototype.daysInMonth = function() {
+	const days = [
+		31,
+		28,
+		31,
+		30,
+		31,
+		30,
+		31,
+		31,
+		30,
+		31,
+		30,
+		31
+	];
+	const month = this.month();
+	return days[month - 1] + (this.isLeapYear() && month === 2 ? 1 : 0);
+};
+Qrono.prototype.daysInYear = function() {
+	return this.isLeapYear() ? 366 : 365;
+};
+Qrono.prototype.weeksInYear = function() {
+	const endOfYear = this.toDate({
+		month: 12,
+		day: 31
+	});
+	const endOfLastYear = endOfYear.minus({ year: 1 });
+	if (endOfYear.dayOfWeek() === thursday || endOfLastYear.dayOfWeek() === wednesday) return 53;
+	return 52;
+};
+for (const [name, cloneArg] of [
+	["Year", {
+		month: 1,
+		day: 1,
+		hour: 0,
+		minute: 0,
+		second: 0,
+		millisecond: 0
+	}],
+	["Month", {
+		day: 1,
+		hour: 0,
+		minute: 0,
+		second: 0,
+		millisecond: 0
+	}],
+	["Hour", {
+		minute: 0,
+		second: 0,
+		millisecond: 0
+	}],
+	["Minute", {
+		second: 0,
+		millisecond: 0
+	}],
+	["Second", { millisecond: 0 }]
+]) Qrono.prototype[`startOf${name}`] = function() {
+	return this.clone(cloneArg);
+};
+Qrono.prototype.startOfDay = function() {
+	const timestamp = this.clone({ disambiguation: "later" }, {
+		hour: 0,
+		minute: 0,
+		second: 0,
+		millisecond: 0
+	}).valueOf();
+	return this.clone(timestamp);
+};
+function implementComparison(prototype) {
+	Object.assign(prototype, {
+		isSame(another) {
+			return +this === +another;
+		},
+		isBefore(another) {
+			return this < another;
+		},
+		isAfter(another) {
+			return this > another;
+		},
+		isSameOrBefore(another) {
+			return this <= another;
+		},
+		isSameOrAfter(another) {
+			return this >= another;
+		},
+		isBetween(a, b) {
+			return a <= this && this <= b || b <= this && this <= a;
+		}
+	});
+}
+implementComparison(Qrono.prototype);
+Qrono.prototype.plus = function(...args) {
+	return plus.call(this, 1, ...args);
+};
+Qrono.prototype.minus = function(...args) {
+	return plus.call(this, -1, ...args);
+};
+function plus(sign, ...args) {
+	const arg0 = args[0];
+	const arg1 = args[1];
+	if (Number.isFinite(arg0) && !Number.isFinite(arg1)) return this.clone(this.valueOf() + arg0);
+	let timeFields = null;
+	if (isObject(arg0)) {
+		if (!hasDatetimeField(arg0)) throw RangeError("Missing time field (year, minute, day, hour, minute, second or millisecond)");
+		timeFields = arg0;
+	} else if (Number.isFinite(arg0) || Array.isArray(arg0)) {
+		const flat = args.flat();
+		const values = flat.filter((v) => Number.isSafeInteger(v));
+		if (values.length !== flat.length) throw RangeError("Should be safe integers");
+		if (values.length > 7) throw RangeError("Too many numbers");
+		timeFields = {
+			year: values[0],
+			month: values[1],
+			day: values[2],
+			hour: values[3],
+			minute: values[4],
+			second: values[5],
+			millisecond: values[6]
+		};
+	} else throw TypeError();
+	const date = this.nativeDate();
+	const utc = this[internal].localtime ? "" : "UTC";
+	if (has(timeFields, "year") || has(timeFields, "month")) {
+		const year = this.year() + sign * (timeFields.year ?? 0);
+		const month = this.month() + sign * (timeFields.month ?? 0);
+		const endOfMonth = new Date(date.getTime());
+		endOfMonth[`set${utc}FullYear`](year, month, 0);
+		const lastDay = endOfMonth[`get${utc}Date`]();
+		if (lastDay < this.day()) date[`set${utc}FullYear`](year, endOfMonth[`get${utc}Month`](), lastDay);
+		else date[`set${utc}FullYear`](year, month - 1);
+	}
+	if (has(timeFields, "day")) date[`set${utc}Date`](date[`get${utc}Date`]() + sign * timeFields.day);
+	for (const [key, nativeKey] of [
+		["hour", "Hours"],
+		["minute", "Minutes"],
+		["second", "Seconds"],
+		["millisecond", "Milliseconds"]
+	]) {
+		if (!has(timeFields, key) || timeFields[key] == null) continue;
+		date[`setUTC${nativeKey}`](date[`getUTC${nativeKey}`]() + sign * timeFields[key]);
+	}
+	return this.clone(date);
+}
+var internalDate = Symbol();
+function QronoDate(...args) {
+	if (!new.target) return new QronoDate(...args);
+	const self = { datetime: null };
+	this[internalDate] = self;
+	let source = null;
+	if (args[0] instanceof QronoDate) source = args.shift().toDatetime();
+	else if (args[0] instanceof Qrono) source = args.shift();
+	const first = args[0];
+	const second = args[1];
+	if (Number.isFinite(first) && !Number.isFinite(second)) args[0] = Math.floor(first) * millisecondsPerDay;
+	if (source) source = source.clone(...args);
+	else source = qrono(...args);
+	self.datetime = source.startOfDay();
+	return this;
+}
+QronoDate.prototype.toString = function() {
+	return this[internalDate].datetime.toString().substring(0, 10);
+};
+QronoDate.prototype.valueOf = function() {
+	return this[internalDate].datetime / millisecondsPerDay;
+};
+QronoDate.prototype.valid = function() {
+	return this[internalDate].datetime.valid();
+};
+QronoDate.prototype.clone = function(...args) {
+	return new QronoDate(this, ...args);
+};
+QronoDate.prototype.toDatetime = function() {
+	return qrono(this[internalDate].datetime.toArray());
+};
+QronoDate.prototype.toObject = function() {
+	return {
+		year: this.year(),
+		month: this.month(),
+		day: this.day()
+	};
+};
+QronoDate.prototype.toArray = function() {
+	return [
+		this.year(),
+		this.month(),
+		this.day()
+	];
+};
+for (const name of ["Year", "Month"]) QronoDate.prototype[`startOf${name}`] = function() {
+	return new QronoDate(this[internalDate].datetime[`startOf${name}`]());
+};
+for (const field of [
+	"year",
+	"month",
+	"day"
+]) QronoDate.prototype[field] = function(value) {
+	if (given(value)) return new QronoDate(this[internalDate].datetime[field](value));
+	return this[internalDate].datetime[field]();
+};
+for (const method of [
+	"dayOfWeek",
+	"dayOfYear",
+	"weekOfYear",
+	"yearOfWeek",
+	"isLeapYear",
+	"daysInMonth",
+	"daysInYear",
+	"weeksInYear"
+]) QronoDate.prototype[method] = function() {
+	return this[internalDate].datetime[method]();
+};
+for (const method of [
+	"minutesInDay",
+	"hasOffsetChangeInYear",
+	"hasOffsetChangeInDay"
+]) QronoDate.prototype[method] = function() {
+	return qrono({ disambiguation: "later" }, this[internalDate].datetime.toArray().slice(0, 3))[method]();
+};
+QronoDate.prototype.endOfYear = function() {
+	return this.clone({
+		month: 12,
+		day: 31
+	});
+};
+QronoDate.prototype.endOfMonth = function() {
+	return this.clone({ day: this.daysInMonth() });
+};
+implementComparison(QronoDate.prototype);
+QronoDate.prototype.plus = function(...args) {
+	return plusDate.call(this, 1, ...args);
+};
+QronoDate.prototype.minus = function(...args) {
+	return plusDate.call(this, -1, ...args);
+};
+function plusDate(sign, ...args) {
+	const arg0 = args[0];
+	const arg1 = args[1];
+	const datetime = this[internalDate].datetime;
+	if (Number.isFinite(arg0) && !Number.isFinite(arg1)) return datetime.plus({ day: sign * arg0 }).toDate();
+	let timeFields = null;
+	if (isObject(arg0) && hasDatetimeField(arg0)) timeFields = {
+		year: sign * (arg0.year ?? 0),
+		month: sign * (arg0.month ?? 0),
+		day: sign * (arg0.day ?? 0)
+	};
+	else if (Number.isFinite(arg0)) {
+		if (args.length > 3) throw RangeError("Too many arguments");
+		timeFields = {
+			year: sign * arg0,
+			month: sign * arg1,
+			day: sign * arg2
+		};
+	} else if (Array.isArray(arg0)) {
+		if (arg0.length > 3) throw RangeError("Too many elements");
+		timeFields = {
+			year: sign * arg0[0],
+			month: sign * arg0[1],
+			day: sign * arg0[2]
+		};
+	} else throw TypeError();
+	return datetime.plus(timeFields).toDate();
+}
+//#endregion
+exports.qrono = qrono;
+
 //# sourceMappingURL=qrono.cjs.map
