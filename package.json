@@ -1,7 +1,7 @@
 {
   "name": "qrono",
   "version": "1.5.0",
-  "description": "A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.",
+  "description": "A tiny JavaScript date library with 100+ APIs and strict DST guarantees.",
   "license": "MIT",
   "keywords": [
     "qrono",
@@ -37,11 +37,12 @@
   "scripts": {
     "prepare": "husky && npm run check:fix && npm run build",
     "postpublish": "jsr publish --no-provenance",
-    "lint": "biome lint ./src ./tests",
+    "lint": "biome lint ./src ./tests ./scripts",
     "format": "biome format --write .",
-    "check": "biome check ./src ./tests",
-    "check:fix": "biome check ./src ./tests --write",
+    "check": "biome check ./src ./tests ./scripts",
+    "check:fix": "biome check ./src ./tests ./scripts --write",
     "build": "vite build --config vite.lib.config.js && vite build --config vite.iife.config.js",
+    "postbuild": "node scripts/make-badges.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

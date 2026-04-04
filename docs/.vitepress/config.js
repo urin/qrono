@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Qrono',
   description:
-    'A 4kB JavaScript date library with 100+ APIs and strict DST guarantees.',
+    'A tiny JavaScript date library with 100+ APIs and strict DST guarantees.',
   head: [
     [
       'link',

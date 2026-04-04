@@ -1,12 +1,12 @@
 # <img src="docs/public/logo.svg" alt="Qrono Logo" width="48"> [Qrono](https://qronojs.dev/) — Small. Complete. Deterministic. JavaScript date-time.
 
-_**4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**. Designed for **single-timezone** applications._
+_A **tiny** JavaScript date library with **100+ APIs** and **strict DST guarantees**. Designed for **single-timezone** applications._
 
 [![MIT License][image-license]][url-license]
 [![CodeQL][image-codeql]][url-codeql]
 [![NPM version][image-npm-version]][url-npm]
 [![NPM downloads][image-downloads]][url-downloads]
-[![gzip size][image-size]][url-size]
+[![brotli size][image-size]][url-size]
 
 ```js
 import { qrono } from 'qrono'
@@ -50,7 +50,7 @@ date.endOfMonth()  // 2024-06-30
 
 #### ⚡ **Minimal and Focused**
 - Pure JavaScript with zero dependencies.
-- Lightweight (**4kB**) with **100+** APIs through focused design.
+- Lightweight (**3.3 kB** brotli-compressed), with **100+** APIs in a focused design.
 
 #### 🌍 **UTC-first with Local Time Support**
 - Supports UTC by default and the environment's local time zone.
@@ -76,7 +76,7 @@ date.endOfMonth()  // 2024-06-30
 
 - **[Day.js](https://day.js.org/)**  
   A small, Moment.js-compatible library with a large GitHub following, increasingly considered a de facto standard.  
-  Approximately 3kB with 30+ core APIs. Timezone, locale support, and additional functionality require plugins.  
+  Approximately 3 kB with 30+ core APIs. Timezone, locale support, and additional functionality require plugins.  
   Currently preparing a major version upgrade.
 
 - **[date-fns](https://date-fns.org/)**  
@@ -111,9 +111,13 @@ yarn add     @urin/qrono  # for Yarn
 
 ```html
 <!-- for Browser -->
-<script src="path/to/qrono.min.js"></script>
+<script type="module">
+  import { qrono } from './path/to/qrono.js'
+</script>
 <!-- from UNPKG -->
-<script src="https://unpkg.com/qrono/dist/qrono.min.js"></script>
+<script type="module">
+  import { qrono } from 'https://unpkg.com/qrono@1/dist/qrono.js'
+</script>
 ```
 
 ```js
@@ -324,7 +328,5 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 [image-downloads]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/urin/my-actions/main/badges/downloads.json
 [url-downloads]: https://npmcharts.com/compare/qrono?minimal=true
 
-[image-size]: https://img.badgesize.io/https://unpkg.com/qrono/dist/qrono.min.js?compression=gzip&color=blue
-[url-size]: https://unpkg.com/qrono/dist/qrono.min.js
-
-
+[image-size]: https://raw.githubusercontent.com/urin/qrono/main/images/size.svg
+[url-size]: https://qronojs.dev/introduction#package-size-comparison

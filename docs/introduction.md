@@ -1,6 +1,6 @@
 # Introduction
 
-Qrono is a **4kB** JavaScript date library with **100+ APIs** and **strict DST guarantees**.  
+Qrono is a **tiny** JavaScript date library with **100+ APIs** and **strict DST guarantees**.  
 Designed for _single-timezone_ applications.
 
 ```javascript
@@ -42,7 +42,9 @@ deno add jsr:@urin/qrono
 ```
 
 ```html [browser]
-<script src="https://unpkg.com/qrono/dist/qrono.min.js"></script>
+<script type="module">
+  import { qrono } from 'https://unpkg.com/qrono@1/dist/qrono.js'
+</script>
 ```
 
 :::
@@ -64,9 +66,8 @@ import { qrono } from '@urin/qrono'
 ```
 
 ```html [browser]
-<script src="https://unpkg.com/qrono/dist/qrono.min.js"></script>
-<script>
-  const { qrono } = Qrono
+<script type="module">
+  import { qrono } from 'https://unpkg.com/qrono@1/dist/qrono.js'
   console.log(qrono().toString())
 </script>
 ```
@@ -89,7 +90,7 @@ import { qrono } from '@urin/qrono'
 
 #### ⚡ **Small Surface, Focused Power**
 - Pure JavaScript with zero dependencies.
-- A compact **4kB** core with **100+** APIs through a tight, coherent design.
+- A compact core with **100+** APIs through a tight, coherent design and a small compressed footprint.
 
 #### ✅ **Standards-Aligned**
 - Fully compliant with [ISO 8601](https://www.iso.org/obp/ui/#iso:std:iso:8601:-1:ed-1:v1:en) for interoperable date-time exchange.
@@ -124,13 +125,27 @@ In short, Qrono sits between `Date` and Temporal: more correct and expressive th
 
 In contrast, **Qrono** focuses on delivering the simplest possible API surface while remaining practical for real-world applications, prioritizing clarity and usability over exhaustive completeness.
 
+### Package Size Comparison
+
+The table below compares browser-ready distribution files from npm as of April 4, 2026.  
+Versions are pinned explicitly, and the compressed sizes are measured from each published minified browser build.
+
+| Library   | Version | Minified  | gzip    | brotli     |
+| --------- | :-----: | -------: | ------: | ---------: |
+| *Qrono*   | 1.5.0   |  11.6 kB | 3.7 kB  | **3.3 kB** |
+| Day.js    | 1.11.19 |   7.0 kB | 3.0 kB  |   2.7 kB   |
+| Luxon     | 3.7.2   |  79.8 kB | 23.9 kB |  20.9 kB   |
+| Moment.js | 2.30.1  |  57.5 kB | 18.4 kB |  16.6 kB   |
+
+`date-fns` is intentionally excluded from this package-size table because it is designed for tree-shaking and is not meant to be evaluated as a single browser bundle.
+
 ### Repository Size Comparison
 
 [![Comparison of repository size](/comparison-repo-size.svg)](/comparison-repo-size.svg)
 
 This comparison shows that **Qrono stands out for its small codebase** among other libraries. Its compact size reflects a strong focus on minimalism and efficiency, making it well suited for situations where bundle size and simplicity are important.
 
-For many of the other libraries, their larger size is due to the fact that a significant portion of the codebase is dedicated to supporting a wide range of locales and time zones. Meanwhile, the larger size of date-fns is intentional and not a drawback. It is designed with tree-shaking in mind, so unused functions are removed at build time, and its API is intentionally fine-grained and verbose to provide clarity and flexibility. The size difference therefore represents a difference in design philosophy, not a measure of overall quality.
+For many of the other libraries, their larger size is due to the fact that a significant portion of the codebase is dedicated to supporting a wide range of locales and time zones. Meanwhile, the larger size of `date-fns` is intentional and not a drawback. It is designed with tree-shaking in mind, so unused functions are removed at build time, and its API is intentionally fine-grained and verbose to provide clarity and flexibility. The size difference therefore represents a difference in design philosophy, not a measure of overall quality.
 
 ### Supporting Only the Local Time of the Execution Environment
 

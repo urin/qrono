@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Qrono
   text: Small. Complete. Deterministic.
-  tagline: A <strong>4kB</strong> JavaScript date library with <strong>100+</strong> APIs and strict DST guarantees.<br>Designed for single-timezone applications.
+  tagline: A <strong>tiny</strong> JavaScript date library with <strong>100+</strong> APIs and strict DST guarantees.<br>Designed for single-timezone applications.
   actions:
     - theme: brand
       text: Get Started
@@ -30,7 +30,7 @@ features:
 
   - icon: ⚡
     title: Minimal and Focused
-    details: Pure JavaScript with zero dependencies.<br>Lightweight (<strong>4kB</strong>) with <strong>100+</strong> APIs through focused design.
+    details: Pure JavaScript with zero dependencies.<br>Lightweight (<strong>3.3 kB</strong>) with <strong>100+</strong> APIs through focused design.
 
   - icon: 🌍
     title: UTC-first with Local Time Support
@@ -70,7 +70,9 @@ deno add jsr:@urin/qrono
 ```
 
 ```html [browser]
-<script src="https://unpkg.com/qrono/dist/qrono.min.js"></script>
+<script type="module">
+  import { qrono } from 'https://unpkg.com/qrono@1/dist/qrono.js'
+</script>
 ```
 
 :::
