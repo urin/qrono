@@ -1,13 +1,13 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
-const entry = resolve(__dirname, 'src/qrono.js')
+const entry = resolve(__dirname, 'src/qrono.global.js')
 
 export default defineConfig({
   build: {
     lib: {
       entry,
-      name: 'Qrono',
+      name: 'qrono',
       formats: ['iife'],
       fileName: () => 'qrono.min.js',
     },
@@ -16,10 +16,5 @@ export default defineConfig({
     sourcemap: true,
     minify: true,
     target: 'esnext',
-    rolldownOptions: {
-      output: {
-        exports: 'named',
-      },
-    },
   },
 })
