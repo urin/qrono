@@ -1,6 +1,6 @@
 # API Comparison
 
-This section compares Qrono's API against six popular date/time APIs and libraries — [TC39 Temporal](https://tc39.es/proposal-temporal/docs/), [Day.js](https://day.js.org/), [Moment.js](https://momentjs.com/), [Luxon](https://moment.github.io/luxon/), and [date-fns](https://date-fns.org/) — across common use cases. Use it as a quick reference to understand how each library approaches the same task and to evaluate which best fits your needs.
+This section compares Qrono's API against six popular date/time APIs and libraries — [TC39 `Temporal`](https://tc39.es/proposal-temporal/docs/), [Day.js](https://day.js.org/), [Moment.js](https://momentjs.com/), [Luxon](https://moment.github.io/luxon/), and [date-fns](https://date-fns.org/) — across common use cases. Use it as a quick reference to understand how each library approaches the same task and to evaluate which best fits your needs.
 
 ## Instance creation
 
@@ -171,12 +171,12 @@ parse('2024-01-15', 'yyyy-MM-dd', new Date())
 ## DST gap/overlap handling
 
 When a local time string falls in a DST gap or overlap, each library must resolve the ambiguity differently.
-Temporal and Day.js default to the DST-active (later) offset in overlap cases, like JavaScript's `Date`.
+`Temporal` and Day.js default to the DST-active (later) offset in overlap cases, like JavaScript's `Date`.
 Luxon defaults to the standard (earlier) offset in overlap cases.
-Qrono defaults to `'compatible'` — gap times are forwarded to the later (DST) side, overlap times use the earlier (standard-time) side — and uniquely exposes all four resolution strategies via its `disambiguation` option, mirroring the [Temporal API](https://tc39.es/proposal-temporal/docs/).
+Qrono defaults to `'compatible'` — gap times are forwarded to the later (DST) side, overlap times use the earlier (standard-time) side — and uniquely exposes all four resolution strategies via its `disambiguation` option, mirroring the [`Temporal` API](https://tc39.es/proposal-temporal/docs/).
 
 Europe/London DST is used here as an example.
-For Temporal, `timeZone` must be explicit in this example so `disambiguation` is resolved deterministically for Europe/London.
+For `Temporal`, `timeZone` must be explicit in this example so `disambiguation` is resolved deterministically for Europe/London.
 
 - Spring forward (Gap)  
   2019-03-31 01:00 → 2019-03-31 02:00  (+00:00 → +01:00)
@@ -249,7 +249,7 @@ Temporal.ZonedDateTime.from(                // Temporal (reject)     throws Rang
 
 ## Date-only instance
 
-Qrono provides a dedicated `QronoDate` type for calendar dates with no time component. Temporal also has a dedicated `PlainDate` type. Other libraries represent date-only values as a datetime at midnight, which can be affected by timezone handling.
+Qrono provides a dedicated `QronoDate` type for calendar dates with no time component. `Temporal` also has a dedicated `PlainDate` type. Other libraries represent date-only values as a datetime at midnight, which can be affected by timezone handling.
 
 <FourCompare>
 <template #a>
@@ -382,7 +382,7 @@ DateTime.local().isInDST
 
 ## Timezone
 
-Qrono supports UTC and the runtime's local timezone only; arbitrary IANA timezone IDs are __NOT__ supported. Temporal and Luxon support named timezones natively; Day.js and Moment.js support them via plugins; date-fns handles timezone conversion through the companion `date-fns-tz` package.
+Qrono supports UTC and the runtime's local timezone only; arbitrary IANA timezone IDs are __NOT__ supported. `Temporal` and Luxon support named timezones natively; Day.js and Moment.js support them via plugins; date-fns handles timezone conversion through the companion `date-fns-tz` package.
 
 <FourCompare>
 <template #a>
@@ -498,7 +498,7 @@ toZonedTime(new Date(), 'America/New_York')
 
 ## Timezone offset
 
-All libraries can expose UTC offset information, but units and APIs differ. Qrono/Day.js/Moment.js/Luxon use minutes; Temporal uses nanoseconds and offset strings; date-fns-tz returns milliseconds and requires an explicit IANA timezone ID. Note that the native `Date.prototype.getTimezoneOffset()` uses the opposite sign convention (positive = west of UTC).
+All libraries can expose UTC offset information, but units and APIs differ. Qrono/Day.js/Moment.js/Luxon use minutes; `Temporal` uses nanoseconds and offset strings; date-fns-tz returns milliseconds and requires an explicit IANA timezone ID. Note that the native `Date.prototype.getTimezoneOffset()` uses the opposite sign convention (positive = west of UTC).
 
 <FourCompare>
 <template #a>
@@ -729,7 +729,7 @@ format(d, 'yyyy-MM-dd HH:mm:ss')
 
 ## Arithmetic
 
-Qrono's `plus`/`minus` accept spread arguments, object, array, or a raw millisecond number. Temporal and Luxon use object-based duration units; Day.js and Moment.js use `(value, unit)`; date-fns provides individual functions per unit (`addMonths`, `addDays`, …). For differences, Qrono and date-fns typically return plain numbers; Temporal/Luxon/Moment.js can produce Duration-like objects (see [Duration](#duration)).
+Qrono's `plus`/`minus` accept spread arguments, object, array, or a raw millisecond number. `Temporal` and Luxon use object-based duration units; Day.js and Moment.js use `(value, unit)`; date-fns provides individual functions per unit (`addMonths`, `addDays`, …). For differences, Qrono and date-fns typically return plain numbers; `Temporal`/Luxon/Moment.js can produce Duration-like objects (see [Duration](#duration)).
 
 <FourCompare>
 <template #a>
@@ -861,7 +861,7 @@ differenceInDays(d, new Date('2024-01-01'))
 
 ## Comparing
 
-Qrono, Day.js (with plugins), and Moment.js provide all six comparison methods as named methods. Temporal uses `compare()`/`equals()` static and instance APIs. Luxon relies on native comparison operators (`<`, `>`, `<=`, `>=`) for ordering and `Interval.contains()` for range checks. date-fns provides `isBefore`, `isAfter`, and `isEqual` as functions, and falls back to native operators for the rest.
+Qrono, Day.js (with plugins), and Moment.js provide all six comparison methods as named methods. `Temporal` uses `compare()`/`equals()` static and instance APIs. Luxon relies on native comparison operators (`<`, `>`, `<=`, `>=`) for ordering and `Interval.contains()` for range checks. date-fns provides `isBefore`, `isAfter`, and `isEqual` as functions, and falls back to native operators for the rest.
 
 <FourCompare>
 <template #a>
@@ -985,7 +985,7 @@ isWithinInterval(a, {
 
 ## Start/End boundaries
 
-Day.js, Moment.js, Luxon, and date-fns use a generic `startOf(unit)` / `endOf(unit)` style down to the hour level. Qrono uses dedicated methods per granularity (`startOfYear()`, `startOfMonth()`, …) but does not provide `endOf` on `Qrono` instances; `endOfYear()` and `endOfMonth()` are available on `QronoDate` only. Temporal composes equivalent behavior via immutable field updates.
+Day.js, Moment.js, Luxon, and date-fns use a generic `startOf(unit)` / `endOf(unit)` style down to the hour level. Qrono uses dedicated methods per granularity (`startOfYear()`, `startOfMonth()`, …) but does not provide `endOf` on `Qrono` instances; `endOfYear()` and `endOfMonth()` are available on `QronoDate` only. `Temporal` composes equivalent behavior via immutable field updates.
 
 <FourCompare>
 <template #a>
@@ -1118,7 +1118,7 @@ endOfHour(d)     // 2024-06-15 12:59:59
 
 ## Day and Week
 
-All compared APIs can retrieve day-of-year and ISO week/year with different method/property names. Day.js may require plugins. `daysInYear` and `weeksInYear` availability differs by library (Temporal and Qrono expose both directly).
+All compared APIs can retrieve day-of-year and ISO week/year with different method/property names. Day.js may require plugins. `daysInYear` and `weeksInYear` availability differs by library (`Temporal` and Qrono expose both directly).
 
 <FourCompare>
 <template #a>
@@ -1271,7 +1271,7 @@ getISOWeeksInYear(d) // e.g. 52
 
 ## Get / Set
 
-Qrono and Day.js use the same method name for both get (no argument) and set (with argument). Moment.js is similar and mutable. Temporal and Luxon use read-only property accessors for get and object-based immutable updates (`with` / `set`). date-fns provides individual `getX` / `setX` functions. Note that Day.js/Moment.js/date-fns months are **0-indexed** while Qrono/Temporal/Luxon use **1-indexed** months.
+Qrono and Day.js use the same method name for both get (no argument) and set (with argument). Moment.js is similar and mutable. `Temporal` and Luxon use read-only property accessors for get and object-based immutable updates (`with` / `set`). date-fns provides individual `getX` / `setX` functions. Note that Day.js/Moment.js/date-fns months are **0-indexed** while Qrono/`Temporal`/Luxon use **1-indexed** months.
 
 <FourCompare>
 <template #a>
@@ -1427,7 +1427,7 @@ setHours(d, 0)
 
 ## Validation
 
-Validity handling differs by API. Qrono/Day.js/Moment.js expose `valid()` / `isValid()` methods, Luxon uses `isValid` properties with reasons, date-fns has standalone `isValid()`, and Temporal throws `RangeError` for invalid values.
+Validity handling differs by API. Qrono/Day.js/Moment.js expose `valid()` / `isValid()` methods, Luxon uses `isValid` properties with reasons, date-fns has standalone `isValid()`, and `Temporal` throws `RangeError` for invalid values.
 
 <FourCompare>
 <template #a>
@@ -1506,7 +1506,7 @@ isValid(NaN)                    // false
 ## Formatting
 
 Day.js and Moment.js use `YYYY`-style tokens; Luxon and date-fns use `yyyy`-style tokens (Unicode CLDR).
-Qrono and Temporal have **NO** built-in custom token formatter and delegate to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
+Qrono and `Temporal` have **NO** built-in custom token formatter and delegate to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
 
 <FourCompare>
 <template #a>
@@ -1619,7 +1619,7 @@ format(d, 'EEE, MMM d yyyy')
 
 ## Locale / i18n
 
-Qrono, Temporal, and Luxon rely on the runtime's `Intl` API with no locale files to import. Day.js and Moment.js use locale packs. date-fns requires importing locale objects per call site, which allows fine-grained tree-shaking.
+Qrono, `Temporal`, and Luxon rely on the runtime's `Intl` API with no locale files to import. Day.js and Moment.js use locale packs. date-fns requires importing locale objects per call site, which allows fine-grained tree-shaking.
 
 <FourCompare>
 <template #a>
@@ -1756,7 +1756,7 @@ format(d, 'PPP', { locale: ja })  // '2024年6月15日'
 
 ## Relative time
 
-Luxon supports relative time natively via `toRelative()` / `toRelativeCalendar()`. Moment.js supports it natively (`fromNow`/`from`/`to`). Day.js supports it via the `relativeTime` plugin. date-fns provides `formatDistanceToNow` and `formatDistance` as standalone functions. Qrono and Temporal have no built-in; `Intl.RelativeTimeFormat` can be used directly.
+Luxon supports relative time natively via `toRelative()` / `toRelativeCalendar()`. Moment.js supports it natively (`fromNow`/`from`/`to`). Day.js supports it via the `relativeTime` plugin. date-fns provides `formatDistanceToNow` and `formatDistance` as standalone functions. Qrono and `Temporal` have no built-in; `Intl.RelativeTimeFormat` can be used directly.
 
 <FourCompare>
 <template #a>
@@ -1888,7 +1888,7 @@ formatDistanceToNow(d, { addSuffix: true, locale: ja })
 
 ## Duration
 
-Qrono intentionally has no Duration type. Differences between `Qrono` instances are plain milliseconds; differences between `QronoDate` instances are plain integers (days). Temporal, Moment.js, Day.js, and Luxon provide Duration types/APIs.
+Qrono intentionally has no Duration type. Differences between `Qrono` instances are plain milliseconds; differences between `QronoDate` instances are plain integers (days). `Temporal`, Moment.js, Day.js, and Luxon provide Duration types/APIs.
 
 <FourCompare>
 <template #a>

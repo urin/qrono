@@ -86,10 +86,21 @@ date.endOfMonth()  // 2024-06-30
 None of these libraries provide dedicated APIs for strict DST transition handling.  
 Qrono addresses this gap with a balanced and pragmatic approach.
 
-- **[The ECMA TC39 Temporal Proposal](https://tc39.es/proposal-temporal/docs/index.html)**  
-  A proposed ECMAScript API that may become a future standard. Temporal (TC39) defines a comprehensive and rigorous date-time model, including numerous classes such as `Instant`, `Duration`, and `ZonedDateTime`, and provides a complete API covering locale handling and the IANA time zone database. While this design ensures correctness and precision across a wide range of use cases, its breadth and strictness can make it heavyweight and difficult to grasp for developers who simply need to handle date and time operations.
+JavaScript already provides **`Intl`** for locale-aware formatting, and **`Temporal`** covers broader multi-timezone workflows. Qrono is deliberately narrower: it stays small by delegating localization to `Intl` and by focusing on applications that only need UTC plus the runtime's local time zone.
 
-In contrast, Qrono focuses on delivering the simplest possible API surface while remaining practical for real-world applications, prioritizing clarity and usability over exhaustive completeness.
+That makes the relationship complementary: use `Intl` for presentation, use `Temporal` when you need full time-zone modeling, and use Qrono when you want a lighter API for the common single-timezone case.
+
+### Package Size Comparison
+
+The table below compares browser-ready distribution files from npm as of April 4, 2026.  
+Versions are pinned explicitly, and the compressed sizes are measured from each published minified browser build.
+
+| Library   | Version | Minified  | gzip    | brotli     |
+| --------- | :-----: | -------: | ------: | ---------: |
+| *Qrono*   | 1.5.0   |  11.6 kB | 3.7 kB  | **3.3 kB** |
+| Day.js    | 1.11.19 |   7.0 kB | 3.0 kB  |   2.7 kB   |
+| Luxon     | 3.7.2   |  79.8 kB | 23.9 kB |  20.9 kB   |
+| Moment.js | 2.30.1  |  57.5 kB | 18.4 kB |  16.6 kB   |
 
 ### Repository Size Comparison
 
@@ -325,7 +336,7 @@ Copyright (c) 2021 [Urin](https://github.com/urin)
 [image-npm-version]: https://img.shields.io/npm/v/qrono.svg?style=flat
 [url-npm]: https://npmjs.org/package/qrono
 
-[image-downloads]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/urin/my-actions/main/badges/downloads.json
+[image-downloads]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/urin/my-actions/main/badges/qrono-downloads.json
 [url-downloads]: https://npmcharts.com/compare/qrono?minimal=true
 
 [image-size]: https://raw.githubusercontent.com/urin/qrono/main/images/size.svg

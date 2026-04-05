@@ -117,13 +117,11 @@ Other date-time libraries have larger codebases and more complicated usage to su
 
 None of these libraries provide APIs to detect or handle DST transitions properly. Qrono fills this gap with a balanced approach - not too simple, not too complex, just right.
 
-#### Temporal and Intl: Complementary, Not Competing
+#### `Temporal` and `Intl`: Complementary, Not Competing
 
-JavaScript already provides **`Intl`** for locale-aware formatting, and **Temporal** is on track to become a standard for comprehensive, multi-timezone date-time handling. Qrono deliberately stays small by delegating localization to `Intl` and by focusing on the single-timezone majority case where Temporal can feel like overkill.
+JavaScript already provides **`Intl`** for locale-aware formatting, and **`Temporal`** covers broader multi-timezone workflows. Qrono is deliberately narrower: it stays small by delegating localization to `Intl` and by focusing on applications that only need UTC plus the runtime's local time zone.
 
-In short, Qrono sits between `Date` and Temporal: more correct and expressive than `Date`, simpler and lighter than Temporal, and designed to work _with_ `Intl` rather than against it.
-
-In contrast, **Qrono** focuses on delivering the simplest possible API surface while remaining practical for real-world applications, prioritizing clarity and usability over exhaustive completeness.
+That makes the relationship complementary: use `Intl` for presentation, use `Temporal` when you need full time-zone modeling, and use Qrono when you want a lighter API for the common single-timezone case.
 
 ### Package Size Comparison
 
@@ -198,7 +196,7 @@ This behavior is not a bug but a result of strictly following the [ECMAScript sp
 
 Additionally, a `Date` object created from a duplicated time during daylight saving time (DST) transition always refers to the time before DST ends. In other words, there is no simple way to obtain a `Date` object that refers to the UTC time **after** the end of DST from a duplicated time.
 
-**Qrono** addresses these issues by providing a more principled approach to handling such transitions. Ambiguous local times — those that fall in a DST gap (spring-forward) or overlap (fall-back) — are resolved through the `disambiguation` option, which mirrors the [Temporal API](https://tc39.es/proposal-temporal/docs/):
+**Qrono** addresses these issues by providing a more principled approach to handling such transitions. Ambiguous local times — those that fall in a DST gap (spring-forward) or overlap (fall-back) — are resolved through the `disambiguation` option, which mirrors the [`Temporal` API](https://tc39.es/proposal-temporal/docs/):
 
 ```javascript
 qrono.context({ localtime: true })
