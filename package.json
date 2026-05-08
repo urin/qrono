@@ -35,7 +35,7 @@
   "jsdeliver": "dist/qrono.min.js",
   "types": "types/qrono.d.ts",
   "scripts": {
-    "prepare": "husky && npm run check:fix && npm run build",
+    "prepare": "node scripts/prepare-husky.js && npm run check:fix && npm run build",
     "postpublish": "jsr publish --no-provenance",
     "lint": "biome lint ./src ./tests ./scripts",
     "format": "biome format --write .",
@@ -47,7 +47,7 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:build": "vitepress build docs && cpy \"**/*.md\" .vitepress/dist --cwd=docs --base=cwd --ignore=\".vitepress/**\"",
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
@@ -55,6 +55,7 @@
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@vitest/ui": "^4.1.2",
+    "cpy-cli": "^7.0.0",
     "husky": "^9.1.7",
     "jsr": "^0.14.3",
     "lint-staged": "^16.2.7",
@@ -62,6 +63,11 @@
     "vite": "^8.0.3",
     "vitepress": "^1.6.4",
     "vitest": "^4.1.2"
+  },
+  "overrides": {
+    "vitepress": {
+      "vite": "6.4.2"
+    }
   },
   "lint-staged": {
     "src/**/*.{js,mjs,cjs,ts,tsx,jsx}": [
