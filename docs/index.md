@@ -1,5 +1,7 @@
 ---
 layout: home
+title: Qrono
+description: A tiny JavaScript date library with 100+ APIs and strict DST guarantees.
 
 hero:
   name: Qrono

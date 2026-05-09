@@ -28,3 +28,23 @@ html.sidebar-hidden .VPDoc .content-container {
 .VPNavBar:not(.home) {
   background-color: var(--vp-nav-bg-color) !important;
 }
+
+.MarkdownPageLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;
+  color: var(--vp-c-text-2);
+  transition: color 0.2s;
+}
+
+.MarkdownPageLink:hover {
+  color: var(--vp-c-text-1);
+}
+
+.MarkdownPageLinkIcon {
+  width: 18px;
+  height: 18px;
+}

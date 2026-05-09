@@ -1,10 +1,73 @@
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vitepress'
+import llmstxt from 'vitepress-plugin-llms'
+
+const llmsSidebar = [
+  {
+    text: 'Documentation',
+    items: [
+      { text: 'Home', link: '/' },
+      { text: 'Introduction', link: '/introduction' },
+      { text: 'Comparison', link: '/comparison' },
+      { text: 'API Reference', link: '/api/' },
+    ],
+  },
+]
+
+const markdownFiles = new Map(
+  [
+    ['/index.md', '../index.md'],
+    ['/introduction.md', '../introduction.md'],
+    ['/comparison.md', '../comparison.md'],
+    ['/api.md', '../api/index.md'],
+  ].map(([route, file]) => [route, new URL(file, import.meta.url)]),
+)
+
+const serveMarkdownInDev = () => ({
+  name: 'serve-markdown-in-dev',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      const url = new URL(req.url ?? '/', 'http://localhost')
+      const file = markdownFiles.get(url.pathname)
+      const accept = req.headers.accept ?? ''
+
+      if (!file || url.search || !accept.includes('text/html')) {
+        next()
+        return
+      }
+
+      res.setHeader('Content-Type', 'text/markdown; charset=utf-8')
+      res.end(readFileSync(file, 'utf8'))
+    })
+  },
+})
 
 export default defineConfig({
   title: 'Qrono',
   description:
     'A tiny JavaScript date library with 100+ APIs and strict DST guarantees.',
+  sitemap: {
+    hostname: 'https://qronojs.dev',
+  },
   head: [
+    [
+      'link',
+      {
+        rel: 'sitemap',
+        type: 'application/xml',
+        title: 'Sitemap',
+        href: '/sitemap.xml',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'alternate',
+        type: 'text/plain',
+        title: 'llms.txt',
+        href: '/llms.txt',
+      },
+    ],
     [
       'link',
       {
@@ -23,6 +86,21 @@ export default defineConfig({
       },
     ],
   ],
+  vite: {
+    plugins: [
+      serveMarkdownInDev(),
+      ...llmstxt({
+        domain: 'https://qronojs.dev',
+        title: 'Qrono',
+        description:
+          'A tiny JavaScript date library with 100+ APIs and strict DST guarantees.',
+        details:
+          'Qrono is designed for single-timezone applications and provides immutable, chainable date-time and calendar-date APIs.',
+        excludeIndexPage: false,
+        sidebar: llmsSidebar,
+      }),
+    ],
+  },
 
   themeConfig: {
     logo: '/logo.svg',

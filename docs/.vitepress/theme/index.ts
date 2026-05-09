@@ -3,6 +3,7 @@ import { h } from 'vue'
 import './custom.css'
 import Comparison from './components/Comparison.vue'
 import ComparisonSidebarToggle from './components/ComparisonSidebarToggle.vue'
+import MarkdownPageLink from './components/MarkdownPageLink.vue'
 
 export default {
   extends: DefaultTheme,
@@ -12,6 +13,7 @@ export default {
   Layout() {
     return h(DefaultTheme.Layout, null, {
       'nav-bar-content-before': () => h(ComparisonSidebarToggle),
+      'nav-bar-content-after': () => h(MarkdownPageLink),
     })
   },
 }

@@ -47,7 +47,7 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs && cpy \"**/*.md\" .vitepress/dist --cwd=docs --base=cwd --ignore=\".vitepress/**\"",
+    "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
@@ -55,16 +55,17 @@
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@vitest/ui": "^4.1.2",
-    "cpy-cli": "^7.0.0",
     "husky": "^9.1.7",
     "jsr": "^0.14.3",
     "lint-staged": "^16.2.7",
     "mockdate": "^3.0.5",
     "vite": "^8.0.3",
     "vitepress": "^1.6.4",
+    "vitepress-plugin-llms": "^1.12.2",
     "vitest": "^4.1.2"
   },
   "overrides": {
+    "fast-uri": "^3.1.2",
     "vitepress": {
       "vite": "6.4.2"
     }
