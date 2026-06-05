@@ -1,0 +1,23 @@
+/*
+  Link: </sitemap.xml>; rel="sitemap"; type="application/xml"; title="Sitemap"
+  Link: </llms.txt>; rel="alternate"; type="text/plain"; title="llms.txt"
+  Link: </llms-full.txt>; rel="alternate"; type="text/plain"; title="llms-full.txt"
+  Link: </AGENTS.md>; rel="help"; type="text/markdown"; title="Agent instructions"
+
+/
+  Link: </index.md>; rel="alternate"; type="text/markdown"; title="Markdown"
+
+/index.html
+  Link: </index.md>; rel="alternate"; type="text/markdown"; title="Markdown"
+
+/introduction.html
+  Link: </introduction.md>; rel="alternate"; type="text/markdown"; title="Markdown"
+
+/comparison.html
+  Link: </comparison.md>; rel="alternate"; type="text/markdown"; title="Markdown"
+
+/api/
+  Link: </api.md>; rel="alternate"; type="text/markdown"; title="Markdown"
+
+/api/index.html
+  Link: </api.md>; rel="alternate"; type="text/markdown"; title="Markdown"

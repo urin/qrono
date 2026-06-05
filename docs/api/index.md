@@ -1,3 +1,7 @@
+---
+description: Complete Qrono API reference for factories, conversion, accessors, context, calculation, comparison, boundaries, date information, and DST APIs.
+---
+
 # API Reference
 
 Complete API reference for Qrono.

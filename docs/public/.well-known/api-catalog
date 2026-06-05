@@ -1,0 +1,19 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://qronojs.dev/",
+      "describedby": [
+        {
+          "href": "https://qronojs.dev/api.md",
+          "type": "text/markdown",
+          "title": "Qrono JavaScript API Reference"
+        },
+        {
+          "href": "https://qronojs.dev/llms-full.txt",
+          "type": "text/plain",
+          "title": "Qrono full LLM documentation bundle"
+        }
+      ]
+    }
+  ]
+}

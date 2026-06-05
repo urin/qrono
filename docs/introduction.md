@@ -1,3 +1,7 @@
+---
+description: Qrono design philosophy, installation, usage, UTC/local-time model, DST handling, and quick tour.
+---
+
 # Introduction
 
 Qrono is a **tiny** JavaScript date library with **100+ APIs** and **strict DST guarantees**.  

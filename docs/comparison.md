@@ -1,3 +1,7 @@
+---
+description: Side-by-side API comparison of Qrono, Temporal, Day.js, Moment.js, Luxon, and date-fns.
+---
+
 # API Comparison
 
 This section compares Qrono's API against six popular date/time APIs and libraries — [TC39 `Temporal`](https://tc39.es/proposal-temporal/docs/), [Day.js](https://day.js.org/), [Moment.js](https://momentjs.com/), [Luxon](https://moment.github.io/luxon/), and [date-fns](https://date-fns.org/) — across common use cases. Use it as a quick reference to understand how each library approaches the same task and to evaluate which best fits your needs.

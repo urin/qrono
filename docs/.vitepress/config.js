@@ -2,6 +2,8 @@ import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vitepress'
 import llmstxt from 'vitepress-plugin-llms'
 
+const siteOrigin = 'https://qronojs.dev'
+
 const llmsSidebar = [
   {
     text: 'Documentation',
@@ -23,21 +25,56 @@ const markdownFiles = new Map(
   ].map(([route, file]) => [route, new URL(file, import.meta.url)]),
 )
 
+const pageMarkdownFiles = new Map(
+  [
+    ['/', '../index.md'],
+    ['/index.html', '../index.md'],
+    ['/introduction', '../introduction.md'],
+    ['/introduction.html', '../introduction.md'],
+    ['/comparison', '../comparison.md'],
+    ['/comparison.html', '../comparison.md'],
+    ['/api/', '../api/index.md'],
+    ['/api/index.html', '../api/index.md'],
+  ].map(([route, file]) => [route, new URL(file, import.meta.url)]),
+)
+
 const serveMarkdownInDev = () => ({
   name: 'serve-markdown-in-dev',
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       const url = new URL(req.url ?? '/', 'http://localhost')
-      const file = markdownFiles.get(url.pathname)
       const accept = req.headers.accept ?? ''
+      const file = accept.includes('text/markdown')
+        ? pageMarkdownFiles.get(url.pathname)
+        : markdownFiles.get(url.pathname)
 
-      if (!file || url.search || !accept.includes('text/html')) {
-        next()
+      if (file && !url.search) {
+        res.setHeader('Content-Type', 'text/markdown; charset=utf-8')
+        res.end(readFileSync(file, 'utf8'))
         return
       }
 
-      res.setHeader('Content-Type', 'text/markdown; charset=utf-8')
-      res.end(readFileSync(file, 'utf8'))
+      next()
+    })
+  },
+})
+
+const addAgentDiscoveryHeadersInDev = () => ({
+  name: 'add-agent-discovery-headers-in-dev',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      const url = new URL(req.url ?? '/', 'http://localhost')
+      const accept = req.headers.accept ?? ''
+
+      if (!url.search && accept.includes('text/html')) {
+        res.setHeader('Link', [
+          '</sitemap.xml>; rel="sitemap"; type="application/xml"; title="Sitemap"',
+          '</llms.txt>; rel="alternate"; type="text/plain"; title="llms.txt"',
+          '</llms-full.txt>; rel="alternate"; type="text/plain"; title="llms-full.txt"',
+        ].join(', '))
+      }
+
+      next()
     })
   },
 })
@@ -46,10 +83,18 @@ export default defineConfig({
   title: 'Qrono',
   description:
     'A tiny JavaScript date library with 100+ APIs and strict DST guarantees.',
+  srcExclude: ['public/**/*.md'],
   sitemap: {
-    hostname: 'https://qronojs.dev',
+    hostname: siteOrigin,
   },
   head: [
+    [
+      'meta',
+      {
+        name: 'robots',
+        content: 'index,follow',
+      },
+    ],
     [
       'link',
       {
@@ -57,6 +102,51 @@ export default defineConfig({
         type: 'application/xml',
         title: 'Sitemap',
         href: '/sitemap.xml',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'alternate',
+        type: 'text/plain',
+        title: 'llms-full.txt',
+        href: '/llms-full.txt',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'alternate',
+        type: 'text/markdown',
+        title: 'Markdown documentation index',
+        href: '/index.md',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'help',
+        type: 'text/markdown',
+        title: 'Agent instructions',
+        href: '/AGENTS.md',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'describedby',
+        type: 'text/markdown',
+        title: 'Qrono agent skill',
+        href: '/.well-known/agent-skills/qrono/SKILL.md',
+      },
+    ],
+    [
+      'link',
+      {
+        rel: 'service-desc',
+        type: 'application/linkset+json',
+        title: 'API catalog',
+        href: '/.well-known/api-catalog',
       },
     ],
     [
@@ -89,15 +179,35 @@ export default defineConfig({
   vite: {
     plugins: [
       serveMarkdownInDev(),
+      addAgentDiscoveryHeadersInDev(),
       ...llmstxt({
-        domain: 'https://qronojs.dev',
+        domain: siteOrigin,
         title: 'Qrono',
         description:
           'A tiny JavaScript date library with 100+ APIs and strict DST guarantees.',
         details:
           'Qrono is designed for single-timezone applications and provides immutable, chainable date-time and calendar-date APIs.',
         excludeIndexPage: false,
+        ignoreFiles: ['public/**'],
         sidebar: llmsSidebar,
+        customLLMsTxtTemplate: `# {title}
+
+{description}
+
+{details}
+
+## Agent Entry Points
+
+- [Full documentation bundle](${siteOrigin}/llms-full.txt): Complete Markdown context for Qrono.
+- [Agent instructions](${siteOrigin}/AGENTS.md): How agents should choose and cite Qrono documentation.
+- [Qrono agent skill](${siteOrigin}/.well-known/agent-skills/qrono/SKILL.md): Task-focused guidance for using Qrono in code.
+- [Robots policy](${siteOrigin}/robots.txt): Crawl and AI-use policy signals.
+- [Sitemap](${siteOrigin}/sitemap.xml): Canonical HTML pages.
+
+## Documentation
+
+{toc}
+`,
       }),
     ],
   },
